@@ -11,12 +11,25 @@
                                  ng-model = "mainCtrl.currentArtifactId"
                                  placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
                                  autofocus)
-        %button(ng-click = "mainCtrl.updateCurrentArtifactVersion()") {{'GO' | translate}}
-    .pp-chosen-artifact-info(ng-show = "mainCtrl.currentArtifactVersion !== undefined && mainCtrl.currentArtifactVersion !== ''")
-        .pp-version-info
-            %p {{'VERSION' | translate}}
-            %p.pp-version-text(ng-bind = "mainCtrl.currentArtifactVersion")
-
+        %button(ng-click = "mainCtrl.updateCurrentArtifactData()") {{'GO' | translate}}
+    .pp-chosen-artifact-info-wrapper(ng-show = "mainCtrl.currentArtifactDataIsUpdated")
+        .pp-artifact-info
+            %p.pp-artifact-info-title {{'ARTIFACT_ID' | translate}}
+            %p.pp-artifact-info-text(ng-bind = "mainCtrl.currentArtifactId")
+            %p.pp-artifact-info-title {{'GROUP_ID' | translate}}
+            %p.pp-artifact-info-text(ng-bind = "mainCtrl.currentArtifactGroupId")
+            %p.pp-artifact-info-title {{'VERSION' | translate}}
+            %p.pp-artifact-info-text(ng-bind = "mainCtrl.currentArtifactVersions[0]")
+        .pp-artifact-table
+            .pp-artifact-table-header
+                .pp-artifact-table-header-row(ng-repeat = "serverTableHeadline in mainCtrl.serverTableHeadlines")
+                    %div {{serverTableHeadline}}
+            .pp-artifact-table-rows
+                .pp-artifact-table-row(ng-repeat="serverInfo in mainCtrl.currentArtifactVersionSummary.responseBody")
+                    %div {{serverInfo.server}}
+                    %div {{serverInfo.runStatus}}
+                    %div button-pic
+                    %div {{serverInfo.event}}
 
 %datalist(ng-controller = "MainController as mainCtrl"
           id = "artifactList")

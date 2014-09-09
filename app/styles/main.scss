@@ -4,9 +4,18 @@ $font-helvetica65: "HelveticaNeueW01-65Medi", "HelveticaNeueW02-65Medi", "Helvet
 $font-helvetica75: "HelveticaNeueW01-75Bold", "HelveticaNeueW02-75Bold", "HelveticaNeueW10-75Bold", sans-serif;
 $border-radius: 6px;
 
+@mixin artifact-info-design(){
+  height: inherit;
+  background-color: #EEE;
+  border: 1px solid #C4BCBC;
+  border-radius: $border-radius;
+  padding-left: 15px;
+  margin-right: 50px;
+}
+
 .container {
   margin: auto;
-//  width: 300px;
+  //  width: 300px;
 }
 
 .pp-hero-unit h1 {
@@ -33,7 +42,7 @@ $border-radius: 6px;
 }
 
 .pp-top-header-image-container img{
-//  background: url(http://bo.wix.com/wix-postplay-webapp/img/wix-icon.png) no-repeat;
+  //  background: url(http://bo.wix.com/wix-postplay-webapp/img/wix-icon.png) no-repeat;
   max-height: 70px;
   object-fit: cover;
 }
@@ -43,7 +52,7 @@ $border-radius: 6px;
 }
 
 .pp-artifact-input {
-//  color: rgb(74, 190, 201);
+  //  color: rgb(74, 190, 201);
   font-size: 13px;
   color: #000000;
   width: 250px;
@@ -62,28 +71,51 @@ input:-webkit-autofill {
   }
 }
 
-.pp-chosen-artifact-info {
+.pp-chosen-artifact-info-wrapper {
   padding: 30px;
   height: 250px;
+  display: flex;
+  flex-direction: row;
+  .pp-artifact-table-header, .pp-artifact-table-rows {
+    display: inline-flex;
+  }
+  .pp-artifact-info {
+    width: 20%;
+    @include artifact-info-design;
+  }
+  .pp-artifact-table {
+    width: 50%;
+    @include artifact-info-design;
+  }
+  .pp-artifact-table-header-row, .pp-artifact-table-row {
+    margin-top: 10px;
+    background-color: gray;
+    display: flex;
+    flex-direction: row;
+    height: 30%;
+    div {
+      margin-left: 5px;
+      margin-right: 10px;
+      width: 160px;
+      //TODO this shouldn't be a fixed width!
+    }
+  }
+
+  .pp-artifact-table-row {
+    background-color: #ffffff;
+  }
 }
 
-.pp-version-info {
-  display: inline-flex;
-  width: 20%;
-  height: inherit;
-  background-color: #EEE;
-  border: 2px solid #C4BCBC;
-  border-radius: $border-radius;
-  padding-left: 15px;
-}
-
-.pp-version-text {
+.pp-artifact-info-text {
   padding-left: 20px;
+}
+.pp-artifact-info-title {
+  font-weight: bold;
 }
 
 .pp-hero-unit {
-//  width: 90%;
-//  position: fixed;
+  //  width: 90%;
+  //  position: fixed;
   font-family: $font-helvetica55;
   font-size: 18px;
   font-weight: 200;
@@ -94,5 +126,4 @@ input:-webkit-autofill {
 
 .repeated-item {
   list-style-type: none;
-
 }

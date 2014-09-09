@@ -23,7 +23,7 @@ angular.module('postplayTryAppMocks', ['ngMockE2E'])
     $httpBackend.whenGET(VER_SUM_API_URL).respond(versionSummaryResponseFromServer);
 
     var ARTIFACT_VERS_API_URL = '/_api/getArtifactVersions/json?artifactId=' + artifactId + '&groupId=' + groupId;
-    var artifactVersionsResponseFromServer = ['2.470.0', '2.469.0', '2.468.0', '2.467.0', '2.466.0', '2.465.0', '2.464.0', '2.463.0', '2.462.0', '2.461.0'];
+    var artifactVersionsResponseFromServer = ['2.487.0', '2.469.0', '2.468.0', '2.467.0', '2.466.0', '2.465.0', '2.464.0', '2.463.0', '2.462.0', '2.461.0'];
     $httpBackend.whenGET(ARTIFACT_VERS_API_URL).respond(artifactVersionsResponseFromServer);
 
     $httpBackend.whenGET(/.*/).passThrough();

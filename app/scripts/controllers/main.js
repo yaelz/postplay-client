@@ -3,16 +3,27 @@
 (function () {
 
   /* @ngInject */
-  function MainController($scope, versionTestResults) {
+  function MainController($scope, $timeout, versionTestResults) {
     var that = this;
+//    this.serverTableHeadlines = ['Status', 'Server', 'Execution', 'Execution status', 'Build event'];
+    this.serverTableHeadlines = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.artifacts = [];
     this.currentArtifactId = '';
-    this.currentArtifactVersion = '';
-    this.updateCurrentArtifactVersion = function () {
+    this.currentArtifactGroupId = '';
+    this.currentArtifactVersions = [];
+    this.currentArtifactVersionSummary = {};
+    this.currentArtifactDataIsUpdated = false;
+    this.updateCurrentArtifactData = function () {
       if (this.currentArtifactId !== '') {
         var currentArtifact = getArtifactByArtifactId(this.currentArtifactId);
-        this.currentArtifactVersion = versionTestResults.getArtifactVersions(currentArtifact.artifactId, currentArtifact.groupId)[0];
+        this.currentArtifactGroupId = currentArtifact.groupId;
+        this.currentArtifactVersions = versionTestResults.getArtifactVersions(this.currentArtifactId, this.currentArtifactGroupId);
+        $timeout(function () {
+          that.currentArtifactVersionSummary = versionTestResults.getVersionSummary(that.currentArtifactVersions[0], that.currentArtifactId, that.currentArtifactGroupId);
+          // TODO is this time enough to get data from the server?
+        }, 100);
       }
+      this.currentArtifactDataIsUpdated = true; //TODO test with e2e
     };
 
     function getArtifactByArtifactId(artifactId) {

@@ -2,5 +2,7 @@
   "CHOOSE_FROM_ARTIFACTS_TITLE": "Choose your artifact!",
   "CHOOSE_ARTIFACT": "Search for your artifact here",
   "GO": "GO",
+  "ARTIFACT_ID": "Artifact id:",
+  "GROUP_ID": "Group id:",
   "VERSION": "Version:"
 }
