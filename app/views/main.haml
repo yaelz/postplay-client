@@ -1,0 +1,24 @@
+%div(ng-controller = "MainController as mainCtrl")
+    .pp-hero-unit
+        .pp-top-header-container
+            .pp-top-header-image-container
+                %img(src='http://bo.wix.com/wix-postplay-webapp/img/wix-icon.png')
+            .pp-top-header-text(ng-bind = "mainCtrl.currentArtifactId")
+        %p.pp-artifacts-title {{'CHOOSE_FROM_ARTIFACTS_TITLE' | translate}}
+        %input.pp-artifact-input(type = "text"
+                                 name = "sheet-input"
+                                 list = "artifactList"
+                                 ng-model = "mainCtrl.currentArtifactId"
+                                 placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
+                                 autofocus)
+        %button(ng-click = "mainCtrl.updateCurrentArtifactVersion()") {{'GO' | translate}}
+    .pp-chosen-artifact-info(ng-show = "mainCtrl.currentArtifactVersion !== undefined && mainCtrl.currentArtifactVersion !== ''")
+        .pp-version-info
+            %p {{'VERSION' | translate}}
+            %p.pp-version-text(ng-bind = "mainCtrl.currentArtifactVersion")
+
+
+%datalist(ng-controller = "MainController as mainCtrl"
+          id = "artifactList")
+    %option(ng-repeat = "artifactData in mainCtrl.artifacts"
+            value="{{ artifactData.artifactId }}")

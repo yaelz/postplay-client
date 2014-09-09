@@ -1,0 +1,98 @@
+$font-helvetica45: "HelveticaNeueW01-45Ligh", "HelveticaNeueW02-45Ligh", "HelveticaNeueW10-45Ligh", sans-serif;
+$font-helvetica55: "HelveticaNeueW01-55Roma", "HelveticaNeueW02-55Roma", "HelveticaNeueW10-55Roma", sans-serif;
+$font-helvetica65: "HelveticaNeueW01-65Medi", "HelveticaNeueW02-65Medi", "HelveticaNeueW10-65Medi", sans-serif;
+$font-helvetica75: "HelveticaNeueW01-75Bold", "HelveticaNeueW02-75Bold", "HelveticaNeueW10-75Bold", sans-serif;
+$border-radius: 6px;
+
+.container {
+  margin: auto;
+//  width: 300px;
+}
+
+.pp-hero-unit h1 {
+  font-family: $font-helvetica75;
+  font-size: 60px;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+.pp-top-header-container {
+  position: relative;
+  background-color: #000000;
+  border-radius: $border-radius;
+  height: 70px;
+}
+
+.pp-top-header-text {
+  color: #eee;
+  padding: 25px;
+}
+
+.pp-top-header-image-container{
+  float: left;
+}
+
+.pp-top-header-image-container img{
+//  background: url(http://bo.wix.com/wix-postplay-webapp/img/wix-icon.png) no-repeat;
+  max-height: 70px;
+  object-fit: cover;
+}
+
+.pp-artifacts-title {
+  font-size: 25px;
+}
+
+.pp-artifact-input {
+//  color: rgb(74, 190, 201);
+  font-size: 13px;
+  color: #000000;
+  width: 250px;
+}
+
+input:focus{
+  outline: 0;
+  border: 1.5px solid #C4BCBC;
+}
+
+input:-webkit-autofill {
+  background-color: #2a2a2a !important;
+  -webkit-box-shadow: 0 0 0px 1000px white inset, 0 0 8px;
+  focus{
+    -webkit-box-shadow: 0 0 0px 1000px white inset, 0 0 8px;
+  }
+}
+
+.pp-chosen-artifact-info {
+  padding: 30px;
+  height: 250px;
+}
+
+.pp-version-info {
+  display: inline-flex;
+  width: 20%;
+  height: inherit;
+  background-color: #EEE;
+  border: 2px solid #C4BCBC;
+  border-radius: $border-radius;
+  padding-left: 15px;
+}
+
+.pp-version-text {
+  padding-left: 20px;
+}
+
+.pp-hero-unit {
+//  width: 90%;
+//  position: fixed;
+  font-family: $font-helvetica55;
+  font-size: 18px;
+  font-weight: 200;
+  background-color: #EED23E;
+  border-radius: $border-radius;
+  padding: 20px 40px 20px;
+}
+
+.repeated-item {
+  list-style-type: none;
+
+}
