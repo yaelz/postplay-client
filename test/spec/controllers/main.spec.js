@@ -8,7 +8,7 @@ describe('Controller: MainController', function () {
     module('postplayTryAppInternal');
 
     //add your mocks here
-    artifactVersions = ['2.487.0', '2.469.0', '2.468.0', '2.467.0', '2.466.0', '2.465.0', '2.464.0', '2.463.0', '2.462.0', '2.461.0'];
+    artifactVersions = ['2.470.0', '2.469.0', '2.468.0', '2.467.0', '2.466.0', '2.465.0', '2.464.0', '2.463.0', '2.462.0', '2.461.0'];
     allArtifacts = [
       {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: null, name: '2. Wix Html Editor', dynamic: false, tests: [], testRuns: []},
       {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: null, name: '2. Wix Public Html Renderer', dynamic: false, tests: [], testRuns: []},
@@ -16,7 +16,7 @@ describe('Controller: MainController', function () {
     ];
     versionSummary = {code: 0, message: 'OK', comments: null, responseBody:
     [{artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', server: 'app30.aus.wixpress.com', version: '2.487.0', analysisResultStatus: 'TEST_FAILED', testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', errorFields: null, runStatus: 'FINISHED', comments: 'Failed on errorRate', event: 'TESTBED'}]};
-    var versionTestResultsMock = {
+    var basicTestInfoServerApiMock = {
       getArtifactVersions: jasmine.createSpy('getArtifactVersions').andCallFake(function () {
         return artifactVersions;
       }),
@@ -29,7 +29,7 @@ describe('Controller: MainController', function () {
     };
 
     module({
-      versionTestResults: versionTestResultsMock
+      basicTestInfoServerApi: basicTestInfoServerApiMock
     });
   });
 

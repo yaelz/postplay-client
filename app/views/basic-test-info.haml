@@ -1,0 +1,37 @@
+%div(ng-controller = "MainController as versionTestCtrl")
+    .pp-hero-unit
+        .pp-top-header-container
+            .pp-top-header-image-container
+                %img(src = 'http://bo.wix.com/wix-postplay-webapp/img/wix-icon.png')
+            .pp-top-header-text(ng-bind = "versionTestCtrl.currentArtifactId")
+        %p.pp-artifacts-title {{'CHOOSE_FROM_ARTIFACTS_TITLE' | translate}}
+        %input.pp-artifact-input(type = "text"
+                                 name = "sheet-input"
+                                 list = "artifactList"
+                                 ng-model = "versionTestCtrl.currentArtifactId"
+                                 placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
+                                 autofocus)
+        %button(ng-click = "versionTestCtrl.updateCurrentArtifactData()") {{'GO' | translate}}
+    .pp-chosen-artifact-info-wrapper(ng-show = "!versionTestCtrl.basicTestInfoServerApi.thereWasServerError && versionTestCtrl.currentArtifactDataIsUpdated")
+        .pp-artifact-info
+            %p.pp-artifact-info-title {{'ARTIFACT_ID' | translate}}
+            %p.pp-artifact-info-text(ng-bind = "versionTestCtrl.currentArtifactId")
+            %p.pp-artifact-info-title {{'GROUP_ID' | translate}}
+            %p.pp-artifact-info-text(ng-bind = "versionTestCtrl.currentArtifactGroupId")
+            %p.pp-artifact-info-title {{'VERSION' | translate}}
+            %p.pp-artifact-info-text(ng-bind = "versionTestCtrl.currentArtifactVersions[0]")
+        .pp-artifact-table
+            .pp-artifact-table-header
+                .pp-artifact-table-header-row(ng-repeat = "serverTableHeadline in versionTestCtrl.serverTableHeadlines")
+                    %div {{serverTableHeadline}}
+            .pp-artifact-table-rows(ng-repeat = "serverInfo in versionTestCtrl.currentArtifactVersionSummary.responseBody")
+                .pp-artifact-table-row(ng-click = "versionTestCtrl.onClick(serverInfo.server)")
+                    %div {{serverInfo.server}}
+                    %div {{serverInfo.runStatus}}
+                    %div *execution-status-pic*
+                    %div {{serverInfo.event}}
+
+%datalist(ng-controller = "MainController as versionTestCtrl"
+          id = "artifactList")
+    %option(ng-repeat = "artifactData in versionTestCtrl.artifacts"
+            value = "{{ artifactData.artifactId }}")

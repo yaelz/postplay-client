@@ -85,6 +85,7 @@ input:-webkit-autofill {
   }
   .pp-artifact-table {
     width: 50%;
+    overflow: auto;
     @include artifact-info-design;
   }
   .pp-artifact-table-header-row, .pp-artifact-table-row {
@@ -103,6 +104,7 @@ input:-webkit-autofill {
 
   .pp-artifact-table-row {
     background-color: #ffffff;
+    cursor: pointer;
   }
 }
 
