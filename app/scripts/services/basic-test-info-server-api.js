@@ -9,6 +9,7 @@
     var allLifeCycleBuilds = {};
     var versionSummary = {};
     var artifactVersions = [];
+    var currentlyRunningArtifacts = [];
     this.thereWasServerError = false;
     var self = this;
     var API_URL;
@@ -72,6 +73,21 @@
 //          $window.alert('Something went wrong trying to get the lifecycle artifact versions');
         });
       return artifactVersions;
+    };
+
+    this.getCurrentlyRunningArtifacts = function () {
+      currentlyRunningArtifacts = [];
+      API_URL = '/_api/getCurrentlyRunningArtifacts/json';
+      $http.get(API_URL)
+        .success(function (response) {
+          self.thereWasServerError = false;
+          angular.copy(response, currentlyRunningArtifacts);
+        })
+        .error(function () {
+          self.thereWasServerError = true;
+//          $window.alert('Something went wrong trying to get the lifecycle artifact versions');
+        });
+      return currentlyRunningArtifacts;
     };
   }
 

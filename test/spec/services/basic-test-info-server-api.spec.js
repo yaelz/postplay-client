@@ -90,7 +90,25 @@ describe('Service: basicTestInfoServerApi', function () {
     expect(artifactVersionsJSONResponse).toEqual(artifactVersionsResponseFromServer);
   });
 
-  describe('thereWasServerError should be true iff there was a server error', function () {
+  it('should get all currently running artifacts', function () {
+    API_URL = serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL;
+    var currentlyRunningArtifactsResponseFromServer = serverResponse.currentlyRunningArtifacts;
+
+    $httpBackend.expectGET(API_URL).respond(200, currentlyRunningArtifactsResponseFromServer);
+    var artifactVersionsJSONResponse = basicTestInfoServerApi.getCurrentlyRunningArtifacts();
+    expect(artifactVersionsJSONResponse).toEqual([]);
+
+    $httpBackend.flush();
+    expect(artifactVersionsJSONResponse).toEqual(currentlyRunningArtifactsResponseFromServer);
+
+    $httpBackend.expectGET(API_URL).respond(200, currentlyRunningArtifactsResponseFromServer);
+    artifactVersionsJSONResponse = basicTestInfoServerApi.getCurrentlyRunningArtifacts();
+    expect(artifactVersionsJSONResponse).toEqual([]);
+    $httpBackend.flush();
+    expect(artifactVersionsJSONResponse).toEqual(currentlyRunningArtifactsResponseFromServer);
+  });
+
+  describe('thereWasServerError variable should be true iff there was a server error', function () {
     var httpSuccess = 200;
     var httpError = 500;
     function mockHttpBackendResponseAndCallServiceFunction(functionToCheck, status) {
@@ -123,6 +141,4 @@ describe('Service: basicTestInfoServerApi', function () {
       checkForHttpSuccessAndError(basicTestInfoServerApi.getLifecycleBuilds);
     });
   });
-  // TODO:
-  //  api/getCurrentlyRunningArtifacts/json => [ { "artifactId" : "wix-public-html-renderer-webapp", "groupId" : "com.wixpress", "version" : "2.489.0", "server" : null, "artifactName" : null, "totalTests" : 0, "completedTests" : 0, "completedTestsPercent" : 0, "runningTests" : 0, "analysisStatus" : null, "runs" : null, "runStatus" : null, "buildEvent" : null, "analysisComments" : [ ] } ]
 });
