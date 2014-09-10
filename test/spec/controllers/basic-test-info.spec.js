@@ -52,16 +52,21 @@ describe('Controller: BasicTestInfoController', function () {
   });
 
   it('should hold all artifacts information on initialization', function () {
+    // TODO is this supposed to be checked? or only if the function has been called?
     expect(BasicTestInfoController.artifacts).toEqual(allArtifacts);
+    expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
   });
 
   it('should hold the last version of the current artifact', function () {
     updateArtifactData();
+    // TODO is this supposed to be checked? or only if the function has been called?
     expect(BasicTestInfoController.currentArtifactVersions).toEqual(artifactVersions);
+    expect(BasicTestInfoController.basicTestInfoServerApi.getArtifactVersions).toHaveBeenCalled();
   });
 
   it('should hold the latest group id of the current artifact', function () {
     updateArtifactData();
+    // TODO is this supposed to be checked?
     expect(BasicTestInfoController.currentArtifactGroupId).toEqual(allArtifacts[1].groupId);
   });
 
@@ -70,5 +75,6 @@ describe('Controller: BasicTestInfoController', function () {
     $timeout.flush();
     expect(BasicTestInfoController.currentArtifactVersionSummary).toEqual(versionSummary);
     expect(BasicTestInfoController.currentArtifactVersionSummary).not.toBe(undefined);
+    expect(BasicTestInfoController.basicTestInfoServerApi.getVersionSummary).toHaveBeenCalled();
   })));
 });
