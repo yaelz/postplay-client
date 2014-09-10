@@ -5,8 +5,28 @@ function MainPage() {
     browser.get('/');
   };
 
-  this.getTitle = function () {
-    return $('h3');
+  this.getElementByClass = function (className) {
+    return $('.' + className);
+  };
+
+  this.getElementTextByClass = function (className) {
+    return this.getElementByClass(className).getText();
+  };
+
+  this.getElementById = function (id) {
+    return $('#' + id);
+  };
+
+  this.getElementTextById = function (id) {
+    return this.getElementById(id).getText();
+  };
+
+  this.setArtifactInputText = function (inputText) {
+    this.getElementByClass('pp-artifact-input').sendKeys(inputText);
+  };
+
+  this.clickOnGoButton = function () {
+    $('#go-button').click();
   };
 }
 

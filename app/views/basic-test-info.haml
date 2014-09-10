@@ -9,18 +9,17 @@
                                  name = "sheet-input"
                                  list = "artifactList"
                                  ng-model = "basicTestInfoCtrl.currentArtifactId"
-                                 ng-blur = "basicTestInfoCtrl.updateCurrentArtifactData()"
                                  placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
                                  autofocus)
-        -#%button(ng-click = "basicTestInfoCtrl.updateCurrentArtifactData()") {{'GO' | translate}}
+        %button#go-button(ng-click = "basicTestInfoCtrl.updateCurrentArtifactData()") {{'GO' | translate}}
     .pp-chosen-artifact-info-wrapper(ng-show = "!basicTestInfoCtrl.basicTestInfoServerApi.thereWasServerError && basicTestInfoCtrl.currentArtifactDataIsUpdated")
         .pp-artifact-info
             %p.pp-artifact-info-title {{'ARTIFACT_ID' | translate}}
-            %p.pp-artifact-info-text(ng-bind = "basicTestInfoCtrl.currentArtifactId")
+            %p.pp-artifact-info-text#artifact-id(ng-bind = "basicTestInfoCtrl.currentArtifactId")
             %p.pp-artifact-info-title {{'GROUP_ID' | translate}}
-            %p.pp-artifact-info-text(ng-bind = "basicTestInfoCtrl.currentArtifactGroupId")
+            %p.pp-artifact-info-text#group-id(ng-bind = "basicTestInfoCtrl.currentArtifactGroupId")
             %p.pp-artifact-info-title {{'VERSION' | translate}}
-            %p.pp-artifact-info-text(ng-bind = "basicTestInfoCtrl.currentArtifactVersions[0]")
+            %p.pp-artifact-info-text#artifact-version(ng-bind = "basicTestInfoCtrl.currentArtifactVersions[0]")
         .pp-artifact-table
             .pp-artifact-table-header
                 .pp-artifact-table-header-row(ng-repeat = "serverTableHeadline in basicTestInfoCtrl.serverTableHeadlines")

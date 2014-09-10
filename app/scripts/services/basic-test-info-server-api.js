@@ -3,7 +3,7 @@
 (function () {
 
   /* @ngInject */
-  function BasicTestInfoServerApi($http, $window) {
+  function BasicTestInfoServerApi($http) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var allArtifacts = [];
     var allLifeCycleBuilds = {};
@@ -24,7 +24,7 @@
         })
         .error(function () {
           self.thereWasServerError = true;
-          $window.alert('Something went wrong trying to get the artifacts');
+//          $window.alert('Something went wrong trying to get the artifacts');
         });
       return allArtifacts;
     };
@@ -39,7 +39,7 @@
         })
         .error(function () {
           self.thereWasServerError = true;
-          $window.alert('Something went wrong trying to get the lifecycle builds');
+//          $window.alert('Something went wrong trying to get the lifecycle builds');
         });
       return allLifeCycleBuilds;
     };
@@ -54,7 +54,7 @@
         })
         .error(function () {
           self.thereWasServerError = true;
-          $window.alert('Something went wrong trying to get the versions summary');
+//          $window.alert('Something went wrong trying to get the versions summary');
         });
       return versionSummary;
     };
@@ -69,7 +69,7 @@
         })
         .error(function () {
           self.thereWasServerError = true;
-          $window.alert('Something went wrong trying to get the lifecycle artifact versions');
+//          $window.alert('Something went wrong trying to get the lifecycle artifact versions');
         });
       return artifactVersions;
     };

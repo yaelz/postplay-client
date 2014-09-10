@@ -27,9 +27,6 @@
       self.artifacts = basicTestInfoServerApi.getAllArtifacts();
     }
 
-    this.onClick = function (serverInfo) {
-      console.log(serverInfo);
-    };
     this.updateCurrentArtifactData = function () {
       initArtifactData.call(self);
       if (self.currentArtifactId !== '') {
@@ -38,7 +35,7 @@
         self.currentArtifactVersions = basicTestInfoServerApi.getArtifactVersions(this.currentArtifactId, this.currentArtifactGroupId);
         $timeout(function () {
           self.currentArtifactVersionSummary = basicTestInfoServerApi.getVersionSummary(self.currentArtifactVersions[0], self.currentArtifactId, self.currentArtifactGroupId);
-          // TODO is this time enough to get data from the server?
+          // TODO is this enough time to get data from the server?
         }, 100);
         if (self.currentArtifactVersions !== []) {
           self.currentArtifactDataIsUpdated = true; //TODO test with e2e
