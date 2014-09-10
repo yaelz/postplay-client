@@ -1,37 +1,38 @@
-%div(ng-controller = "MainController as versionTestCtrl")
+%div(ng-controller = "BasicTestInfoController as basicTestInfoCtrl")
     .pp-hero-unit
         .pp-top-header-container
             .pp-top-header-image-container
                 %img(src = 'http://bo.wix.com/wix-postplay-webapp/img/wix-icon.png')
-            .pp-top-header-text(ng-bind = "versionTestCtrl.currentArtifactId")
+            .pp-top-header-text(ng-bind = "basicTestInfoCtrl.currentArtifactId")
         %p.pp-artifacts-title {{'CHOOSE_FROM_ARTIFACTS_TITLE' | translate}}
         %input.pp-artifact-input(type = "text"
                                  name = "sheet-input"
                                  list = "artifactList"
-                                 ng-model = "versionTestCtrl.currentArtifactId"
+                                 ng-model = "basicTestInfoCtrl.currentArtifactId"
+                                 ng-blur = "basicTestInfoCtrl.updateCurrentArtifactData()"
                                  placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
                                  autofocus)
-        %button(ng-click = "versionTestCtrl.updateCurrentArtifactData()") {{'GO' | translate}}
-    .pp-chosen-artifact-info-wrapper(ng-show = "!versionTestCtrl.basicTestInfoServerApi.thereWasServerError && versionTestCtrl.currentArtifactDataIsUpdated")
+        -#%button(ng-click = "basicTestInfoCtrl.updateCurrentArtifactData()") {{'GO' | translate}}
+    .pp-chosen-artifact-info-wrapper(ng-show = "!basicTestInfoCtrl.basicTestInfoServerApi.thereWasServerError && basicTestInfoCtrl.currentArtifactDataIsUpdated")
         .pp-artifact-info
             %p.pp-artifact-info-title {{'ARTIFACT_ID' | translate}}
-            %p.pp-artifact-info-text(ng-bind = "versionTestCtrl.currentArtifactId")
+            %p.pp-artifact-info-text(ng-bind = "basicTestInfoCtrl.currentArtifactId")
             %p.pp-artifact-info-title {{'GROUP_ID' | translate}}
-            %p.pp-artifact-info-text(ng-bind = "versionTestCtrl.currentArtifactGroupId")
+            %p.pp-artifact-info-text(ng-bind = "basicTestInfoCtrl.currentArtifactGroupId")
             %p.pp-artifact-info-title {{'VERSION' | translate}}
-            %p.pp-artifact-info-text(ng-bind = "versionTestCtrl.currentArtifactVersions[0]")
+            %p.pp-artifact-info-text(ng-bind = "basicTestInfoCtrl.currentArtifactVersions[0]")
         .pp-artifact-table
             .pp-artifact-table-header
-                .pp-artifact-table-header-row(ng-repeat = "serverTableHeadline in versionTestCtrl.serverTableHeadlines")
+                .pp-artifact-table-header-row(ng-repeat = "serverTableHeadline in basicTestInfoCtrl.serverTableHeadlines")
                     %div {{serverTableHeadline}}
-            .pp-artifact-table-rows(ng-repeat = "serverInfo in versionTestCtrl.currentArtifactVersionSummary.responseBody")
-                .pp-artifact-table-row(ng-click = "versionTestCtrl.onClick(serverInfo.server)")
+            .pp-artifact-table-rows(ng-repeat = "serverInfo in basicTestInfoCtrl.currentArtifactVersionSummary.responseBody")
+                .pp-artifact-table-row(ng-click = "basicTestInfoCtrl.onClick(serverInfo.server)")
                     %div {{serverInfo.server}}
                     %div {{serverInfo.runStatus}}
                     %div *execution-status-pic*
                     %div {{serverInfo.event}}
 
-%datalist(ng-controller = "MainController as versionTestCtrl"
+%datalist(ng-controller = "BasicTestInfoController as basicTestInfoCtrl"
           id = "artifactList")
-    %option(ng-repeat = "artifactData in versionTestCtrl.artifacts"
+    %option(ng-repeat = "artifactData in basicTestInfoCtrl.artifacts"
             value = "{{ artifactData.artifactId }}")

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: MainController', function () {
+describe('Controller: BasicTestInfoController', function () {
 
   var allArtifacts, artifactVersions, versionSummary;
   // load the controller's module
@@ -33,46 +33,46 @@ describe('Controller: MainController', function () {
     });
   });
 
-  var MainController, scope;
+  var BasicTestInfoController, scope;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope) {
     scope = $rootScope.$new();
-    MainController = $controller('MainController', {
+    BasicTestInfoController = $controller('BasicTestInfoController', {
       $scope: scope
     });
   }));
 
   function updateArtifactData() {
-    MainController.currentArtifactId = 'wix-public-html-renderer-webapp';
-    MainController.updateCurrentArtifactData();
+    BasicTestInfoController.currentArtifactId = 'wix-public-html-renderer-webapp';
+    BasicTestInfoController.updateCurrentArtifactData();
   }
 
   it('should hold an artifact version iff the artifact id is empty', function () {
-    if (MainController.currentArtifactId === '') {
-      expect(MainController.currentArtifactVersions).toEqual([]);
+    if (BasicTestInfoController.currentArtifactId === '') {
+      expect(BasicTestInfoController.currentArtifactVersions).toEqual([]);
     } else {
-      expect(MainController.currentArtifactVersions).not.toEqual([]);
+      expect(BasicTestInfoController.currentArtifactVersions).not.toEqual([]);
     }
   });
 
   it('should hold the last version of the current artifact', function () {
     updateArtifactData();
-    expect(MainController.currentArtifactVersions).toEqual(artifactVersions);
+    expect(BasicTestInfoController.currentArtifactVersions).toEqual(artifactVersions);
   });
 
   it('should hold all artifacts information on initialization', function () {
-    expect(MainController.artifacts).toEqual(allArtifacts);
+    expect(BasicTestInfoController.artifacts).toEqual(allArtifacts);
   });
 
   it('should hold the latest group id of the current artifact', function () {
     updateArtifactData();
-    expect(MainController.currentArtifactGroupId).toEqual(allArtifacts[1].groupId);
+    expect(BasicTestInfoController.currentArtifactGroupId).toEqual(allArtifacts[1].groupId);
   });
 
   it('should hold the latest artifact version summary', (inject(function ($timeout) {
     updateArtifactData();
     $timeout.flush();
-    expect(MainController.currentArtifactVersionSummary).toEqual(versionSummary);
+    expect(BasicTestInfoController.currentArtifactVersionSummary).toEqual(versionSummary);
   })));
 });

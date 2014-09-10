@@ -3,7 +3,7 @@
 (function () {
 
   /* @ngInject */
-  function MainController($scope, $timeout, basicTestInfoServerApi) {
+  function BasicTestInfoController($scope, $timeout, basicTestInfoServerApi) {
     var self = this;
     this.basicTestInfoServerApi = basicTestInfoServerApi;
     function initArtifactData() {
@@ -56,6 +56,6 @@
 
   angular
     .module('postplayTryAppInternal')
-    .controller('MainController', MainController);
+    .controller('BasicTestInfoController', BasicTestInfoController);
 
 })();
