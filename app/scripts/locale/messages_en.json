@@ -4,5 +4,8 @@
   "GO": "GO",
   "ARTIFACT_ID": "Artifact id:",
   "GROUP_ID": "Group id:",
-  "VERSION": "Version:"
+  "VERSION": "Version:",
+  "CURRENTLY_RUNNING": "Currently running artifacts:",
+  "CURRENTLY_RUNNING_SERVER_ERROR": "SERVER ERROR trying to get the currently running artifacts",
+  "NO_CURRENTLY_RUNNING": "No currently running artifacts"
 }

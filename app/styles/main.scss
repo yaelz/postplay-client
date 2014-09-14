@@ -83,7 +83,7 @@ input:-webkit-autofill {
     width: 20%;
     @include artifact-info-design;
   }
-  .pp-artifact-table {
+  .pp-artifact-table-wrapper {
     width: 50%;
     overflow: auto;
     @include artifact-info-design;
@@ -108,10 +108,10 @@ input:-webkit-autofill {
   }
 }
 
-.pp-artifact-info-text {
+.pp-artifact-info-text, .pp-currently-running {
   padding-left: 20px;
 }
-.pp-artifact-info-title {
+.pp-artifact-info-title, .pp-currently-running-title, .pp-currently-running-error {
   font-weight: bold;
 }
 
@@ -121,11 +121,17 @@ input:-webkit-autofill {
   font-family: $font-helvetica55;
   font-size: 18px;
   font-weight: 200;
-  background-color: #EED23E;
+  background-color: rgb(255,194,52);
   border-radius: $border-radius;
   padding: 20px 40px 20px;
 }
 
 .repeated-item {
   list-style-type: none;
+}
+
+#artifact-table-error-image {
+  object-fit: cover;
+  max-width: 18px;
+  margin-left: 40px;
 }

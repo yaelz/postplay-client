@@ -11,7 +11,7 @@
                                  ng-model = "basicTestInfoCtrl.currentArtifactId"
                                  placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
                                  autofocus)
-        %button#go-button(ng-click = "basicTestInfoCtrl.updateCurrentArtifactData()") {{'GO' | translate}}
+        %button#go-button(ng-click = "basicTestInfoCtrl.updateChosenArtifactData()") {{'GO' | translate}}
     .pp-chosen-artifact-info-wrapper(ng-show = "!basicTestInfoCtrl.basicTestInfoServerApi.thereWasServerError && basicTestInfoCtrl.currentArtifactDataIsUpdated")
         .pp-artifact-info
             %p.pp-artifact-info-title {{'ARTIFACT_ID' | translate}}
@@ -20,16 +20,31 @@
             %p.pp-artifact-info-text#group-id(ng-bind = "basicTestInfoCtrl.currentArtifactGroupId")
             %p.pp-artifact-info-title {{'VERSION' | translate}}
             %p.pp-artifact-info-text#artifact-version(ng-bind = "basicTestInfoCtrl.currentArtifactVersions[0]")
-        .pp-artifact-table
+        .pp-artifact-table-wrapper
             .pp-artifact-table-header
-                .pp-artifact-table-header-row(ng-repeat = "serverTableHeadline in basicTestInfoCtrl.serverTableHeadlines")
+                .pp-artifact-table-header-row(ng-repeat = "serverTableHeadline in basicTestInfoCtrl.serverTableTitles")
                     %div {{serverTableHeadline}}
             .pp-artifact-table-rows(ng-repeat = "serverInfo in basicTestInfoCtrl.currentArtifactVersionSummary.responseBody")
                 .pp-artifact-table-row(ng-click = "basicTestInfoCtrl.onClick(serverInfo.server)")
                     %div {{serverInfo.server}}
                     %div {{serverInfo.runStatus}}
-                    %div *execution-status-pic*
+                    %div(ng-if = 'basicTestInfoCtrl.serverRunEndedWithError(serverInfo)')
+                        %img#artifact-table-error-image(src = 'http://bo.wix.com/wix-postplay-webapp/img/error-icon.png')
+                    %div(ng-if = 'basicTestInfoCtrl.serverRunEndedWithWarning(serverInfo)')
+                        %img#artifact-table-error-image(src = 'http://bo.wix.com/wix-postplay-webapp/img/warning-icon.png')
+                    %div(ng-if = 'basicTestInfoCtrl.serverRunEndedSuccessfully(serverInfo)')
+                        %img#artifact-table-error-image(src = 'http://bo.wix.com/wix-postplay-webapp/img/ok-icon.png')
                     %div {{serverInfo.event}}
+    %div(ng-controller = "CurrentlyRunningController as currentlyRunningCtrl")
+    //%div(ng-if = '')
+    -#.pp-chosen-artifact-info-wrapper(ng-show = "!currentlyRunningCtrl.basicTestInfoServerApi.thereWasServerError")
+    -#    .pp-artifact-info
+    -#        %p.pp-currently-running-title(ng-hide = "currentlyRunningCtrl.basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts")
+    -#            {{'CURRENTLY_RUNNING' | translate}}
+    -#        %div(ng-repeat="runningArtifact in currentlyRunningCtrl.currentlyRunningArtifacts")
+    -#            %p.pp-currently-running {{runningArtifact.artifactId}}
+    -#        %p.pp-currently-running-error(ng-show = "currentlyRunningCtrl.basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts")
+    -#            {{'CURRENTLY_RUNNING_SERVER_ERROR' | translate}}
 
 %datalist(ng-controller = "BasicTestInfoController as basicTestInfoCtrl"
           id = "artifactList")

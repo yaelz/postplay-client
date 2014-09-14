@@ -10,9 +10,9 @@ describe('Service: basicTestInfoServerApi', function () {
   });
 
   // instantiate service
-  var $httpBackend, API_URL, basicTestInfoServerApi, serverResponse, serverApiUrl;
-  beforeEach(inject(function (_basicTestInfoServerApi_, _$httpBackend_, _serverResponse_, _serverApiUrl_) {
-    serverResponse = _serverResponse_;
+  var $httpBackend, API_URL, basicTestInfoServerApi, basicTestInfoServerResponse, serverApiUrl;
+  beforeEach(inject(function (_basicTestInfoServerApi_, _$httpBackend_, _basicTestInfoServerResponse_, _serverApiUrl_) {
+    basicTestInfoServerResponse = _basicTestInfoServerResponse_;
     serverApiUrl = _serverApiUrl_;
     basicTestInfoServerApi = _basicTestInfoServerApi_;
     $httpBackend = _$httpBackend_;
@@ -20,7 +20,7 @@ describe('Service: basicTestInfoServerApi', function () {
 
   it('should get all artifacts monitored by postplay, and clean up before getting them again', function () {
     API_URL = serverApiUrl.ALL_ARTIFACTS_API_URL;
-    var artifactsResponseFromServer = serverResponse.allArtifacts;
+    var artifactsResponseFromServer = basicTestInfoServerResponse.allArtifacts;
 
     $httpBackend.expectGET(API_URL).respond(200, artifactsResponseFromServer);
     var artifactsJSONResponse = basicTestInfoServerApi.getAllArtifacts();
@@ -34,36 +34,48 @@ describe('Service: basicTestInfoServerApi', function () {
     function checkResponseFromServerOnce() {
       $httpBackend.expectGET(API_URL).respond(200, responseFromServer);
     // TODO what should I send as 'this' in the apply..?
-      var lifecycleBuildJSONResponse = functionToEval.apply(basicTestInfoServerApi, argsForFunc);
-      expect(lifecycleBuildJSONResponse).toEqual(valueBeforeServerResponse);
+      var functionReturnValue = functionToEval.apply(basicTestInfoServerApi, argsForFunc);
+      expect(functionReturnValue).toEqual(valueBeforeServerResponse);
       $httpBackend.flush();
-      expect(lifecycleBuildJSONResponse).toEqual(responseFromServer);
+      expect(functionReturnValue).toEqual(responseFromServer);
     }
     checkResponseFromServerOnce();
     checkResponseFromServerOnce();
   }
 
   it('should get all lifecycle builds, and clean up before getting them again', function () {
-    API_URL = serverResponse.BUILDS_API_URL;
-    checkResponseFromServer(basicTestInfoServerApi.getLifecycleBuilds, {}, serverResponse.lifecycleBuilds);
+    API_URL = basicTestInfoServerResponse.BUILDS_API_URL;
+    checkResponseFromServer(basicTestInfoServerApi.getLifecycleBuilds, {}, basicTestInfoServerResponse.lifecycleBuilds);
     // TODO toEqual([]) and toEqual({}) will both work! How is it best to check?
   });
 
   it('should get version summary of an artifact, and clean up before getting them again', function () {
     API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + serverApiUrl.version + '&artifactId=' + serverApiUrl.artifactId + '&groupId=' + serverApiUrl.groupId;
     var argsForFunc = [serverApiUrl.version, serverApiUrl.artifactId, serverApiUrl.groupId];
-    checkResponseFromServer(basicTestInfoServerApi.getVersionSummary, {}, serverResponse.versionSummary, argsForFunc);
+    checkResponseFromServer(basicTestInfoServerApi.getVersionSummary, {}, basicTestInfoServerResponse.versionSummary, argsForFunc);
   });
 
   it('should get all artifact versions, and clean up before getting them again', function () {
     API_URL = serverApiUrl.ARTIFACT_VERS_API_URL_PREFIX + serverApiUrl.artifactId + '&groupId=' + serverApiUrl.groupId;
     var argsForFunc = [serverApiUrl.artifactId, serverApiUrl.groupId];
-    checkResponseFromServer(basicTestInfoServerApi.getArtifactVersions, {}, serverResponse.artifactVersions, argsForFunc);
+    checkResponseFromServer(basicTestInfoServerApi.getArtifactVersions, {}, basicTestInfoServerResponse.artifactVersions, argsForFunc);
   });
 
   it('should get all currently running artifacts', function () {
     API_URL = serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL;
-    checkResponseFromServer(basicTestInfoServerApi.getCurrentlyRunningArtifacts, [], serverResponse.currentlyRunningArtifacts);
+    checkResponseFromServer(basicTestInfoServerApi.getCurrentlyRunningArtifacts, [], basicTestInfoServerResponse.currentlyRunningArtifacts);
+  });
+
+  it('should get currently running artifacts error', function () {
+    API_URL = serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL;
+    $httpBackend.expectGET(API_URL).respond(500);
+    basicTestInfoServerApi.getCurrentlyRunningArtifacts();
+    $httpBackend.flush();
+    expect(basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts).toEqual(true);
+    $httpBackend.expectGET(API_URL).respond(200);
+    basicTestInfoServerApi.getCurrentlyRunningArtifacts();
+    $httpBackend.flush();
+    expect(basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts).toEqual(false);
   });
 
   describe('thereWasServerError variable should be true iff there was a server error', function () {

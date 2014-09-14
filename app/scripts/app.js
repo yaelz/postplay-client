@@ -4,7 +4,7 @@
 //avoid adding module dependencies for this module
 angular
   .module('postplayTryAppInternal', [])
-  .constant('serverResponse', {
+  .constant('basicTestInfoServerResponse', {
     artifactVersions: ['2.487.0', '2.469.0', '2.468.0', '2.467.0', '2.466.0', '2.465.0', '2.464.0', '2.463.0', '2.462.0', '2.461.0'],
     allArtifacts: [
       {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: null, name: '2. Wix Html Editor', dynamic: false, tests: [], testRuns: []},
@@ -73,6 +73,10 @@ angular
     BUILDS_API_URL: '/_api/getLifecycleBuilds',
     VER_SUM_API_URL_PREFIX: '/_api/versionSummary/json?version=',
     ARTIFACT_VERS_API_URL_PREFIX: '/_api/getArtifactVersions/json?artifactId='
+  })
+  .constant('dashboardServerResponse', {
+    currentlyRunningTests: {code: 0, message: 'OK', comments: null, responseBody: []},
+    fieldMap: {throughputTotalCalls: 'Throughput Total Calls', systemError: 'System Error Rate', rps: 'Requests Per Seconds', totalIncomingCalls: 'Total Incoming Calls', businessWarning: 'Business Warning Rate', systemRecoverable: 'System Recoverable Rate', totalIncomingSuccessfulCalls: 'Total Incoming Successful Calls', businessFatal: 'Business Fatal Rate', systemWarning: 'System Warning Rate', systemFatal: 'System Fatal Rate', businessRecoverable: 'Business Recoverable Rate', businessError: 'Business Error Rate', errorRate: 'Error Rate'}
   });
 
 //add module dependencies & config and run blocks in this module
