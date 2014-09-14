@@ -3,11 +3,12 @@
 (function () {
 
   /* @ngInject */
-  function CurrentlyRunningController(_basicTestInfoServerApi_) {
+  function CurrentlyRunningArtifactsController(_basicTestInfoServerApi_) {
     var self = this;
     this.basicTestInfoServerApi = _basicTestInfoServerApi_;
     this.currentlyRunningArtifacts = [];
     function updateCurrentlyRunningArtifacts() {
+//      console.log('in currently running artifacts!');
       self.currentlyRunningArtifacts = self.basicTestInfoServerApi.getCurrentlyRunningArtifacts();
     }
 
@@ -16,6 +17,6 @@
 
   angular
     .module('postplayTryAppInternal')
-    .controller('CurrentlyRunningController', CurrentlyRunningController);
+    .controller('CurrentlyRunningArtifactsController', CurrentlyRunningArtifactsController);
 
 })();

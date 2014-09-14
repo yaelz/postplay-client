@@ -3,7 +3,7 @@
 (function () {
 
   /* @ngInject */
-  function BasicTestInfoServerApi($http) {
+  function BasicTestInfoServerApi($http, serverApiUrl) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     var allArtifacts = [];
     var allLifeCycleBuilds = {};
@@ -36,31 +36,32 @@
     // Public API here
     this.getAllArtifacts = function () {
 //      allArtifacts = [];
-      API_URL = '/_api/getAllArtifacts';
+      API_URL = serverApiUrl.ALL_ARTIFACTS_API_URL;
       return runHttpGetSuccessAndError(API_URL, allArtifacts);
     };
 
     this.getLifecycleBuilds = function () {
       allLifeCycleBuilds = {};
-      API_URL = '/_api/getLifecycleBuilds';
+      API_URL = serverApiUrl.BUILDS_API_URL;
       return runHttpGetSuccessAndError(API_URL, allLifeCycleBuilds);
     };
 
     this.getVersionSummary = function (version, artifactId, groupId) {
       versionSummary = {};
-      API_URL = '/_api/versionSummary/json?version=' + version + '&artifactId=' + artifactId + '&groupId=' + groupId;
+      API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + version + '&artifactId=' + artifactId + '&groupId=' + groupId;
       return runHttpGetSuccessAndError(API_URL, versionSummary);
     };
 
     this.getArtifactVersions = function (artifactId, groupId) {
       artifactVersions = [];
-      API_URL = '/_api/getArtifactVersions/json?artifactId=' + artifactId + '&groupId=' + groupId;
+      API_URL = serverApiUrl.ARTIFACT_VERS_API_URL_PREFIX + artifactId + '&groupId=' + groupId;
       return runHttpGetSuccessAndError(API_URL, artifactVersions);
     };
 
     this.getCurrentlyRunningArtifacts = function () {
       currentlyRunningArtifacts = [];
-      API_URL = '/_api/getCurrentlyRunningArtifacts/json';
+//      API_URL = '/_api/getCurrentlyRunningArtifacts/json';
+      API_URL = serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL;
 //      return runHttpGetSuccessAndError(API_URL, currentlyRunningArtifacts, 'errorGettingRunningArtifacts');
       $http.get(API_URL)
         .success(function (response) {

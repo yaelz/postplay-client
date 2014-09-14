@@ -1,5 +1,5 @@
 %div(ng-controller = "BasicTestInfoController as basicTestInfoCtrl")
-    .pp-hero-unit
+    .pp-post-play-header-unit
         .pp-top-header-container
             .pp-top-header-image-container
                 %img(src = 'http://bo.wix.com/wix-postplay-webapp/img/wix-icon.png')
@@ -30,21 +30,21 @@
                     %div {{serverInfo.runStatus}}
                     %div(ng-if = 'basicTestInfoCtrl.serverRunEndedWithError(serverInfo)')
                         %img#artifact-table-error-image(src = 'http://bo.wix.com/wix-postplay-webapp/img/error-icon.png')
-                    %div(ng-if = 'basicTestInfoCtrl.serverRunEndedWithWarning(serverInfo)')
-                        %img#artifact-table-error-image(src = 'http://bo.wix.com/wix-postplay-webapp/img/warning-icon.png')
+                    -#%div(ng-if = 'basicTestInfoCtrl.serverRunEndedWithWarning(serverInfo)')
+                    -#    %img#artifact-table-error-image(src = 'http://bo.wix.com/wix-postplay-webapp/img/warning-icon.png')
                     %div(ng-if = 'basicTestInfoCtrl.serverRunEndedSuccessfully(serverInfo)')
                         %img#artifact-table-error-image(src = 'http://bo.wix.com/wix-postplay-webapp/img/ok-icon.png')
                     %div {{serverInfo.event}}
-    %div(ng-controller = "CurrentlyRunningController as currentlyRunningCtrl")
-    //%div(ng-if = '')
-    -#.pp-chosen-artifact-info-wrapper(ng-show = "!currentlyRunningCtrl.basicTestInfoServerApi.thereWasServerError")
-    -#    .pp-artifact-info
-    -#        %p.pp-currently-running-title(ng-hide = "currentlyRunningCtrl.basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts")
-    -#            {{'CURRENTLY_RUNNING' | translate}}
-    -#        %div(ng-repeat="runningArtifact in currentlyRunningCtrl.currentlyRunningArtifacts")
-    -#            %p.pp-currently-running {{runningArtifact.artifactId}}
-    -#        %p.pp-currently-running-error(ng-show = "currentlyRunningCtrl.basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts")
-    -#            {{'CURRENTLY_RUNNING_SERVER_ERROR' | translate}}
+    %div(ng-controller = "CurrentlyRunningArtifactsController as currentlyRunningCtrl")
+        .pp-chosen-artifact-info-wrapper
+            .pp-artifact-info(ng-show = "!currentlyRunningCtrl.basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts")
+                %p.pp-artifact-info-title {{'CURRENTLY_RUNNING' | translate}}
+                %div(ng-repeat="runningArtifact in currentlyRunningCtrl.currentlyRunningArtifacts")
+                    %p.pp-currently-running(id = "pp-currently-running-{{$index}}")
+                        {{runningArtifact.artifactId}}
+            -#.pp-artifact-info(ng-show = "currentlyRunningCtrl.basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts")
+            -#    %p.pp-currently-running-error
+            -#        {{'CURRENTLY_RUNNING_SERVER_ERROR' | translate}}
 
 %datalist(ng-controller = "BasicTestInfoController as basicTestInfoCtrl"
           id = "artifactList")

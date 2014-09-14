@@ -64,6 +64,10 @@ angular
       }
     ]
   })
+  .constant('dashboardServerResponse', {
+    currentlyRunningTests: {code: 0, message: 'OK', comments: null, responseBody: []},
+    fieldMap: {throughputTotalCalls: 'Throughput Total Calls', systemError: 'System Error Rate', rps: 'Requests Per Seconds', totalIncomingCalls: 'Total Incoming Calls', businessWarning: 'Business Warning Rate', systemRecoverable: 'System Recoverable Rate', totalIncomingSuccessfulCalls: 'Total Incoming Successful Calls', businessFatal: 'Business Fatal Rate', systemWarning: 'System Warning Rate', systemFatal: 'System Fatal Rate', businessRecoverable: 'Business Recoverable Rate', businessError: 'Business Error Rate', errorRate: 'Error Rate'}
+  })
   .constant('serverApiUrl', {
     version: '2.487.0',
     artifactId: 'wix-public-html-renderer-webapp',
@@ -72,11 +76,9 @@ angular
     CURRENTLY_RUNNING_ARTIFACTS_API_URL: '/_api/getCurrentlyRunningArtifacts/json',
     BUILDS_API_URL: '/_api/getLifecycleBuilds',
     VER_SUM_API_URL_PREFIX: '/_api/versionSummary/json?version=',
-    ARTIFACT_VERS_API_URL_PREFIX: '/_api/getArtifactVersions/json?artifactId='
-  })
-  .constant('dashboardServerResponse', {
-    currentlyRunningTests: {code: 0, message: 'OK', comments: null, responseBody: []},
-    fieldMap: {throughputTotalCalls: 'Throughput Total Calls', systemError: 'System Error Rate', rps: 'Requests Per Seconds', totalIncomingCalls: 'Total Incoming Calls', businessWarning: 'Business Warning Rate', systemRecoverable: 'System Recoverable Rate', totalIncomingSuccessfulCalls: 'Total Incoming Successful Calls', businessFatal: 'Business Fatal Rate', systemWarning: 'System Warning Rate', systemFatal: 'System Fatal Rate', businessRecoverable: 'Business Recoverable Rate', businessError: 'Business Error Rate', errorRate: 'Error Rate'}
+    ARTIFACT_VERS_API_URL_PREFIX: '/_api/getArtifactVersions/json?artifactId=',
+    CURRENTLY_RUNNING_TESTS_API_URL: '/_api/getCurrentlyRunningTests/json',
+    FIELD_MAP_API_URL: '/_api/fieldMap'
   });
 
 //add module dependencies & config and run blocks in this module

@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Service: dashboard', function () {
+describe('Service: dashboardServerApi', function () {
 
   // load the service's module
   beforeEach(function () {
@@ -10,14 +10,16 @@ describe('Service: dashboard', function () {
   });
 
   // instantiate service
-  var dashboard, $httpBackend, dashboardServerResponse;
-  beforeEach(inject(function (_dashboard_, _$httpBackend_, _dashboardServerResponse_) {
-    dashboard = _dashboard_;
+  var dashboardServerApi, $httpBackend, dashboardServerResponse, serverApiUrl;
+  beforeEach(inject(function (_dashboardServerApi_, _$httpBackend_, _dashboardServerResponse_, _serverApiUrl_) {
+    dashboardServerApi = _dashboardServerApi_;
+    serverApiUrl = _serverApiUrl_;
     $httpBackend = _$httpBackend_;
     dashboardServerResponse = _dashboardServerResponse_;
   }));
 
   function checkResponseFromServerHttp(API_URL, serverResponse, valueBeforeServerResponse, dashboardFuncToApply) {
+    // TODO same function in all server apis! Refactor?
     $httpBackend.expectGET(API_URL).respond(200, serverResponse);
     var functionReturnValue = dashboardFuncToApply();
     expect(functionReturnValue).toEqual(valueBeforeServerResponse);
@@ -28,12 +30,12 @@ describe('Service: dashboard', function () {
 
   it('should get all currently running tests', function () {
     // TODO what does the responseBody look like?
-    var functionReturnValue = checkResponseFromServerHttp('/_api/getCurrentlyRunningTests/json', dashboardServerResponse.currentlyRunningTests, {}, dashboard.getCurrentlyRunningTests);
+    var functionReturnValue = checkResponseFromServerHttp(serverApiUrl.CURRENTLY_RUNNING_TESTS_API_URL, dashboardServerResponse.currentlyRunningTests, {}, dashboardServerApi.getCurrentlyRunningTests);
     expect(functionReturnValue).toEqual(dashboardServerResponse.currentlyRunningTests);
   });
 
   it('should get the field map data', function () {
-    var functionReturnValue = checkResponseFromServerHttp('/_api/fieldMap', dashboardServerResponse.fieldMap, {}, dashboard.getFieldMap);
+    var functionReturnValue = checkResponseFromServerHttp(serverApiUrl.FIELD_MAP_API_URL, dashboardServerResponse.fieldMap, {}, dashboardServerApi.getFieldMap);
     expect(functionReturnValue).toEqual(dashboardServerResponse.fieldMap);
   });
 });

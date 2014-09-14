@@ -18,7 +18,7 @@ $border-radius: 6px;
   //  width: 300px;
 }
 
-.pp-hero-unit h1 {
+.pp-post-play-header-unit h1 {
   font-family: $font-helvetica75;
   font-size: 60px;
   line-height: 1;
@@ -111,11 +111,12 @@ input:-webkit-autofill {
 .pp-artifact-info-text, .pp-currently-running {
   padding-left: 20px;
 }
+
 .pp-artifact-info-title, .pp-currently-running-title, .pp-currently-running-error {
   font-weight: bold;
 }
 
-.pp-hero-unit {
+.pp-post-play-header-unit {
   //  width: 90%;
   //  position: fixed;
   font-family: $font-helvetica55;

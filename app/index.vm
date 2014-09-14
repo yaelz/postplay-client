@@ -76,7 +76,7 @@
     <script src="scripts/services/basic-test-info-server-api.js"></script>
     <script src="scripts/controllers/test-results.js"></script>
     <script src="scripts/controllers/currently-running-artifacts.js"></script>
-    <script src="scripts/services/dashboard.js"></script>
+    <script src="scripts/services/dashboard-server-api.js"></script>
     <!-- endbuild --><!-- scripts -->
     <!-- end-process-tags -->
 

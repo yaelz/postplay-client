@@ -1,6 +1,6 @@
 'use strict';
 
-describe('Controller: CurrentlyRunningController', function () {
+describe('Controller: CurrentlyRunningArtifactsController', function () {
 
   // load the controller's module
   beforeEach(function () {
@@ -18,19 +18,20 @@ describe('Controller: CurrentlyRunningController', function () {
     });
   });
 
-  var CurrentlyRunningController, scope, currentlyRunningArtifacts;
+  var CurrentlyRunningArtifactsController, scope, currentlyRunningArtifacts;
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, basicTestInfoServerResponse) {
     currentlyRunningArtifacts = basicTestInfoServerResponse.currentlyRunningArtifacts;
     scope = $rootScope.$new();
-    CurrentlyRunningController = $controller('CurrentlyRunningController', {
+    CurrentlyRunningArtifactsController = $controller('CurrentlyRunningArtifactsController', {
       $scope: scope
     });
   }));
 
   it('should hold the currently running artifacts', function () {
-    expect(CurrentlyRunningController.currentlyRunningArtifacts).toEqual(currentlyRunningArtifacts);
-    expect(CurrentlyRunningController.basicTestInfoServerApi.getCurrentlyRunningArtifacts).toHaveBeenCalled();
+    //TODO should I be checking this?
+    expect(CurrentlyRunningArtifactsController.basicTestInfoServerApi.getCurrentlyRunningArtifacts).toHaveBeenCalled();
+    expect(CurrentlyRunningArtifactsController.currentlyRunningArtifacts).toEqual(currentlyRunningArtifacts);
   });
 });

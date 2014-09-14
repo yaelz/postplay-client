@@ -25,6 +25,8 @@ describe('postplayTryApp', function () {
           var ARTIFACT_VERS_API_URL = serverApiUrl.ARTIFACT_VERS_API_URL_PREFIX + serverApiUrl.artifactId + '&groupId=' + serverApiUrl.groupId;
           $httpBackend.whenGET(ARTIFACT_VERS_API_URL).respond(basicTestInfoServerResponse.artifactVersions);
 
+          $httpBackend.whenGET(serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL).respond(basicTestInfoServerResponse.currentlyRunningArtifacts);
+
           $httpBackend.whenGET(/.*/).passThrough();
           $httpBackend.whenPOST(/.*/).passThrough();
           $httpBackend.whenPUT(/.*/).passThrough();
@@ -59,6 +61,12 @@ describe('postplayTryApp', function () {
       expect(mainPage.getElementTextById('artifact-id')).toEqual(artifactId);
       expect(mainPage.getElementTextById('group-id')).toEqual(groupId);
       expect(mainPage.getElementTextById('artifact-version')).toEqual(artifactVersion);
+    });
+
+    it('should hold the currently running artifacts', function () {
+      mainPage.navigate();
+      expect(mainPage.getElementTextById('pp-currently-running-' + 0)).toEqual('wix-public-html-renderer-webapp');
+      expect(mainPage.getElementTextById('pp-currently-running-' + 1)).toEqual('wix-public-my-app-keiloo');
     });
   });
 
