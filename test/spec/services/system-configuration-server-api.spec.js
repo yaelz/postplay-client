@@ -45,4 +45,11 @@ describe('Service: systemConfigurationServerApi', function () {
     );
   });
 
+  it('should get all templates', function () {
+    checkResponseFromServerHttp(serverApiUrl.TEMPLATES_API_URL, systemConfigurationServerResponse.templates, [], systemConfigurationServerApi.getAllTemplates);
+  });
+
+  it('should get expression syntax', function () {
+    checkResponseFromServerHttp(serverApiUrl.EXPRESSION_SYNTAX_API_URL, systemConfigurationServerResponse.expressionSyntax, [], systemConfigurationServerApi.getExpressionSyntax);
+  });
 });

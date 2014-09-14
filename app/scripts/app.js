@@ -176,7 +176,30 @@ angular
         useBaseline: false
       }],
       testRuns: []
-    }
+    },
+    templates: [{
+      monitorTestTemplateId: 1,
+      name: 'AppInfo Sanity',
+      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+      runEveryMinute: 1,
+      times: 5,
+      delayInMinutes: 0,
+      inputParams: [],
+      validationExpressions: [],
+      defaultTest: false
+    }],
+    expressionSyntax: [{
+      operators: ['=', '>', '<', '<=', '>=', '!='],
+      refServersOprands: ['HIGHEST', 'LOWEST', 'AVG'],
+      fields: [{
+        name: 'totalIncomingCalls',
+        dataType: 'LONG'
+      }, {
+        name: 'totalIncomingSuccessfulCalls',
+        dataType: 'LONG'
+      }],
+      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest'
+    }]
   })
   .constant('serverApiUrl', {
     version: '2.487.0',
@@ -190,7 +213,9 @@ angular
     CURRENTLY_RUNNING_TESTS_API_URL: '/_api/getCurrentlyRunningTests/json',
     FIELD_MAP_API_URL: '/_api/fieldMap',
     TEST_DATA_BY_ID_API_URL_PREFIX: '_api/getTest',
-    ARTIFACT_DATA_API_URL_PREFIX: '_api/getArtifact'
+    ARTIFACT_DATA_API_URL_PREFIX: '_api/getArtifact',
+    TEMPLATES_API_URL: '_api/getAllTemplates',
+    EXPRESSION_SYNTAX_API_URL: '_api/getExpressionSyntax'
   });
 
 //add module dependencies & config and run blocks in this module
