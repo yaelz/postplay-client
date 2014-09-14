@@ -65,8 +65,118 @@ angular
     ]
   })
   .constant('dashboardServerResponse', {
-    currentlyRunningTests: {code: 0, message: 'OK', comments: null, responseBody: []},
-    fieldMap: {throughputTotalCalls: 'Throughput Total Calls', systemError: 'System Error Rate', rps: 'Requests Per Seconds', totalIncomingCalls: 'Total Incoming Calls', businessWarning: 'Business Warning Rate', systemRecoverable: 'System Recoverable Rate', totalIncomingSuccessfulCalls: 'Total Incoming Successful Calls', businessFatal: 'Business Fatal Rate', systemWarning: 'System Warning Rate', systemFatal: 'System Fatal Rate', businessRecoverable: 'Business Recoverable Rate', businessError: 'Business Error Rate', errorRate: 'Error Rate'}
+    currentlyRunningTests: {
+      code: 0,
+      message: 'OK',
+      comments: null,
+      responseBody: []
+    },
+    fieldMap: {
+      throughputTotalCalls: 'Throughput Total Calls',
+      systemError: 'System Error Rate',
+      rps: 'Requests Per Seconds',
+      totalIncomingCalls: 'Total Incoming Calls',
+      businessWarning: 'Business Warning Rate',
+      systemRecoverable: 'System Recoverable Rate',
+      totalIncomingSuccessfulCalls: 'Total Incoming Successful Calls',
+      businessFatal: 'Business Fatal Rate',
+      systemWarning: 'System Warning Rate',
+      systemFatal: 'System Fatal Rate',
+      businessRecoverable: 'Business Recoverable Rate',
+      businessError: 'Business Error Rate',
+      errorRate: 'Error Rate'
+    }
+  })
+  .constant('systemConfigurationServerResponse', {
+    testDataByTestId21: {
+      monitorTestId: 21,
+      monitoredArtifactId: 31,
+      name: 'AppInfo Sanity',
+      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+      runEveryMinute: 1,
+      times: 10,
+      delayInMinutes: 2,
+      inputParams: [],
+      validationExpressions: [{
+        name: 'Error rate',
+        monitorTestId: 21,
+        expression: 'errorRate > HIGHEST ^ -5%',
+        validationExpressionId: 71,
+        deleted: false
+      }],
+      monitorTestQueueId: 0,
+      active: true,
+      defaultTest: false,
+      deleted: false,
+      reference: true,
+      useBaseline: false
+    },
+    testDataByTestId31: {
+      monitorTestId: 31,
+      monitoredArtifactId: 31,
+      name: 'AppInfo Sanity2',
+      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+      runEveryMinute: 1,
+      times: 3,
+      delayInMinutes: 8,
+      inputParams: [],
+      validationExpressions: [{
+        name: 'Throughput',
+        monitorTestId: 31,
+        expression: 'throughputTotalCalls < LOWEST',
+        validationExpressionId: 81,
+        deleted: false
+      }],
+      monitorTestQueueId: 0,
+      active: true,
+      defaultTest: false,
+      deleted: false,
+      reference: true,
+      useBaseline: false
+    },
+    artifactData: {
+      monitoredArtifactId: 31,
+      artifactId: 'wix-public-html-renderer-webapp',
+      groupId: 'com.wixpress',
+      version: null,
+      name: '2. Wix Public Html Renderer',
+      dynamic: false,
+      tests: [{
+        monitorTestId: 21,
+        monitoredArtifactId: 31,
+        name: 'AppInfo Sanity',
+        implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+        runEveryMinute: 1,
+        times: 10,
+        delayInMinutes: 2,
+        inputParams: [],
+        validationExpressions: [],
+        monitorTestQueueId: 0,
+        active: true,
+        defaultTest: false,
+        deleted: false,
+        reference: true,
+        useBaseline: false
+      },
+      {
+        monitorTestId: 31,
+        monitoredArtifactId: 31,
+        name: 'AppInfo Sanity2',
+        implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+        runEveryMinute: 1,
+        times: 3,
+        delayInMinutes: 8,
+        inputParams: [],
+        validationExpressions: [],
+        monitorTestQueueId: 0,
+        active: true,
+        defaultTest: false,
+        deleted: false,
+        reference: true,
+        useBaseline: false
+      }],
+      testRuns: []
+    }
   })
   .constant('serverApiUrl', {
     version: '2.487.0',
@@ -78,7 +188,9 @@ angular
     VER_SUM_API_URL_PREFIX: '/_api/versionSummary/json?version=',
     ARTIFACT_VERS_API_URL_PREFIX: '/_api/getArtifactVersions/json?artifactId=',
     CURRENTLY_RUNNING_TESTS_API_URL: '/_api/getCurrentlyRunningTests/json',
-    FIELD_MAP_API_URL: '/_api/fieldMap'
+    FIELD_MAP_API_URL: '/_api/fieldMap',
+    TEST_DATA_BY_ID_API_URL_PREFIX: '_api/getTest',
+    ARTIFACT_DATA_API_URL_PREFIX: '_api/getArtifact'
   });
 
 //add module dependencies & config and run blocks in this module
