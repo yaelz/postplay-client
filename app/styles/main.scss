@@ -12,6 +12,7 @@ $border-radius: 6px;
   padding-left: 15px;
   padding-top: 15px;
   margin-right: 50px;
+  overflow: scroll;
 }
 
 .container {
@@ -86,7 +87,6 @@ input:-webkit-autofill {
   }
   .pp-artifact-table-wrapper {
     width: 50%;
-    overflow: auto;
     @include artifact-info-design;
   }
   .pp-artifact-table-header-row, .pp-artifact-table-row {
@@ -136,4 +136,51 @@ input:-webkit-autofill {
   object-fit: cover;
   max-width: 18px;
   margin-left: 40px;
+}
+
+.repeated-item.ng-enter {
+  animation: ng-enter 1000ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
+  position: relative;
+}
+@-webkit-keyframes ng-enter {
+  from {
+    opacity: 0;
+    height: 0px;
+    up: -1000px;
+  }
+  to {
+    opacity: 1;
+    height: 30px;
+    up: 0px;
+  }
+}
+@keyframes ng-enter {
+  from {
+    opacity: 0;
+    height: 0px;
+    up: -70px;
+  }
+  to {
+    opacity: 1;
+    height: 30px;
+    up: 0px;
+  }
+}
+
+.repeated-item.ng-leave {
+  animation: ng-leave 600ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
+  position: relative;
+}
+
+@keyframes ng-leave {
+  to {
+    opacity: 0;
+    height: 0px;
+    left: -1000px;
+  }
+  from {
+    opacity: 1;
+    height: 30px;
+    left: 0px;
+  }
 }

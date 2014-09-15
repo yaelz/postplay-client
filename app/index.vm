@@ -64,6 +64,7 @@
     <script src="bower_components/jquery/jquery.js"></script>
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-translate/angular-translate.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-i18n/angular-locale_${locale}.js"></script>
     <script src="scripts/locale/messages_${locale}.js"></script>
     <!-- build:js scripts/modules.js -->
