@@ -25,7 +25,7 @@
                 .pp-artifact-table-header-row(ng-repeat = "serverTableHeadline in basicTestInfoCtrl.serverTableTitles")
                     %div {{serverTableHeadline}}
             .pp-artifact-table-rows(ng-repeat = "serverInfo in basicTestInfoCtrl.currentArtifactVersionSummary.responseBody"
-                                    class = "repeated-item")
+                                    class = "repeat-animation")
                 .pp-artifact-table-row(ng-click = "basicTestInfoCtrl.onClick(serverInfo.server)")
                     %div {{serverInfo.server}}
                     %div {{serverInfo.runStatus}}
@@ -41,7 +41,7 @@
             .pp-artifact-info(ng-show = "!currentlyRunningCtrl.basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts")
                 %p.pp-artifact-info-title {{'CURRENTLY_RUNNING' | translate}}
                 %div(ng-repeat = "runningArtifact in currentlyRunningCtrl.currentlyRunningArtifacts"
-                     class = "repeated-item")
+                     class = "repeat-animation")
                     %p.pp-currently-running(id = "pp-currently-running-{{$index}}")
                         {{runningArtifact.artifactId}}
             -#.pp-artifact-info(ng-show = "currentlyRunningCtrl.basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts")

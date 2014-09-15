@@ -128,7 +128,7 @@ input:-webkit-autofill {
   padding: 20px 40px 20px;
 }
 
-.repeated-item {
+.repeat-animation {
   list-style-type: none;
 }
 
@@ -138,7 +138,7 @@ input:-webkit-autofill {
   margin-left: 40px;
 }
 
-.repeated-item.ng-enter {
+.repeat-animation.ng-enter {
   animation: ng-enter 1000ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
   position: relative;
 }
@@ -167,7 +167,7 @@ input:-webkit-autofill {
   }
 }
 
-.repeated-item.ng-leave {
+.repeat-animation.ng-leave {
   animation: ng-leave 600ms cubic-bezier(0.445, 0.050, 0.550, 0.950);
   position: relative;
 }
