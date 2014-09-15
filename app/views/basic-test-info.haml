@@ -5,13 +5,14 @@
                 %img(src = 'http://bo.wix.com/wix-postplay-webapp/img/wix-icon.png')
             .pp-top-header-text(ng-bind = "basicTestInfoCtrl.currentArtifactId")
         %p.pp-artifacts-title {{'CHOOSE_FROM_ARTIFACTS_TITLE' | translate}}
-        %input.pp-artifact-input(type = "text"
+        %form(name = "choose-artifact-form"
+              ng-submit = "basicTestInfoCtrl.updateChosenArtifactData()")
+            %input.pp-artifact-input(type = "text"
                                  name = "sheet-input"
                                  list = "artifactList"
                                  ng-model = "basicTestInfoCtrl.currentArtifactId"
                                  placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
                                  autofocus)
-        %button#go-button(ng-click = "basicTestInfoCtrl.updateChosenArtifactData()") {{'GO' | translate}}
     .pp-chosen-artifact-info-wrapper(ng-show = "!basicTestInfoCtrl.basicTestInfoServerApi.thereWasServerError && basicTestInfoCtrl.currentArtifactDataIsUpdated")
         .pp-artifact-info
             %p.pp-artifact-info-title {{'ARTIFACT_ID' | translate}}
