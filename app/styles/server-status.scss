@@ -1,14 +1,14 @@
-$header-height: 90px;
+$header-height: 150px;
 $header-image-size: 70px;
 $box-height: 70px;
-$box-border: 1px solid transparent;
+$box-border: 1px solid;
 $box-border-radius: 4px;
 $font-family: 'Open Sans', sans-serif;
 $header-font-size: 13px;
 
-$background-blue: rgb(57, 96, 255);
+$background-blue: #90AEFC;
 $error-color: rgba(255, 0, 0, 0.7);
-$background-light-blue: #699fff;
+$background-light-blue: #A3A3A3;
 
 body {
   margin: 0;
@@ -69,30 +69,18 @@ body {
   border-radius: $box-border-radius;
 }
 
-.pp-server-status-tabs-container {
+.pp-server-status-page-container {
+  display: flex;
+}
+#pp-server-status-tabs-container {
+  -webkit-flex: 1;
+  flex: 1;
   padding: 20px;
   float: left;
   ul {
     display: inline-block;
   }
 }
-
-.pp-basic-tests-container {
-  float: right;
-  padding: 85px;
-  box-sizing: border-box;
-  width: 540px;
-}
-
-.pp-server-status-page-container {
-  height: 300px;
-}
-
-.pp-server-status-tables-container {
-  //background-color: red;
-  display: table-caption;
-}
-
 .pp-test-runs-tabs {
   float: left;
   background-color: rgb(200,200,200);
@@ -114,5 +102,20 @@ body {
   border-radius: 4px 0px 0px 4px;
 }
 #tests-tab-title {
-border-radius: 0px 4px 4px 0px;
+  border-radius: 0px 4px 4px 0px;
 }
+.pp-server-status-tables-container {
+  //background-color: red;
+  display: table-caption;
+}
+#pp-runs-tables-container {
+//  background-color: greenyellow;
+//  border: $box-border;
+  float: right;
+  padding: 85px;
+  box-sizing: border-box;
+  -webkit-flex: 2;
+  flex: 2;
+}
+
+.pp-animation.ng-hide-remove      { animation:1.5s fadeInLeft ease; }

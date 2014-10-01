@@ -19,7 +19,7 @@
                 #artifact-version {{serverStatusCtrl.specificServerStatusServerApi.getVersion()}}
                 #server {{serverStatusCtrl.specificServerStatusServerApi.getServerName()}}
     .pp-server-status-page-container
-        .pp-server-status-tabs-container
+        #pp-server-status-tabs-container
             %ul(ng-init="tab=1")
                 %li.pp-test-runs-tabs#runs-tab-title(ng-class="{active:tab===1}")
                     %a(ng-click="tab = 1"
@@ -34,5 +34,6 @@
                 %p
                     .pp-server-status-tables-container(ng-show="tab === 2")
                         .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testNamesTableData")
-        .pp-basic-tests-container(ng-show="tab === 1 && serverStatusCtrl.specificServerStatusServerApi.runHasBeenSelected")
+        #pp-runs-tables-container(ng-show="tab === 1 && serverStatusCtrl.specificServerStatusServerApi.runHasBeenSelected"
+                                  class="pp-animation")
             .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsBasicTableData")

@@ -56,9 +56,9 @@
     this.runsTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runs',
       columnDefs: [
-        { field: 'runStatus', width: 120, displayName: 'Run Status', resizable: true},
-        { field: 'startTime', displayName: 'Start Time', width: 140 },
-        { field: 'endTime', displayName: 'End Time', width: 140 }
+        { field: 'runStatus', width: '25%', displayName: 'Run Status', resizable: true},
+        { field: 'startTime', displayName: 'Start Time', width: '40%' },
+        { field: 'endTime', displayName: 'End Time', width: '35%' }
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
