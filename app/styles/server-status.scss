@@ -1,4 +1,3 @@
-$background-blue: rgb(57, 96, 255);
 $header-height: 90px;
 $header-image-size: 70px;
 $box-height: 70px;
@@ -6,7 +5,9 @@ $box-border: 1px solid transparent;
 $box-border-radius: 4px;
 $font-family: 'Open Sans', sans-serif;
 $header-font-size: 13px;
-$error-color: #F50E19;
+
+$background-blue: rgb(57, 96, 255);
+$error-color: rgba(255, 0, 0, 0.7);
 $background-light-blue: #699fff;
 
 body {
@@ -16,7 +17,7 @@ body {
 
 .pp-server-status-header-container {
   background-color: $background-blue;
-  padding: 20px 40px 20px;
+  padding: 20px 20px 20px;
   position: relative;
   height: $header-height;
   overflow: scroll;
@@ -35,19 +36,20 @@ body {
   background-color: $background-light-blue;
 }
 
-.pp-server-basic-status-titles {
+.pp-server-basic-status-titles{
   float: left;
   margin-right: 50px;
   font-weight: bold;
 }
 
-.pp-server-basic-status-percent {
+.pp-status-bars {
   float: left;
+}
+.pp-server-basic-percent, .pp-server-basic-analysis-status {
   font-weight: bold;
   background-color: $error-color;
   width: 120px;
-  margin-right: 50px;
-  margin-left: 50px;
+  margin: 0px 50px 35px 50px;
   text-align: center;
 }
 
@@ -62,18 +64,33 @@ body {
 
 .grid-style {
   border: 1px solid rgb(212,212,212);
-  width: 400px;
-  height: 300px;
+  width: 350px;
+  height: 150px;
+  border-radius: $box-border-radius;
 }
 
 .pp-server-status-tabs-container {
-  background-color: grey;
-  display: inline-block;
+  padding: 20px;
+  float: left;
+  ul {
+    display: inline-block;
+  }
+}
+
+.pp-basic-tests-container {
+  float: right;
+  padding: 85px;
+  box-sizing: border-box;
+  width: 540px;
+}
+
+.pp-server-status-page-container {
+  height: 300px;
 }
 
 .pp-server-status-tables-container {
   //background-color: red;
-  display: inline-block;
+  display: table-caption;
 }
 
 .pp-test-runs-tabs {
@@ -81,10 +98,9 @@ body {
   background-color: rgb(200,200,200);
   padding: 5px 20px;
   margin: 5px 2px 5px 0px;
-  color: black;
   list-style: none;
   &.active {
-    background-color: #699fff;
+    background-color: $background-light-blue;
   }
   a {
     text-decoration: none;
@@ -92,13 +108,11 @@ body {
     font-size: 21px;
     font-style: italic;
     text-shadow: 1px 0px 3px rgb(157, 157, 157);
-
   }
-  p {
-    font-size: 22px;
-    font-weight: bold;
-    font-style: italic;
-    color: rgb(62, 62, 62);
-    margin: 18px;
-  }
+}
+#runs-tab-title {
+  border-radius: 4px 0px 0px 4px;
+}
+#tests-tab-title {
+border-radius: 0px 4px 4px 0px;
 }

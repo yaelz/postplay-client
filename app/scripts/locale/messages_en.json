@@ -8,8 +8,9 @@
   "CURRENTLY_RUNNING": "Currently running artifacts:",
   "CURRENTLY_RUNNING_SERVER_ERROR": "SERVER ERROR while trying to get the currently running artifacts",
   "NO_CURRENTLY_RUNNING": "No currently running artifacts",
-  "ARTIFACT_ID": "Artifact Id:",
   "ARTIFACT_NAME": "Artifact Name:",
   "ARTIFACT_VERSION": "Artifact Version:",
-  "SERVER": "Server:"
+  "SERVER": "Server:",
+  "RUNS_TAB_NAME": "Runs",
+  "TESTS_TAB_NAME": "Tests"
 }

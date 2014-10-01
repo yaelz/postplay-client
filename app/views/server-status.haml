@@ -3,8 +3,11 @@
         .pp-server-status-header-image-container
             %img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
         .pp-server-status-basic-data-container
-            .pp-server-basic-status-percent
-                {{serverStatusCtrl.specificServerStatusServerApi.getCompletedTestsPercent() + '%'}}
+            .pp-status-bars
+                .pp-server-basic-percent
+                    {{serverStatusCtrl.specificServerStatusServerApi.getCompletedTestsPercent() + '%'}}
+                .pp-server-basic-analysis-status
+                    {{serverStatusCtrl.specificServerStatusServerApi.getCompletedTestsStatus()}}
             .pp-server-basic-status-titles
                 %div {{'ARTIFACT_ID' | translate}}
                 %div {{'ARTIFACT_NAME' | translate}}
@@ -15,19 +18,21 @@
                 #artifact-name {{serverStatusCtrl.specificServerStatusServerApi.getArtifactName()}}
                 #artifact-version {{serverStatusCtrl.specificServerStatusServerApi.getVersion()}}
                 #server {{serverStatusCtrl.specificServerStatusServerApi.getServerName()}}
-    .pp-server-status-tabs-container
-        %ul(ng-init="tab=1")
-            %li.pp-test-runs-tabs(ng-class="{active:tab===1}")
-                %a(ng-click="tab = 1"
-                   href)
-                    Runs
-            %li.pp-test-runs-tabs(ng-class="{active:tab===2}")
-                %a(ng-click="tab = 2"
-                   href)
-                    Tests
-            %p
+    .pp-server-status-page-container
+        .pp-server-status-tabs-container
+            %ul(ng-init="tab=1")
+                %li.pp-test-runs-tabs#runs-tab-title(ng-class="{active:tab===1}")
+                    %a(ng-click="tab = 1"
+                       href)
+                        {{'RUNS_TAB_NAME' | translate}}
+                %li.pp-test-runs-tabs#tests-tab-title(ng-class="{active:tab===2}")
+                    %a(ng-click="tab = 2"
+                       href)
+                        {{'TESTS_TAB_NAME' | translate}}
                 .pp-server-status-tables-container(ng-show="tab === 1")
-                    .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.gridOptions")
-                        runs
-            %p
-                tests
+                    .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsTableData")
+                %p
+                    .pp-server-status-tables-container(ng-show="tab === 2")
+                        .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testNamesTableData")
+        .pp-basic-tests-container(ng-show="tab === 1 && serverStatusCtrl.specificServerStatusServerApi.runHasBeenSelected")
+            .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsBasicTableData")

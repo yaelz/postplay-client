@@ -37,36 +37,45 @@ describe('Service: specificServerStatusServerApi', function () {
     callGetServerStatusMethodAndFlushHttpBackend();
     expect(specificServerStatusServerApi.isDataLoaded).toBe(true);
   });
-  it('should hold the artifactId after getting the server status data from the server', function () {
-    callGetServerStatusMethodAndFlushHttpBackend();
-    expect(specificServerStatusServerApi.getArtifactId()).toEqual(specificServerServerResponse.serverData.responseBody.artifactId);
-  });
-  it('should hold the artifactName after getting the server status data from the server', function () {
-    callGetServerStatusMethodAndFlushHttpBackend();
-    expect(specificServerStatusServerApi.getArtifactName()).toEqual(specificServerServerResponse.serverData.responseBody.artifactName);
-  });
-  it('should hold the version after getting the server status data from the server', function () {
-    callGetServerStatusMethodAndFlushHttpBackend();
-    expect(specificServerStatusServerApi.getVersion()).toEqual(specificServerServerResponse.serverData.responseBody.version);
-  });
-  it('should hold the server name after getting the server status data from the server', function () {
-    callGetServerStatusMethodAndFlushHttpBackend();
-    expect(specificServerStatusServerApi.getServerName()).toEqual(specificServerServerResponse.serverData.responseBody.server);
-  });
-  it('should hold the runs after getting the server status data from the server', function () {
-    callGetServerStatusMethodAndFlushHttpBackend();
-    expect(specificServerStatusServerApi.getRuns()).toEqual(specificServerServerResponse.serverData.responseBody.runs.runs);
-  });
-  it('should hold the total number of runs after getting the server status data from the server', function () {
-    callGetServerStatusMethodAndFlushHttpBackend();
-    expect(specificServerStatusServerApi.getTotalNumberOfRuns()).toEqual(specificServerServerResponse.serverData.responseBody.runs.totalNumberOfRuns);
-  });
-  it('should hold the number of completed runs after getting the server status data from the server', function () {
-    callGetServerStatusMethodAndFlushHttpBackend();
-    expect(specificServerStatusServerApi.getNumberOfCompletedRuns()).toEqual(specificServerServerResponse.serverData.responseBody.runs.completedNumberOfRuns);
-  });
-  it('should hold the completed tests percent after getting the server status data from the server', function () {
-    callGetServerStatusMethodAndFlushHttpBackend();
-    expect(specificServerStatusServerApi.getCompletedTestsPercent()).toEqual(specificServerServerResponse.serverData.responseBody.completedTestsPercent);
+
+  describe('After getting the server status', function () {
+    beforeEach(function () {
+      callGetServerStatusMethodAndFlushHttpBackend();
+    });
+    it('should hold the runs', function () {
+      expect(specificServerStatusServerApi.runs).toEqual(specificServerServerResponse.serverData.responseBody.runs.runs);
+    });
+    it('should hold the tests data for a specific run', function () {
+      var selectedRow = {entity: specificServerServerResponse.serverData.responseBody.runs.runs[0]};
+      specificServerStatusServerApi.runsTableData.beforeSelectionChange(selectedRow);
+      expect(specificServerStatusServerApi.testsBasicTableData).toEqual(specificServerServerResponse.serverData.responseBody.runs.runs[0].tests);
+    });
+    it('should be able to get the test names', function () {
+      expect(specificServerStatusServerApi.testNames).toEqual([{testName: 'AppInfo Sanity2'}, {testName: 'AppInfo Sanity'}]);
+    });
+    it('should be able to get the artifactId', function () {
+      expect(specificServerStatusServerApi.getArtifactId()).toEqual(specificServerServerResponse.serverData.responseBody.artifactId);
+    });
+    it('should be able to get the artifactName', function () {
+      expect(specificServerStatusServerApi.getArtifactName()).toEqual(specificServerServerResponse.serverData.responseBody.artifactName);
+    });
+    it('should be able to get the version', function () {
+      expect(specificServerStatusServerApi.getVersion()).toEqual(specificServerServerResponse.serverData.responseBody.version);
+    });
+    it('should be able to get the server name', function () {
+      expect(specificServerStatusServerApi.getServerName()).toEqual(specificServerServerResponse.serverData.responseBody.server);
+    });
+    it('should be able to get the total number of runs', function () {
+      expect(specificServerStatusServerApi.getTotalNumberOfRuns()).toEqual(specificServerServerResponse.serverData.responseBody.runs.totalNumberOfRuns);
+    });
+    it('should be able to get the number of completed runs', function () {
+      expect(specificServerStatusServerApi.getNumberOfCompletedRuns()).toEqual(specificServerServerResponse.serverData.responseBody.runs.completedNumberOfRuns);
+    });
+    it('should be able to get the completed tests percent', function () {
+      expect(specificServerStatusServerApi.getCompletedTestsPercent()).toEqual(specificServerServerResponse.serverData.responseBody.completedTestsPercent);
+    });
+    it('should be able to get the completed tests status', function () {
+      expect(specificServerStatusServerApi.getCompletedTestsStatus()).toEqual(specificServerServerResponse.serverData.responseBody.analysisStatus);
+    });
   });
 });

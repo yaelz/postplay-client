@@ -7,6 +7,8 @@
     // AngularJS will instantiate a singleton by calling "new" on this function
     this.serverResponseBody = {};
     this.isDataLoaded = false;
+    this.selectedRun = {};
+    this.runHasBeenSelected = false;
     var self = this;
 
     // Public API here
@@ -16,6 +18,8 @@
         .then(function (response) {
           angular.copy(response.data.responseBody, self.serverResponseBody);
           self.isDataLoaded = true;
+          self.runs = response.data.responseBody.runs.runs;
+          self.testNames = getTestNames(self.runs);
         });
     };
     this.getArtifactId = function () {
@@ -36,27 +40,65 @@
     this.getNumberOfCompletedRuns = function () {
       return self.serverResponseBody.runs.completedNumberOfRuns;
     };
-    this.getRuns = function () {
-      return self.serverResponseBody.runs.runs;
-    };
     this.getCompletedTestsPercent = function () {
       return self.serverResponseBody.completedTestsPercent;
     };
-    this.myData = [
-      {runStatus: 'Moroni', startTime: 50, endTime: 100},
-      {name: 'Tiancum', age: 43},
-      {name: 'Jacob', age: 27},
-      {name: 'Nephi', age: 29},
-      {name: 'Enos', age: 34}
-    ];
-    this.gridOptions = {
-      data: 'serverStatusCtrl.specificServerStatusServerApi.getRuns()',
+    this.getCompletedTestsStatus = function () {
+      return self.serverResponseBody.analysisStatus;
+    };
+    this.testNamesTableData = {
+      data: 'serverStatusCtrl.specificServerStatusServerApi.testNames',
+      columnDefs: [
+        { field: 'testName', width: 120, displayName: 'Test Name'}
+      ],
+      multiSelect: false
+    };
+    this.runsTableData = {
+      data: 'serverStatusCtrl.specificServerStatusServerApi.runs',
       columnDefs: [
         { field: 'runStatus', width: 120, displayName: 'Run Status', resizable: true},
-        { field: 'startTime', displayName: 'Start Time', width: 120 },
-        { field: 'endTime', displayName: 'End Time', width: 120 }
+        { field: 'startTime', displayName: 'Start Time', width: 140 },
+        { field: 'endTime', displayName: 'End Time', width: 140 }
+      ],
+      multiSelect: false,
+      beforeSelectionChange: function (selectedRow) {
+        self.selectedRun = selectedRow.entity;
+        self.runHasBeenSelected = true;
+        getTestsBasicTableData();
+        return true;
+      }
+    };
+    this.testsBasicTableData = {
+      data: 'serverStatusCtrl.specificServerStatusServerApi.testsBasicTableData',
+      columnDefs: [
+        { field: 'name', width: 220, displayName: 'Test Name', resizable: true},
+        { field: 'testStatus', displayName: 'Test Status', width: 400 },
+        { field: 'analysisResultStatus', displayName: 'Results Status', width: 400}
       ]
     };
+
+    function getTestNames(runs) {
+      var testNames = [];
+      for (var runsIdx = 0; runsIdx < runs.length; ++runsIdx) {
+        var run = runs[runsIdx];
+        for (var testIdx = 0; testIdx < run.tests.length; ++testIdx) {
+          var test = run.tests[testIdx];
+          var isFound = false;
+          for (var testNamesIdx = 0; testNamesIdx < testNames.length; ++testNamesIdx) {
+            if (test.name === testNames[testNamesIdx])  {
+              isFound = true;
+            }
+          }
+          if (!isFound) {
+            testNames[testNames.length] = {testName: test.name};
+          }
+        }
+      }
+      return testNames;
+    }
+    function getTestsBasicTableData() {
+      self.testsBasicTableData = self.selectedRun.tests;
+    }
   }
 
   angular
