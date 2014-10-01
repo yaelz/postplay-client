@@ -64,8 +64,7 @@ body {
 
 .grid-style {
   border: 1px solid rgb(212,212,212);
-  width: 350px;
-  height: 150px;
+  height: 100%;
   border-radius: $box-border-radius;
 }
 
@@ -107,6 +106,9 @@ body {
 .pp-server-status-tables-container {
   //background-color: red;
   display: table-caption;
+  .grid-style {
+    width: 500px;
+  }
 }
 #pp-runs-tables-container {
 //  background-color: greenyellow;
@@ -116,6 +118,9 @@ body {
   box-sizing: border-box;
   -webkit-flex: 2;
   flex: 2;
+  .grid-style {
+    width: 1000px;
+  }
 }
 
-.pp-animation.ng-hide-remove      { animation:1.5s fadeInLeft ease; }
+.pp-animation.ng-hide-remove { animation:1.5s fadeInLeft ease; }

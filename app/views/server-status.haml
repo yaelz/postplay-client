@@ -31,9 +31,8 @@
                         {{'TESTS_TAB_NAME' | translate}}
                 .pp-server-status-tables-container(ng-show="tab === 1")
                     .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsTableData")
-                %p
-                    .pp-server-status-tables-container(ng-show="tab === 2")
-                        .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testNamesTableData")
+                .pp-server-status-tables-container(ng-show="tab === 2")
+                    .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testNamesTableData")
         #pp-runs-tables-container(ng-show="tab === 1 && serverStatusCtrl.specificServerStatusServerApi.runHasBeenSelected"
                                   class="pp-animation")
             .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsBasicTableData")
