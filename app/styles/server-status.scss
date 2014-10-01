@@ -1,0 +1,104 @@
+$background-blue: rgb(57, 96, 255);
+$header-height: 90px;
+$header-image-size: 70px;
+$box-height: 70px;
+$box-border: 1px solid transparent;
+$box-border-radius: 4px;
+$font-family: 'Open Sans', sans-serif;
+$header-font-size: 13px;
+$error-color: #F50E19;
+$background-light-blue: #699fff;
+
+body {
+  margin: 0;
+  font-family: $font-family;
+}
+
+.pp-server-status-header-container {
+  background-color: $background-blue;
+  padding: 20px 40px 20px;
+  position: relative;
+  height: $header-height;
+  overflow: scroll;
+}
+
+.pp-server-status-header-image-container {
+  float: left;
+}
+.pp-server-status-basic-data-container {
+  float: right;
+  height: $box-height;
+  border: $box-border;
+  border-radius: $box-border-radius;
+  font-size: $header-font-size;
+  padding: 10px;
+  background-color: $background-light-blue;
+}
+
+.pp-server-basic-status-titles {
+  float: left;
+  margin-right: 50px;
+  font-weight: bold;
+}
+
+.pp-server-basic-status-percent {
+  float: left;
+  font-weight: bold;
+  background-color: $error-color;
+  width: 120px;
+  margin-right: 50px;
+  margin-left: 50px;
+  text-align: center;
+}
+
+.pp-server-basic-status {
+  float: right;
+}
+
+.pp-server-status-header-image-container img {
+  max-height: $header-image-size;
+  object-fit: cover;
+}
+
+.grid-style {
+  border: 1px solid rgb(212,212,212);
+  width: 400px;
+  height: 300px;
+}
+
+.pp-server-status-tabs-container {
+  background-color: grey;
+  display: inline-block;
+}
+
+.pp-server-status-tables-container {
+  //background-color: red;
+  display: inline-block;
+}
+
+.pp-test-runs-tabs {
+  float: left;
+  background-color: rgb(200,200,200);
+  padding: 5px 20px;
+  margin: 5px 2px 5px 0px;
+  color: black;
+  list-style: none;
+  &.active {
+    background-color: #699fff;
+  }
+  a {
+    text-decoration: none;
+    color: white;
+    font-size: 21px;
+    font-style: italic;
+    text-shadow: 1px 0px 3px rgb(157, 157, 157);
+
+  }
+  p {
+    font-size: 22px;
+    font-weight: bold;
+    font-style: italic;
+    color: rgb(62, 62, 62);
+    margin: 18px;
+  }
+}

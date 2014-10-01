@@ -1,0 +1,33 @@
+%div(ng-show = "serverStatusCtrl.specificServerStatusServerApi.isDataLoaded" ng-controller = "SpecificServerStatusController as serverStatusCtrl")
+    .pp-server-status-header-container
+        .pp-server-status-header-image-container
+            %img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
+        .pp-server-status-basic-data-container
+            .pp-server-basic-status-percent
+                {{serverStatusCtrl.specificServerStatusServerApi.getCompletedTestsPercent() + '%'}}
+            .pp-server-basic-status-titles
+                %div {{'ARTIFACT_ID' | translate}}
+                %div {{'ARTIFACT_NAME' | translate}}
+                %div {{'ARTIFACT_VERSION' | translate}}
+                %div {{'SERVER' | translate}}
+            .pp-server-basic-status
+                #artifact-id {{serverStatusCtrl.specificServerStatusServerApi.getArtifactId()}}
+                #artifact-name {{serverStatusCtrl.specificServerStatusServerApi.getArtifactName()}}
+                #artifact-version {{serverStatusCtrl.specificServerStatusServerApi.getVersion()}}
+                #server {{serverStatusCtrl.specificServerStatusServerApi.getServerName()}}
+    .pp-server-status-tabs-container
+        %ul(ng-init="tab=1")
+            %li.pp-test-runs-tabs(ng-class="{active:tab===1}")
+                %a(ng-click="tab = 1"
+                   href)
+                    Runs
+            %li.pp-test-runs-tabs(ng-class="{active:tab===2}")
+                %a(ng-click="tab = 2"
+                   href)
+                    Tests
+            %p
+                .pp-server-status-tables-container(ng-show="tab === 1")
+                    .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.gridOptions")
+                        runs
+            %p
+                tests

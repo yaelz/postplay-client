@@ -25,9 +25,9 @@ function MainPage() {
     this.getElementByClass('pp-artifact-input').sendKeys(inputText);
   };
 
-  this.clickOnGoButton = function () {
-    $('#go-button').click();
-  };
+//  this.clickOnGoButton = function () {
+//    $('#go-button').click();
+//  };
 }
 
 module.exports = MainPage;

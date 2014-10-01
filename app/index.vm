@@ -38,9 +38,12 @@
     <meta name="robots" content="noindex, nofollow">
 
     <link rel="stylesheet" href="${staticBaseUrl}services/third-party/fonts/Helvetica/fontFace.css">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'>
     <!-- process-tags prefix('${staticsUrl}') -->
     <!-- build:css({.tmp,app}) styles/main.css -->
     <link rel="stylesheet" href="styles/main.css">
+    <link rel="stylesheet" href="styles/server-status.css">
+    <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css">
     <!-- endbuild -->
     <!-- end-process-tags -->
 
@@ -65,6 +68,7 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-translate/angular-translate.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/ng-grid/ng-grid-2.0.13.debug.js"></script>
     <script src="bower_components/angular-i18n/angular-locale_${locale}.js"></script>
     <script src="scripts/locale/messages_${locale}.js"></script>
     <!-- build:js scripts/modules.js -->
@@ -79,6 +83,8 @@
     <script src="scripts/controllers/currently-running-artifacts.js"></script>
     <script src="scripts/services/dashboard-server-api.js"></script>
     <script src="scripts/services/system-configuration-server-api.js"></script>
+    <script src="scripts/services/specific-server-status-server-api.js"></script>
+    <script src="scripts/controllers/specific-server-status.js"></script>
     <!-- endbuild --><!-- scripts -->
     <!-- end-process-tags -->
 

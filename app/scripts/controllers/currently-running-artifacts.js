@@ -8,7 +8,6 @@
     this.basicTestInfoServerApi = _basicTestInfoServerApi_;
     this.currentlyRunningArtifacts = [];
     function updateCurrentlyRunningArtifacts() {
-//      console.log('in currently running artifacts!');
       self.currentlyRunningArtifacts = self.basicTestInfoServerApi.getCurrentlyRunningArtifacts();
     }
 

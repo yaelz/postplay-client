@@ -1,7 +1,9 @@
 {
   "name": "postplay-try",
   "version": "0.0.0",
-  "dependencies": {},
+  "dependencies": {
+    "jquery-ui": "^1.10.5"
+  },
   "devDependencies": {
     "wix-gruntfile": "~0.1.2"
   },

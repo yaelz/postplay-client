@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('postplayTryAppMocks', ['ngMockE2E'])
-  .run(function ($httpBackend, basicTestInfoServerResponse, serverApiUrl) {
+  .run(function ($httpBackend, basicTestInfoServerResponse, serverApiUrl, specificServerData, specificServerServerResponse) {
     $httpBackend.whenGET(serverApiUrl.ALL_ARTIFACTS_API_URL).respond(basicTestInfoServerResponse.allArtifacts);
 
     $httpBackend.whenGET(serverApiUrl.BUILDS_API_URL).respond(basicTestInfoServerResponse.lifecycleBuilds);
@@ -14,6 +14,9 @@ angular.module('postplayTryAppMocks', ['ngMockE2E'])
 
 //    $httpBackend.whenGET(serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL).respond(500);
     $httpBackend.whenGET(serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL).respond(basicTestInfoServerResponse.currentlyRunningArtifacts);
+
+    var API_URL = serverApiUrl.SERVER_STATUS_API_URL_PREFIX + specificServerData.server + '&artifactId=' + specificServerData.artifactId + '&groupId=' + specificServerData.groupId;
+    $httpBackend.whenGET(API_URL).respond(specificServerServerResponse.serverData);
 
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();

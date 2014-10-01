@@ -26,8 +26,9 @@
                 .pp-artifact-table-header-row(ng-repeat = "serverTableHeadline in basicTestInfoCtrl.serverTableTitles")
                     %div {{serverTableHeadline}}
             .pp-artifact-table-rows(ng-repeat = "serverInfo in basicTestInfoCtrl.currentArtifactVersionSummary.responseBody"
-                                    class = "repeat-animation")
-                .pp-artifact-table-row(ng-click = "basicTestInfoCtrl.onClick(serverInfo.server)")
+                                    class = "repeat-animation"
+                                    ng-click = "basicTestInfoCtrl.onClick(serverInfo.server)")
+                .pp-artifact-table-row
                     %div {{serverInfo.server}}
                     %div {{serverInfo.runStatus}}
                     %div(ng-if = 'basicTestInfoCtrl.serverRunEndedWithError(serverInfo)')
