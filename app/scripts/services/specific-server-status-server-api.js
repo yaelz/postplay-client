@@ -8,12 +8,11 @@
     this.serverResponseBody = {};
     this.isDataLoaded = false;
     this.selectedRun = {};
-    this.selectedTestName = '';
     this.runIsSelected = false;
-    this.testOfRunHasBeenSelected = false;
-    this.runsOfChosenTestToDisplay = [];
-    this.testsOfRunResultsToDisplayData = []
     this.testIsSelected = false;
+    this.testOfRunIsSelected = false;
+    this.runsOfSelectedTest = [];
+    this.serversDataOfTestOfSelectedRun = [];
     var self = this;
 
     // Public API here
@@ -63,6 +62,7 @@
       }
       return runArr;
     };
+
     this.testNamesTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.testNames',
       columnDefs: [
@@ -70,16 +70,13 @@
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
-        self.selectedTestName = selectedRow.entity.testName;
-        self.testIsSelected = true;
-        self.runsOfChosenTestToDisplay = self.getRunsOfSelectedTest(self.selectedTestName);
+        self.runsOfSelectedTest = self.getRunsOfSelectedTest(selectedRow.entity.testName);
         self.testIsSelected = true;
         return true;
-//        self.run
       }
     };
     this.runsOfChosenTestTableData = {
-      data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfChosenTestToDisplay',
+      data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTest',
       columnDefs: [
         { field: 'runStatus', width: '30%', displayName: 'Run Status'},
         { field: 'numberOfTests', width: '30%', displayName: 'Num of Tests'},
@@ -98,13 +95,12 @@
       beforeSelectionChange: function (selectedRow) {
         self.selectedRun = selectedRow.entity;
         self.runIsSelected = true;
-        self.testOfRunHasBeenSelected = false;
+        self.testOfRunIsSelected = false;
         getTestsOfRunBasicTableData();
         return true;
       }
     };
-
-    this.testsBasicTableData = {
+    this.testsOfSelectedRunBasicTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.tests',
       columnDefs: [
         { field: 'name', width: '30%', displayName: 'Test Name'},
@@ -113,15 +109,13 @@
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
-        self.selectedTestFromRun = selectedRow.entity;
-        getTestsOfRunResultsToDisplayData();
-        self.testOfRunHasBeenSelected = true;
+        getServersDataOfTestOfSelectedRun(selectedRow.entity);
+        self.testOfRunIsSelected = true;
         return true;
       }
     };
-
-    this.testsOfSelectedRunTableData = {
-      data: 'serverStatusCtrl.specificServerStatusServerApi.testsOfRunResultsToDisplayData',
+    this.serversOfSelectedTestOfSelectedRunTableData = {
+      data: 'serverStatusCtrl.specificServerStatusServerApi.serversDataOfTestOfSelectedRun',
       rowTemplate: '' +
         '<div style="height: 100%" ng-class="{ppSsTestedServer: row.rowIndex == 0}">' +
             '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
@@ -160,10 +154,9 @@
     function getTestsOfRunBasicTableData() {
       self.tests = self.selectedRun.tests;
     }
-    function getTestsOfRunResultsToDisplayData() {
-      self.testsOfRunResultsToDisplayData = (JSON.parse(self.selectedTestFromRun.resultsForDisplay)).referenceServers;
-      self.testsOfRunResultsToDisplayData.unshift((JSON.parse(self.selectedTestFromRun.resultsForDisplay)).testedServer);
-//      referenceServers
+    function getServersDataOfTestOfSelectedRun(selectedTestFromRun) {
+      self.serversDataOfTestOfSelectedRun = (JSON.parse(selectedTestFromRun.resultsForDisplay)).referenceServers;
+      self.serversDataOfTestOfSelectedRun.unshift((JSON.parse(selectedTestFromRun.resultsForDisplay)).testedServer);
     }
   }
 

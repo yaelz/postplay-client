@@ -46,17 +46,20 @@ describe('Service: specificServerStatusServerApi', function () {
       expect(specificServerStatusServerApi.runs).toEqual(specificServerServerResponse.serverData.responseBody.runs.runs);
     });
     it('should hold the tests data for a specific run', function () {
+      expect(specificServerStatusServerApi.runIsSelected).toBe(false);
       var selectedRow = {entity: specificServerServerResponse.serverData.responseBody.runs.runs[0]};
       specificServerStatusServerApi.runsTableData.beforeSelectionChange(selectedRow);
-      expect(specificServerStatusServerApi.tests).toEqual(specificServerServerResponse.serverData.responseBody.runs.runs[0].tests);
+      expect(specificServerStatusServerApi.tests).toEqual(selectedRow.entity.tests);
+      expect(specificServerStatusServerApi.runIsSelected).toBe(true);
+      expect(specificServerStatusServerApi.testOfRunIsSelected).toBe(false);
     });
-    it('should hold results for display test data for a specific test in a specific run', function () {
+    it('should hold server data for a specific test in a specific run', function () {
       var selectedTestForSelectedRun = {entity: specificServerServerResponse.serverData.responseBody.runs.runs[0].tests[0]};
-      specificServerStatusServerApi.testsBasicTableData.beforeSelectionChange(selectedTestForSelectedRun);
+      specificServerStatusServerApi.testsOfSelectedRunBasicTableData.beforeSelectionChange(selectedTestForSelectedRun);
       var resultsToDisplayJson = JSON.parse(selectedTestForSelectedRun.entity.resultsForDisplay);
       var arr = resultsToDisplayJson.referenceServers;
       arr.unshift(resultsToDisplayJson.testedServer);
-      expect(specificServerStatusServerApi.testsOfRunResultsToDisplayData).toEqual(arr);
+      expect(specificServerStatusServerApi.serversDataOfTestOfSelectedRun).toEqual(arr);
     });
     it('should be able to get all test names, each test name once!', function () {
       expect(specificServerStatusServerApi.testNames).toEqual([{ testName: 'AppInfo Sanity2' }, { testName: 'Another test' }, { testName: 'Yet Another test' }, { testName: 'AppInfo Sanity' }]);

@@ -35,10 +35,10 @@
                 .pp-ss-tables-under-tabs-container#tests-table-under-tabs(ng-show="tab === 2")
                     .pp-ss-grid(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testNamesTableData")
         #pp-ss-runs-tables-container(ng-show="tab === 1")
-            .pp-ss-grid.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsBasicTableData"
+            .pp-ss-grid.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsOfSelectedRunBasicTableData"
                                                              ng-show="serverStatusCtrl.specificServerStatusServerApi.runIsSelected")
-            .pp-ss-grid.pp-ss-animation-second-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsOfSelectedRunTableData"
-                                                              ng-show = "serverStatusCtrl.specificServerStatusServerApi.testOfRunHasBeenSelected")
+            .pp-ss-grid.pp-ss-animation-second-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.serversOfSelectedTestOfSelectedRunTableData"
+                                                              ng-show = "serverStatusCtrl.specificServerStatusServerApi.testOfRunIsSelected")
         #pp-ss-tests-tables-container(ng-show="tab === 2")
             .pp-ss-grid.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsOfChosenTestTableData"
                                                              ng-show="serverStatusCtrl.specificServerStatusServerApi.testIsSelected")

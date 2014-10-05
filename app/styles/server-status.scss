@@ -34,11 +34,8 @@ body {
   float: right;
   height: $box-height;
   box-sizing: border-box;
-//  border: $box-border;
-//  border-radius: $box-border-radius;
   font-size: $header-font-size;
   padding: 10px;
-//  background-color: $background-light-blue;
 }
 
 .pp-ss-header-server-status-titles {
@@ -85,6 +82,7 @@ body {
   width: 100%;
   top: 110px;
 }
+
 #pp-ss-tabs-container {
   -webkit-flex: 1;
   flex: 1;
@@ -95,9 +93,6 @@ body {
   }
 }
 
-*:after {
-  box-sizing: border-box;
-}
 .pp-ss-test-runs-tabs {
   float: left;
   background-color: rgb(200,200,200);
@@ -142,6 +137,9 @@ body {
 //    border: 10px solid rgb(88, 78, 78);
 //    border-color: rgba(88, 78, 78, 0) transparent transparent rgba(88, 78, 78, 1);
 //  }
+//}
+//*:after {
+//  box-sizing: border-box;
 //}
 #pp-ss-runs-tables-container, #pp-ss-tests-tables-container {
   float: right;
