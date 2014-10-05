@@ -9,11 +9,11 @@
     this.isDataLoaded = false;
     this.selectedRun = {};
     this.selectedTestName = '';
-    this.runHasBeenSelected = false;
+    this.runIsSelected = false;
     this.testOfRunHasBeenSelected = false;
     this.runsOfChosenTestToDisplay = [];
     this.testsOfRunResultsToDisplayData = []
-    this.testHasBeenSelected = false;
+    this.testIsSelected = false;
     var self = this;
 
     // Public API here
@@ -71,9 +71,9 @@
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
         self.selectedTestName = selectedRow.entity.testName;
-        self.testHasBeenSelected = true;
+        self.testIsSelected = true;
         self.runsOfChosenTestToDisplay = self.getRunsOfSelectedTest(self.selectedTestName);
-        self.testHasBeenSelected = true;
+        self.testIsSelected = true;
         return true;
 //        self.run
       }
@@ -97,7 +97,7 @@
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
         self.selectedRun = selectedRow.entity;
-        self.runHasBeenSelected = true;
+        self.runIsSelected = true;
         self.testOfRunHasBeenSelected = false;
         getTestsOfRunBasicTableData();
         return true;
@@ -123,7 +123,7 @@
     this.testsOfSelectedRunTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.testsOfRunResultsToDisplayData',
       rowTemplate: '' +
-        '<div style="height: 100%" ng-class="{testedServer: row.rowIndex == 0}">' +
+        '<div style="height: 100%" ng-class="{ppSsTestedServer: row.rowIndex == 0}">' +
             '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
             '<div ng-cell>' +
             '</div>' +
