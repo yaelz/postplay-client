@@ -29,10 +29,18 @@
                     %a(ng-click="tab = 2"
                        href)
                         {{'TESTS_TAB_NAME' | translate}}
-                .pp-server-status-tables-container(ng-show="tab === 1")
+                .pp-server-status-tables-container#runs-table(ng-show="tab === 1")
                     .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsTableData")
-                .pp-server-status-tables-container(ng-show="tab === 2")
+                .pp-server-status-tables-container#tests-table(ng-show="tab === 2")
                     .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testNamesTableData")
-        #pp-runs-tables-container(ng-show="tab === 1 && serverStatusCtrl.specificServerStatusServerApi.runHasBeenSelected"
-                                  class="pp-animation")
-            .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsBasicTableData")
+        #pp-runs-tables-container(ng-show="tab === 1")
+            .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsBasicTableData"
+                        ng-show="serverStatusCtrl.specificServerStatusServerApi.runHasBeenSelected"
+                        class="pp-animation-first-table-on-right")
+            .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsOfSelectedRunTableData"
+                        ng-show = "serverStatusCtrl.specificServerStatusServerApi.testOfRunHasBeenSelected"
+                        class="pp-animation-second-table-on-right")
+        #pp-runs-tables-container(ng-show="tab === 2")
+            .grid-style(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsOfChosenTestTableData"
+                        ng-show="serverStatusCtrl.specificServerStatusServerApi.testHasBeenSelected"
+                        class="pp-animation-first-table-on-right")

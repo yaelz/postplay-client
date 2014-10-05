@@ -48,10 +48,18 @@ describe('Service: specificServerStatusServerApi', function () {
     it('should hold the tests data for a specific run', function () {
       var selectedRow = {entity: specificServerServerResponse.serverData.responseBody.runs.runs[0]};
       specificServerStatusServerApi.runsTableData.beforeSelectionChange(selectedRow);
-      expect(specificServerStatusServerApi.testsBasicTableData).toEqual(specificServerServerResponse.serverData.responseBody.runs.runs[0].tests);
+      expect(specificServerStatusServerApi.tests).toEqual(specificServerServerResponse.serverData.responseBody.runs.runs[0].tests);
     });
-    it('should be able to get the test names', function () {
-      expect(specificServerStatusServerApi.testNames).toEqual([{testName: 'AppInfo Sanity2'}, {testName: 'AppInfo Sanity'}]);
+    it('should hold results for display test data for a specific test in a specific run', function () {
+      var selectedTestForSelectedRun = {entity: specificServerServerResponse.serverData.responseBody.runs.runs[0].tests[0]};
+      specificServerStatusServerApi.testsBasicTableData.beforeSelectionChange(selectedTestForSelectedRun);
+      var resultsToDisplayJson = JSON.parse(selectedTestForSelectedRun.entity.resultsForDisplay);
+      var arr = resultsToDisplayJson.referenceServers;
+      arr.unshift(resultsToDisplayJson.testedServer);
+      expect(specificServerStatusServerApi.testsOfRunResultsToDisplayData).toEqual(arr);
+    });
+    it('should be able to get all test names, each test name once!', function () {
+      expect(specificServerStatusServerApi.testNames).toEqual([{ testName: 'AppInfo Sanity2' }, { testName: 'Another test' }, { testName: 'Yet Another test' }, { testName: 'AppInfo Sanity' }]);
     });
     it('should be able to get the artifactId', function () {
       expect(specificServerStatusServerApi.getArtifactId()).toEqual(specificServerServerResponse.serverData.responseBody.artifactId);
@@ -76,6 +84,9 @@ describe('Service: specificServerStatusServerApi', function () {
     });
     it('should be able to get the completed tests status', function () {
       expect(specificServerStatusServerApi.getCompletedTestsStatus()).toEqual(specificServerServerResponse.serverData.responseBody.analysisStatus);
+    });
+    it('should be able to get all runs for a specific test', function () {
+      expect(specificServerStatusServerApi.getRunsOfSelectedTest('AppInfo Sanity')).toEqual([specificServerStatusServerApi.runs[1]]);
     });
   });
 });

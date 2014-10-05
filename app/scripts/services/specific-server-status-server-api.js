@@ -8,7 +8,12 @@
     this.serverResponseBody = {};
     this.isDataLoaded = false;
     this.selectedRun = {};
+    this.selectedTestName = '';
     this.runHasBeenSelected = false;
+    this.testOfRunHasBeenSelected = false;
+    this.runsOfChosenTestToDisplay = [];
+    this.testsOfRunResultsToDisplayData = []
+    this.testHasBeenSelected = false;
     var self = this;
 
     // Public API here
@@ -46,35 +51,91 @@
     this.getCompletedTestsStatus = function () {
       return self.serverResponseBody.analysisStatus;
     };
+    this.getRunsOfSelectedTest = function (testName) {
+      var runArr = [];
+      for (var i = 0; i < self.runs.length; i++) {
+        var run = self.runs[i];
+        for (var j = 0; j < run.tests.length; j++) {
+          if (self.runs[i].tests[j].name === testName) {
+            runArr[runArr.length] = self.runs[i];
+          }
+        }
+      }
+      return runArr;
+    };
     this.testNamesTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.testNames',
       columnDefs: [
         { field: 'testName', width: 120, displayName: 'Test Name'}
       ],
-      multiSelect: false
+      multiSelect: false,
+      beforeSelectionChange: function (selectedRow) {
+        self.selectedTestName = selectedRow.entity.testName;
+        self.testHasBeenSelected = true;
+        self.runsOfChosenTestToDisplay = self.getRunsOfSelectedTest(self.selectedTestName);
+        self.testHasBeenSelected = true;
+        return true;
+//        self.run
+      }
+    };
+    this.runsOfChosenTestTableData = {
+      data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfChosenTestToDisplay',
+      columnDefs: [
+        { field: 'runStatus', width: '30%', displayName: 'Run Status'},
+        { field: 'numberOfTests', width: '30%', displayName: 'Num of Tests'},
+        { field: 'plannedExecutionTimeUtc', width: '30%', displayName: 'Start Time', cellFilter: 'date:\'HH:mm:ss\'' }
+      ],
+      enableRowSelection: false
     };
     this.runsTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runs',
       columnDefs: [
-        { field: 'runStatus', width: '25%', displayName: 'Run Status', resizable: true},
-        { field: 'startTime', displayName: 'Start Time', width: '40%' },
-        { field: 'endTime', displayName: 'End Time', width: '35%' }
+        { field: 'runStatus', width: '30%', displayName: 'Run Status', resizable: true},
+        { field: 'startTime', displayName: 'Start Time', width: '30%', cellFilter: 'date:\'HH:mm:ss\'' },
+        { field: 'endTime', displayName: 'End Time', width: '30%', cellFilter: 'date:\'HH:mm:ss\'' }
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
         self.selectedRun = selectedRow.entity;
         self.runHasBeenSelected = true;
-        getTestsBasicTableData();
+        self.testOfRunHasBeenSelected = false;
+        getTestsOfRunBasicTableData();
         return true;
       }
     };
+
     this.testsBasicTableData = {
-      data: 'serverStatusCtrl.specificServerStatusServerApi.testsBasicTableData',
+      data: 'serverStatusCtrl.specificServerStatusServerApi.tests',
       columnDefs: [
-        { field: 'name', width: 220, displayName: 'Test Name', resizable: true},
-        { field: 'testStatus', displayName: 'Test Status', width: 400 },
-        { field: 'analysisResultStatus', displayName: 'Results Status', width: 400}
-      ]
+        { field: 'name', width: '30%', displayName: 'Test Name'},
+        { field: 'testStatus', displayName: 'Test Status', width: '50%' },
+        { field: 'analysisResultStatus', displayName: 'Results Status', width: '20%'}
+      ],
+      multiSelect: false,
+      beforeSelectionChange: function (selectedRow) {
+        self.selectedTestFromRun = selectedRow.entity;
+        getTestsOfRunResultsToDisplayData();
+        self.testOfRunHasBeenSelected = true;
+        return true;
+      }
+    };
+
+    this.testsOfSelectedRunTableData = {
+      data: 'serverStatusCtrl.specificServerStatusServerApi.testsOfRunResultsToDisplayData',
+      rowTemplate: '' +
+        '<div style="height: 100%" ng-class="{testedServer: row.rowIndex == 0}">' +
+            '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
+            '<div ng-cell>' +
+            '</div>' +
+            '</div>' +
+        '</div>',
+      columnDefs: [
+        { field: 'systemError', width: '25%', displayName: 'System Error'},
+        { field: 'serverHostName', displayName: 'Server Host Name', width: '35%' },
+        { field: 'systemFatal', displayName: 'system Fatal', width: '20%' },
+        { field: 'errorRate', displayName: 'Error Rate', width: '20%'}
+      ],
+      enableRowSelection: false
     };
 
     function getTestNames(runs) {
@@ -85,7 +146,7 @@
           var test = run.tests[testIdx];
           var isFound = false;
           for (var testNamesIdx = 0; testNamesIdx < testNames.length; ++testNamesIdx) {
-            if (test.name === testNames[testNamesIdx])  {
+            if (test.name === testNames[testNamesIdx].testName)  {
               isFound = true;
             }
           }
@@ -96,8 +157,13 @@
       }
       return testNames;
     }
-    function getTestsBasicTableData() {
-      self.testsBasicTableData = self.selectedRun.tests;
+    function getTestsOfRunBasicTableData() {
+      self.tests = self.selectedRun.tests;
+    }
+    function getTestsOfRunResultsToDisplayData() {
+      self.testsOfRunResultsToDisplayData = (JSON.parse(self.selectedTestFromRun.resultsForDisplay)).referenceServers;
+      self.testsOfRunResultsToDisplayData.unshift((JSON.parse(self.selectedTestFromRun.resultsForDisplay)).testedServer);
+//      referenceServers
     }
   }
 
