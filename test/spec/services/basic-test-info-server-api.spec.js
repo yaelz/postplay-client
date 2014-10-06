@@ -18,64 +18,38 @@ describe('Service: basicTestInfoServerApi', function () {
     $httpBackend = _$httpBackend_;
   }));
 
-  it('should get all artifacts monitored by postplay, and clean up before getting them again', function () {
+  it('should get all artifacts monitored by postplay', function () {
     API_URL = serverApiUrl.ALL_ARTIFACTS_API_URL;
-    var artifactsResponseFromServer = basicTestInfoServerResponse.allArtifacts;
-
-    $httpBackend.expectGET(API_URL).respond(200, artifactsResponseFromServer);
-    var artifactsJSONResponse = basicTestInfoServerApi.getAllArtifacts();
-    expect(artifactsJSONResponse).toEqual([]);
-
-    $httpBackend.flush();
-    expect(artifactsJSONResponse).toEqual(artifactsResponseFromServer);
+    checkResponseFromServer(basicTestInfoServerApi.getAllArtifacts, [], basicTestInfoServerResponse.allArtifacts);
   });
 
   function checkResponseFromServer(functionToEval, valueBeforeServerResponse, responseFromServer, argsForFunc) {
-    function checkResponseFromServerOnce() {
-      $httpBackend.expectGET(API_URL).respond(200, responseFromServer);
+    $httpBackend.expectGET(API_URL).respond(200, responseFromServer);
+    var functionReturnValue = valueBeforeServerResponse;
     // TODO what should I send as 'this' in the apply..?
-      var functionReturnValue = functionToEval.apply(basicTestInfoServerApi, argsForFunc);
-      expect(functionReturnValue).toEqual(valueBeforeServerResponse);
-      $httpBackend.flush();
-      expect(functionReturnValue).toEqual(responseFromServer);
-    }
-    checkResponseFromServerOnce();
-    checkResponseFromServerOnce();
+    functionToEval.apply(undefined, argsForFunc).then(function (response) {
+      angular.copy(response.data, functionReturnValue);
+    });
+    $httpBackend.flush();
+    expect(functionReturnValue).toEqual(responseFromServer);
   }
 
-  it('should get all lifecycle builds, and clean up before getting them again', function () {
-    API_URL = basicTestInfoServerResponse.BUILDS_API_URL;
+  it('should get all lifecycle builds', function () {
+    API_URL = serverApiUrl.BUILDS_API_URL;
     checkResponseFromServer(basicTestInfoServerApi.getLifecycleBuilds, {}, basicTestInfoServerResponse.lifecycleBuilds);
     // TODO toEqual([]) and toEqual({}) will both work! How is it best to check?
   });
 
-  it('should get version summary of an artifact, and clean up before getting them again', function () {
+  it('should get version summary of an artifact', function () {
     API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + serverApiUrl.version + '&artifactId=' + serverApiUrl.artifactId + '&groupId=' + serverApiUrl.groupId;
     var argsForFunc = [serverApiUrl.version, serverApiUrl.artifactId, serverApiUrl.groupId];
     checkResponseFromServer(basicTestInfoServerApi.getVersionSummary, {}, basicTestInfoServerResponse.versionSummary, argsForFunc);
   });
 
-  it('should get all artifact versions, and clean up before getting them again', function () {
+  it('should get all artifact versions', function () {
     API_URL = serverApiUrl.ARTIFACT_VERS_API_URL_PREFIX + serverApiUrl.artifactId + '&groupId=' + serverApiUrl.groupId;
     var argsForFunc = [serverApiUrl.artifactId, serverApiUrl.groupId];
-    checkResponseFromServer(basicTestInfoServerApi.getArtifactVersions, {}, basicTestInfoServerResponse.artifactVersions, argsForFunc);
-  });
-
-  it('should get all currently running artifacts', function () {
-    API_URL = serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL;
-    checkResponseFromServer(basicTestInfoServerApi.getCurrentlyRunningArtifacts, [], basicTestInfoServerResponse.currentlyRunningArtifacts);
-  });
-
-  it('should get currently running artifacts error', function () {
-    API_URL = serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL;
-    $httpBackend.expectGET(API_URL).respond(500);
-    basicTestInfoServerApi.getCurrentlyRunningArtifacts();
-    $httpBackend.flush();
-    expect(basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts).toEqual(true);
-    $httpBackend.expectGET(API_URL).respond(200);
-    basicTestInfoServerApi.getCurrentlyRunningArtifacts();
-    $httpBackend.flush();
-    expect(basicTestInfoServerApi.serverErrors.errorGettingRunningArtifacts).toEqual(false);
+    checkResponseFromServer(basicTestInfoServerApi.getArtifactVersions, [], basicTestInfoServerResponse.artifactVersions, argsForFunc);
   });
 
   describe('thereWasServerError variable should be true iff there was a server error', function () {

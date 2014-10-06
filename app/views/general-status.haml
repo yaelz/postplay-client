@@ -1,0 +1,8 @@
+%div(ng-controller="BasicTestInfoController as basicTestInfoCtrl"
+     ng-show="basicTestInfoCtrl.isDataLoaded")
+    .pp-ss-header-container
+        .pp-ss-header-image-container
+            %img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
+    .pp-ss-page-container
+        #pp-ss-runs-tables-container
+            .pp-ss-grid.pp-ss-animation-first-table-on-right(ng-grid="basicTestInfoCtrl.serversTestResultsSummary")

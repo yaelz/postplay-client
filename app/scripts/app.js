@@ -7,9 +7,9 @@ angular
   .constant('basicTestInfoServerResponse', {
     artifactVersions: ['2.487.0', '2.469.0', '2.468.0', '2.467.0', '2.466.0', '2.465.0', '2.464.0', '2.463.0', '2.462.0', '2.461.0'],
     allArtifacts: [
-      {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: null, name: '2. Wix Html Editor', dynamic: false, tests: [], testRuns: []},
-      {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: null, name: '2. Wix Public Html Renderer', dynamic: false, tests: [], testRuns: []},
-      {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: null, name: 'Wix Public', dynamic: false, tests: [], testRuns: []}
+      {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.487.0', name: '2. Wix Html Editor', dynamic: false, tests: [], testRuns: []},
+      {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', name: '2. Wix Public Html Renderer', dynamic: false, tests: [], testRuns: []},
+      {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', name: 'Wix Public', dynamic: false, tests: [], testRuns: []}
     ],
     versionSummary: {
       code: 0,
@@ -201,9 +201,22 @@ angular
       implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest'
     }]
   })
+  .constant('specificServerData2', {
+    server: 'app30.aus.wixpress.com',
+    version: '2.487.0',
+    artifactId: 'wix-html-editor-webapp',
+    groupId: 'com.wixpress'
+  })
   .constant('specificServerData', {
     server: 'app30.aus.wixpress.com',
+    version: '2.487.0',
     artifactId: 'wix-public-html-renderer-webapp',
+    groupId: 'com.wixpress'
+  })
+  .constant('specificServerData3', {
+    server: 'app30.aus.wixpress.com',
+    version: '2.487.0',
+    artifactId: 'wix-public-war',
     groupId: 'com.wixpress'
   })
   .constant('specificServerServerResponse', {

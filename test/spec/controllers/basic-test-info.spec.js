@@ -3,7 +3,7 @@
 describe('Controller: BasicTestInfoController', function () {
 
   var allArtifacts, artifactVersions, versionSummary;
-  var serverInfoMockSuccess, serverInfoMockWarning, serverInfoMockErrors, serverInfoMockIncomplete;
+  var serverInfoMockSuccess, serverInfoMockWarning, serverInfoMockErrors, serverInfoMockIncomplete, $q, deferred;
   // load the controller's module
   beforeEach(function () {
     module('postplayTryAppInternal');
@@ -15,13 +15,19 @@ describe('Controller: BasicTestInfoController', function () {
     var basicTestInfoServerApiMock = {
       getArtifactVersions: jasmine.createSpy('getArtifactVersions').andCallFake(function () {
         // TODO don't think it should check the server response... :\
-        return artifactVersions;
+        deferred = $q.defer();
+        deferred.resolve({data: artifactVersions});
+        return deferred.promise;
       }),
       getAllArtifacts: jasmine.createSpy('getAllArtifacts').andCallFake(function () {
-        return allArtifacts;
+        deferred = $q.defer();
+        deferred.resolve({data: allArtifacts});
+        return deferred.promise;
       }),
       getVersionSummary: jasmine.createSpy('getVersionSummary').andCallFake(function () {
-        return versionSummary;
+        deferred = $q.defer();
+        deferred.resolve({data: versionSummary});
+        return deferred.promise;
       })
     };
 
@@ -33,11 +39,12 @@ describe('Controller: BasicTestInfoController', function () {
   var BasicTestInfoController, scope;
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function ($controller, $rootScope, basicTestInfoServerResponse) {
+  beforeEach(inject(function ($controller, $rootScope, basicTestInfoServerResponse, _$q_) {
     // TODO don't think it should check the server response... :\
     artifactVersions = basicTestInfoServerResponse.artifactVersions;
     allArtifacts = basicTestInfoServerResponse.allArtifacts;
     versionSummary = basicTestInfoServerResponse.versionSummary;
+    $q = _$q_;
 
     scope = $rootScope.$new();
     BasicTestInfoController = $controller('BasicTestInfoController', {
@@ -45,38 +52,13 @@ describe('Controller: BasicTestInfoController', function () {
     });
   }));
 
-  function updateArtifactData() {
-    BasicTestInfoController.currentArtifactId = 'wix-public-html-renderer-webapp';
-    BasicTestInfoController.updateChosenArtifactData();
-  }
-
   describe('initialization and getting chosen artifact data', function () {
     it('should hold all artifacts information on initialization', function () {
       expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
       // TODO is this supposed to be checked? or only if the function has been called?
+      scope.$apply();
       expect(BasicTestInfoController.artifacts).toEqual(allArtifacts);
     });
-
-    it('should hold the last version of the current artifact', function () {
-      updateArtifactData();
-      expect(BasicTestInfoController.basicTestInfoServerApi.getArtifactVersions).toHaveBeenCalled();
-      // TODO is this supposed to be checked? or only if the function has been called?
-      expect(BasicTestInfoController.currentArtifactVersions).toEqual(artifactVersions);
-    });
-
-    it('should hold the latest group id of the current artifact', function () {
-      updateArtifactData();
-      // TODO is this supposed to be checked? And how ([1])?
-      expect(BasicTestInfoController.currentArtifactGroupId).toEqual(allArtifacts[1].groupId);
-    });
-
-    it('should hold the latest artifact version summary', (inject(function ($timeout) {
-      updateArtifactData();
-      $timeout.flush();
-      expect(BasicTestInfoController.basicTestInfoServerApi.getVersionSummary).toHaveBeenCalled();
-      // TODO is this supposed to be checked?
-      expect(BasicTestInfoController.currentArtifactVersionSummary).toEqual(versionSummary);
-    })));
   });
 
   describe('server run end status', function () {
