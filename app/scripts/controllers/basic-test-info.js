@@ -19,10 +19,18 @@
         { field: 'server', width: '40%', displayName: 'Server'},
         { field: 'analysisResultStatus', width: '20%', displayName: 'Analysis Result Status'}
       ],
-      multiSelect: false
-//      beforeSelectionChange: function (selectedRow) {
-//        return true;
-//      }
+      multiSelect: false,
+      rowTemplate: '' +
+        '<div style="height: 100%" >' +
+          '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell">' +
+            '<a href="#artifactId/{{row.entity.artifactId}}/server/{{row.entity.server}}/groupId/{{row.entity.groupId}}">' +
+            '<div ng-cell>' +
+            '</div>' +
+          '</div>' +
+        '</div>',
+      beforeSelectionChange: function (selectedRow) {
+        return true;
+      }
     };
     this.serverRunEndedWithError = function (serverInfo) {
       // TODO get possibilities
