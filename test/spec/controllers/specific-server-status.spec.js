@@ -7,6 +7,9 @@ describe('Controller: SpecificServerStatusController', function () {
     module('postplayTryAppInternal');
 
     //add your mocks here
+    module({
+      serverStatusCtrlDTO: {}
+    });
   });
 
   var SpecificServerStatusController, scope;

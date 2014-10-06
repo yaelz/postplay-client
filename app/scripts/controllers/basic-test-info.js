@@ -27,10 +27,7 @@
             '<div ng-cell>' +
             '</div>' +
           '</div>' +
-        '</div>',
-      beforeSelectionChange: function (selectedRow) {
-        return true;
-      }
+        '</div>'
     };
     this.serverRunEndedWithError = function (serverInfo) {
       // TODO get possibilities

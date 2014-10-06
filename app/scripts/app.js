@@ -351,7 +351,29 @@ angular
 //load only the internal module in tests and mock any module dependency
 //the only exception to load this module in tests in to test the config & run blocks
 angular
-  .module('postplayTryApp', ['postplayTryAppInternal', 'postplayTryTranslations', 'wixAngular'])
-  .config(function () {
-    return;
+  .module('postplayTryApp', ['postplayTryAppInternal', 'postplayTryTranslations', 'wixAngular', 'ngRoute'])
+  .config(function ($routeProvider) {
+    $routeProvider
+      .when('/artifactId/:artifactId/server/:server/groupId/:groupId', {
+        templateUrl: 'views/server-status.html',
+        controller: 'SpecificServerStatusController',
+        controllerAs: 'serverStatusCtrl',
+        resolve: {
+          serverStatusCtrlDTO: ['$route', function ($route) {
+            return {
+              groupId: $route.current.params.groupId,
+              artifactId: $route.current.params.artifactId,
+              server: $route.current.params.server
+            };
+          }]
+        }
+      })
+      .when('/', {
+        templateUrl: 'views/general-status.html',
+        controller: 'BasicTestInfoController',
+        controllerAs: 'basicTestInfoCtrl'
+      })
+      .otherwise({
+        redirectTo: '/'
+      });
   });

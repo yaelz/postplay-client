@@ -3,9 +3,9 @@
 (function () {
 
   /* @ngInject */
-  function SpecificServerStatusController(specificServerStatusServerApi, specificServerData) {
+  function SpecificServerStatusController(specificServerStatusServerApi, serverStatusCtrlDTO) {
     this.specificServerStatusServerApi = specificServerStatusServerApi;
-    this.specificServerStatusServerApi.getServerData(specificServerData.server, specificServerData.artifactId, specificServerData.groupId);
+    this.specificServerStatusServerApi.getServerData(serverStatusCtrlDTO.server, serverStatusCtrlDTO.artifactId, serverStatusCtrlDTO.groupId);
   }
 
   angular

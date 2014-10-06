@@ -61,7 +61,7 @@
   <body>
     
     <!-- Add your site or application content here -->
-    <div class="container" ng-include="'views/main.html'"></div>
+    <div ng-view></div>
     
 
     <!-- process-tags prefix('${staticsUrl}') -->
@@ -69,6 +69,7 @@
     <script src="bower_components/angular/angular.js"></script>
     <script src="bower_components/angular-translate/angular-translate.js"></script>
     <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/ng-grid/ng-grid-2.0.13.debug.js"></script>
     <script src="bower_components/angular-i18n/angular-locale_${locale}.js"></script>
     <script src="scripts/locale/messages_${locale}.js"></script>
