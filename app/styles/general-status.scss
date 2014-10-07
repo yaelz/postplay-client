@@ -1,0 +1,21 @@
+a {
+  text-decoration:none;
+}
+a:-webkit-any-link:active {
+  color: -webkit-link;
+}
+
+#pp-gs-table-container {
+  float: right;
+  padding: 85px;
+  box-sizing: border-box;
+  -webkit-flex: 2;
+  flex: 2;
+  .pp-grid-container {
+    width: 100%;
+    margin-bottom: 50px;
+    .ngViewport, .ngTopPanel {
+      overflow: visible;
+    }
+  }
+}

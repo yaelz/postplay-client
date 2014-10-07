@@ -3,7 +3,7 @@
 (function () {
 
   /* @ngInject */
-  function BasicTestInfoController(_basicTestInfoServerApi_) {
+  function BasicTestInfoController(_basicTestInfoServerApi_, $timeout) {
     var self = this;
     this.basicTestInfoServerApi = _basicTestInfoServerApi_;
 
@@ -14,6 +14,15 @@
 
     this.serversTestResultsSummary = {
       data: 'basicTestInfoCtrl.versionSummary',
+      init: function (gridCtrl, gridScope) {
+        gridScope.$on('ngGridEventData', function () {
+          $timeout(function () {
+            angular.forEach(gridScope.columns, function (col) {
+              gridCtrl.resizeOnData(col);
+            });
+          });
+        });
+      },
       columnDefs: [
         { field: 'artifactId', width: '40%', displayName: 'Artifact Id'},
         { field: 'server', width: '40%', displayName: 'Server'},

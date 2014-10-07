@@ -1,6 +1,6 @@
 %div(ng-show = "serverStatusCtrl.specificServerStatusServerApi.isDataLoaded")
-    .pp-ss-header-container
-        .pp-ss-header-image-container
+    .pp-header-container
+        .pp-header-image-container
             %img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
         .pp-server-basic-header-status-container
             .pp-ss-status-bars
@@ -18,7 +18,7 @@
                 #artifact-name {{serverStatusCtrl.specificServerStatusServerApi.getArtifactName()}}
                 #artifact-version {{serverStatusCtrl.specificServerStatusServerApi.getVersion()}}
                 #server {{serverStatusCtrl.specificServerStatusServerApi.getServerName()}}
-    .pp-ss-page-container
+    .pp-page-container
         #pp-ss-tabs-container
             %ul(ng-init="tab=1")
                 %li.pp-ss-test-runs-tabs#pp-ss-runs-tab-title(ng-class="{active:tab===1}")
@@ -30,14 +30,14 @@
                        href)
                         {{'TESTS_TAB_NAME' | translate}}
                 .pp-ss-tables-under-tabs-container#runs-table-under-tabs(ng-show="tab === 1")
-                    .pp-ss-grid(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsTableData")
+                    .pp-grid-container(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsTableData")
                 .pp-ss-tables-under-tabs-container#tests-table-under-tabs(ng-show="tab === 2")
-                    .pp-ss-grid(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testNamesTableData")
+                    .pp-grid-container(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testNamesTableData")
         #pp-ss-runs-tables-container(ng-show="tab === 1")
-            .pp-ss-grid.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsOfSelectedRunBasicTableData"
+            .pp-grid-container.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsOfSelectedRunBasicTableData"
                                                              ng-show="serverStatusCtrl.specificServerStatusServerApi.runIsSelected")
-            .pp-ss-grid.pp-ss-animation-second-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.serversOfSelectedTestOfSelectedRunTableData"
+            .pp-grid-container.pp-ss-animation-second-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.serversOfSelectedTestOfSelectedRunTableData"
                                                               ng-show = "serverStatusCtrl.specificServerStatusServerApi.testOfRunIsSelected")
         #pp-ss-tests-tables-container(ng-show="tab === 2")
-            .pp-ss-grid.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsOfChosenTestTableData"
+            .pp-grid-container.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsOfChosenTestTableData"
                                                              ng-show="serverStatusCtrl.specificServerStatusServerApi.testIsSelected")

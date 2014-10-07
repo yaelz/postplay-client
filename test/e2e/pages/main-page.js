@@ -28,6 +28,12 @@ function MainPage() {
 //  this.clickOnGoButton = function () {
 //    $('#go-button').click();
 //  };
+  this.getElement = function (elem) {
+    return $(elem);
+  };
+  this.clickOnCellInTable = function () {
+    this.getElement('.ngCell a').click();
+  };
 }
 
 module.exports = MainPage;

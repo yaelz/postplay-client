@@ -3,7 +3,7 @@
 (function () {
 
   /* @ngInject */
-  function SpecificServerStatusServerApi($http, serverApiUrl) {
+  function SpecificServerStatusServerApi($http, serverApiUrl, $timeout) {
     // AngularJS will instantiate a singleton by calling "new" on this function
     this.serverResponseBody = {};
     this.isDataLoaded = false;
@@ -66,30 +66,32 @@
     this.testNamesTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.testNames',
       columnDefs: [
-        { field: 'testName', width: 120, displayName: 'Test Name'}
+        { field: 'testName', width: 100, displayName: 'Test Name'}
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
         self.runsOfSelectedTest = self.getRunsOfSelectedTest(selectedRow.entity.testName);
         self.testIsSelected = true;
         return true;
-      }
+      },
+      init: init
     };
     this.runsOfChosenTestTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTest',
       columnDefs: [
-        { field: 'runStatus', width: '30%', displayName: 'Run Status'},
-        { field: 'numberOfTests', width: '30%', displayName: 'Num of Tests'},
-        { field: 'plannedExecutionTimeUtc', width: '30%', displayName: 'Start Time', cellFilter: 'date:\'HH:mm:ss\'' }
+        { field: 'runStatus', width: '20%', displayName: 'Run Status'},
+        { field: 'numberOfTests', width: '40%', displayName: 'Num of Tests'},
+        { field: 'plannedExecutionTimeUtc', width: '40%', displayName: 'Start Time', cellFilter: 'date:\'MMM d, y -  h:mm a\'' }
       ],
-      enableRowSelection: false
+      enableRowSelection: false,
+      init: init
     };
     this.runsTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runs',
       columnDefs: [
         { field: 'runStatus', width: '30%', displayName: 'Run Status', resizable: true},
-        { field: 'startTime', displayName: 'Start Time', width: '30%', cellFilter: 'date:\'HH:mm:ss\'' },
-        { field: 'endTime', displayName: 'End Time', width: '30%', cellFilter: 'date:\'HH:mm:ss\'' }
+        { field: 'startTime', displayName: 'Start Time', width: '30%', cellFilter: 'date: \'MMM d, y  - h:mm:ss a\'' },
+        { field: 'endTime', displayName: 'End Time', width: '30%', cellFilter: 'date: \'MMM d, y -  h:mm:ss a\'' }
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
@@ -98,7 +100,8 @@
         self.testOfRunIsSelected = false;
         getTestsOfRunBasicTableData();
         return true;
-      }
+      },
+      init: init
     };
     this.testsOfSelectedRunBasicTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.tests',
@@ -112,7 +115,8 @@
         getServersDataOfTestOfSelectedRun(selectedRow.entity);
         self.testOfRunIsSelected = true;
         return true;
-      }
+      },
+      init: init
     };
     this.serversOfSelectedTestOfSelectedRunTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.serversDataOfTestOfSelectedRun',
@@ -124,12 +128,13 @@
             '</div>' +
         '</div>',
       columnDefs: [
-        { field: 'systemError', width: '25%', displayName: 'System Error'},
         { field: 'serverHostName', displayName: 'Server Host Name', width: '35%' },
+        { field: 'systemError', width: '25%', displayName: 'System Error'},
         { field: 'systemFatal', displayName: 'system Fatal', width: '20%' },
         { field: 'errorRate', displayName: 'Error Rate', width: '20%'}
       ],
-      enableRowSelection: false
+      enableRowSelection: false,
+      init: init
     };
 
     function getTestNames(runs) {
@@ -157,6 +162,15 @@
     function getServersDataOfTestOfSelectedRun(selectedTestFromRun) {
       self.serversDataOfTestOfSelectedRun = (JSON.parse(selectedTestFromRun.resultsForDisplay)).referenceServers;
       self.serversDataOfTestOfSelectedRun.unshift((JSON.parse(selectedTestFromRun.resultsForDisplay)).testedServer);
+    }
+    function init(gridCtrl, gridScope) {
+      gridScope.$on('ngGridEventData', function () {
+        $timeout(function () {
+          angular.forEach(gridScope.columns, function (col) {
+            gridCtrl.resizeOnData(col);
+          });
+        });
+      });
     }
   }
 

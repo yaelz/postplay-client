@@ -1,7 +1,7 @@
 %div(ng-show="basicTestInfoCtrl.isDataLoaded")
-    .pp-ss-header-container
-        .pp-ss-header-image-container
+    .pp-header-container
+        .pp-header-image-container
             %img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
-    .pp-ss-page-container
-        #pp-ss-runs-tables-container
-            .pp-ss-grid.pp-ss-animation-first-table-on-right(ng-grid="basicTestInfoCtrl.serversTestResultsSummary")
+    .pp-page-container
+        #pp-gs-table-container
+            .pp-grid-container(ng-grid="basicTestInfoCtrl.serversTestResultsSummary")
