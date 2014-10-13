@@ -29,18 +29,18 @@
                     %a(ng-click="tab = 2"
                        href)
                         {{'TESTS_TAB_NAME' | translate}}
-                .pp-ss-tables-under-tabs-container#runs-table-under-tabs(ng-show="tab === 1")
+                .pp-ss-tables-under-tabs-container#runs-table-under-tabs(ng-if="tab === 1")
                     .pp-grid-container(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsTableData")
-                .pp-ss-tables-under-tabs-container#tests-table-under-tabs(ng-show="tab === 2")
+                .pp-ss-tables-under-tabs-container#tests-table-under-tabs(ng-if="tab === 2")
                     .pp-grid-container(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testNamesTableData")
-        #pp-ss-runs-tables-container(ng-show="tab === 1")
-            .pp-table-title.pp-ss-animation-first-table-on-right(ng-show="serverStatusCtrl.specificServerStatusServerApi.runIsSelected") {{'TESTS_OF_RUN_TITLE' | translate}}
+        #pp-ss-runs-tables-container(ng-if="tab === 1")
+            .pp-table-title.pp-ss-animation-first-table-on-right(ng-if="serverStatusCtrl.specificServerStatusServerApi.runIsSelected") {{'TESTS_OF_RUN_TITLE' | translate}}
             .pp-grid-container.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.testsOfSelectedRunBasicTableData"
-                                                             ng-show="serverStatusCtrl.specificServerStatusServerApi.runIsSelected")
-            .pp-table-title.pp-ss-animation-second-table-on-right(ng-show="serverStatusCtrl.specificServerStatusServerApi.testOfRunIsSelected") {{'SERVERS_OF_TESTS_OF_RUNS_TITLE' | translate}} "{{serverStatusCtrl.specificServerStatusServerApi.chosenTestOfRun}}"
+                                                             ng-if="serverStatusCtrl.specificServerStatusServerApi.runIsSelected")
+            .pp-table-title.pp-ss-animation-second-table-on-right(ng-if="serverStatusCtrl.specificServerStatusServerApi.testOfRunIsSelected") {{'SERVERS_OF_TESTS_OF_RUNS_TITLE' | translate}} "{{serverStatusCtrl.specificServerStatusServerApi.chosenTestOfRun}}"
             .pp-grid-container.pp-ss-animation-second-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.serversOfSelectedTestOfSelectedRunTableData"
-                                                              ng-show = "serverStatusCtrl.specificServerStatusServerApi.testOfRunIsSelected")
-        #pp-ss-tests-tables-container(ng-show="tab === 2")
-            .pp-table-title.pp-ss-animation-first-table-on-right(ng-show="serverStatusCtrl.specificServerStatusServerApi.testIsSelected") {{'RUNS_OF_TEST_TITLE' | translate}} "{{serverStatusCtrl.specificServerStatusServerApi.chosenRunOfTest}}"
+                                                              ng-if = "serverStatusCtrl.specificServerStatusServerApi.testOfRunIsSelected")
+        #pp-ss-tests-tables-container(ng-if="tab === 2")
+            .pp-table-title.pp-ss-animation-first-table-on-right(ng-if="serverStatusCtrl.specificServerStatusServerApi.testIsSelected") {{'RUNS_OF_TEST_TITLE' | translate}} "{{serverStatusCtrl.specificServerStatusServerApi.chosenRunOfTest}}"
             .pp-grid-container.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsOfChosenTestTableData"
-                                                             ng-show="serverStatusCtrl.specificServerStatusServerApi.testIsSelected")
+                                                             ng-if="serverStatusCtrl.specificServerStatusServerApi.testIsSelected")
