@@ -87,6 +87,7 @@ body {
   -webkit-flex: 1;
   flex: 1;
   padding: 20px;
+  width: 550px;
   float: left;
   ul {
     display: inline-block;
@@ -120,7 +121,17 @@ body {
   display: table-caption;
   width: 550px;
   height: 100%;
-  overflow: visible;
+  .ngTopPanel {
+    background-color: $background-light-blue;
+    color: #ffffff;
+  }
+  &#tests-table-under-tabs{
+    width: 100%;
+  }
+  &#runs-table-under-tabs {
+    width: 550px;
+  }
+//  overflow: visible;
   .pp-grid-container {
     width: 100%;
     height: 100%;
@@ -129,7 +140,15 @@ body {
 }
 .ppSsTestedServer {
   background-color: rgb(0, 108, 128);
+  border: solid 2px red;
   color: #ffffff;
+  display: block;
+}
+
+[ng-cell] img {
+  height: 28px;
+  margin: auto;
+  display: block
 }
 //#runs-table-under-tabs, #tests-table-under-tabs {
 //  .ngRow.selected:after {
@@ -156,23 +175,30 @@ body {
   display: flex;
   flex-direction: column;
   .pp-grid-container {
-    width: 80%;
-//    height: 100%;
-    margin-bottom: 50px;
-    .ngViewport, .ngTopPanel {
-      overflow: visible;
-    }
+    height: auto;
+    -webkit-flex: 6;
+    flex: 6;
   }
 }
-.pp-ss-animation-first-table-on-right {
-  -webkit-flex: 1;
-  flex: 1;
-//  align-self: flex-start;
-  &.ng-hide-remove { animation:1.5s fadeInLeft ease; }
+.pp-table-title {
+  height: 30px;
+  margin: 10px;
+  font-weight: bold;
+  font-size: larger;
+  color: $background-light-blue;
 }
-.pp-ss-animation-second-table-on-right {
-  -webkit-flex: 1;
-  flex: 1;
-//  align-self: flex-end;
-  &.ng-hide-remove { animation:1.5s fadeInDown ease; }
+.pp-ss-animation-first-table-on-right.ng-hide-remove {
+  animation:1.5s fadeIn ease;
+}
+.pp-ss-animation-second-table-on-right.ng-hide-remove {
+  animation:1.5s fadeIn ease;
+}
+.ngViewport {
+  display: inline;
+}
+.ngTopPanel {
+  width: 100% !important;
+}
+.div-try img {
+  float: left; margin-left: 10px; margin-right: 10px;
 }

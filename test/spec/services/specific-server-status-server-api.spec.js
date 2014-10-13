@@ -61,35 +61,35 @@ describe('Service: specificServerStatusServerApi', function () {
       arr.unshift(resultsToDisplayJson.testedServer);
       expect(specificServerStatusServerApi.serversDataOfTestOfSelectedRun).toEqual(arr);
     });
-    it('should be able to get all test names, each test name once!', function () {
-      expect(specificServerStatusServerApi.testNames).toEqual([{ testName: 'AppInfo Sanity2' }, { testName: 'Another test' }, { testName: 'Yet Another test' }, { testName: 'AppInfo Sanity' }]);
+    it('should hold all test names, each test name once!', function () {
+      expect(specificServerStatusServerApi.testNames).toEqual([{testName: 'AppInfo Sanity'}, {testName: 'AppInfo Sanity2'}, {testName: 'Another test'}, {testName: 'Yet Another test'}]);
     });
-    it('should be able to get the artifactId', function () {
-      expect(specificServerStatusServerApi.getArtifactId()).toEqual(specificServerServerResponse.serverData.responseBody.artifactId);
+    it('should hold the artifactId', function () {
+      expect(specificServerStatusServerApi.artifactId).toEqual(specificServerServerResponse.serverData.responseBody.artifactId);
     });
-    it('should be able to get the artifactName', function () {
-      expect(specificServerStatusServerApi.getArtifactName()).toEqual(specificServerServerResponse.serverData.responseBody.artifactName);
+    it('should hold the artifactName', function () {
+      expect(specificServerStatusServerApi.artifactName).toEqual(specificServerServerResponse.serverData.responseBody.artifactName);
     });
-    it('should be able to get the version', function () {
-      expect(specificServerStatusServerApi.getVersion()).toEqual(specificServerServerResponse.serverData.responseBody.version);
+    it('should hold the version', function () {
+      expect(specificServerStatusServerApi.version).toEqual(specificServerServerResponse.serverData.responseBody.version);
     });
-    it('should be able to get the server name', function () {
-      expect(specificServerStatusServerApi.getServerName()).toEqual(specificServerServerResponse.serverData.responseBody.server);
+    it('should hold the server name', function () {
+      expect(specificServerStatusServerApi.serverName).toEqual(specificServerServerResponse.serverData.responseBody.server);
     });
-    it('should be able to get the total number of runs', function () {
-      expect(specificServerStatusServerApi.getTotalNumberOfRuns()).toEqual(specificServerServerResponse.serverData.responseBody.runs.totalNumberOfRuns);
+    it('should hold the total number of runs', function () {
+      expect(specificServerStatusServerApi.totalNumberOfRuns).toEqual(specificServerServerResponse.serverData.responseBody.runs.totalNumberOfRuns);
     });
-    it('should be able to get the number of completed runs', function () {
-      expect(specificServerStatusServerApi.getNumberOfCompletedRuns()).toEqual(specificServerServerResponse.serverData.responseBody.runs.completedNumberOfRuns);
+    it('should hold the number of completed runs', function () {
+      expect(specificServerStatusServerApi.completedNumberOfRuns).toEqual(specificServerServerResponse.serverData.responseBody.runs.completedNumberOfRuns);
     });
-    it('should be able to get the completed tests percent', function () {
-      expect(specificServerStatusServerApi.getCompletedTestsPercent()).toEqual(specificServerServerResponse.serverData.responseBody.completedTestsPercent);
+    it('should hold the completed tests percent', function () {
+      expect(specificServerStatusServerApi.completedTestsPercent).toEqual(specificServerServerResponse.serverData.responseBody.completedTestsPercent);
     });
-    it('should be able to get the completed tests status', function () {
-      expect(specificServerStatusServerApi.getCompletedTestsStatus()).toEqual(specificServerServerResponse.serverData.responseBody.analysisStatus);
+    it('should hold the completed tests status', function () {
+      expect(specificServerStatusServerApi.analysisStatus).toEqual(specificServerServerResponse.serverData.responseBody.analysisStatus);
     });
     it('should be able to get all runs for a specific test', function () {
-      expect(specificServerStatusServerApi.getRunsOfSelectedTest('AppInfo Sanity')).toEqual([specificServerStatusServerApi.runs[1]]);
+      expect(specificServerStatusServerApi.getRunsOfSelectedTest('AppInfo Sanity')).toEqual([specificServerStatusServerApi.runs[0]]);
     });
   });
 });

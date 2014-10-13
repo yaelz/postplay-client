@@ -1,0 +1,6 @@
+%img(ng-src='images/ok-icon.png'
+     ng-show="row.getProperty('analysisStatus')==='TEST_PASSED'")
+%img(ng-src='images/error-icon.png'
+     ng-show="row.getProperty('analysisStatus')==='TEST_FAILED'")
+%img(ng-src='images/alert.png'
+     ng-show="row.getProperty('analysisStatus')==='STATUS_COMPLETED_WITH_ERRORS' || row.getProperty('analysisStatus')==='TEST_INCONCLUSIVE'")

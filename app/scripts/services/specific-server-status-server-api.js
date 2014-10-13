@@ -15,40 +15,33 @@
     this.serversDataOfTestOfSelectedRun = [];
     var self = this;
 
+    function resizeGridOnEventData(gridCtrl, gridScope) {
+      gridScope.$on('ngGridEventData', function () {
+        $timeout(function () {
+          angular.forEach(gridScope.columns, function (col) {
+            gridCtrl.resizeOnData(col);
+          });
+        });
+      });
+    }
     // Public API here
     this.getServerData = function (server, artifactId, groupId) {
       var API_URL = serverApiUrl.SERVER_STATUS_API_URL_PREFIX + server + '&artifactId=' + artifactId + '&groupId=' + groupId;
       $http.get(API_URL)
         .then(function (response) {
-          angular.copy(response.data.responseBody, self.serverResponseBody);
+          self.serverResponseBody = response.data.responseBody;
+          self.completedTestsPercent = self.serverResponseBody.completedTestsPercent;
+          self.completedNumberOfRuns = self.serverResponseBody.runs.completedNumberOfRuns;
+          self.totalNumberOfRuns = self.serverResponseBody.runs.totalNumberOfRuns;
+          self.analysisStatus = self.serverResponseBody.analysisStatus;
+          self.artifactName = self.serverResponseBody.artifactName;
+          self.artifactId = self.serverResponseBody.artifactId;
+          self.serverName = self.serverResponseBody.server;
+          self.version = self.serverResponseBody.version;
           self.isDataLoaded = true;
           self.runs = response.data.responseBody.runs.runs;
           self.testNames = getTestNames(self.runs);
         });
-    };
-    this.getArtifactId = function () {
-      return self.serverResponseBody.artifactId;
-    };
-    this.getArtifactName = function () {
-      return self.serverResponseBody.artifactName;
-    };
-    this.getVersion = function () {
-      return self.serverResponseBody.version;
-    };
-    this.getServerName = function () {
-      return self.serverResponseBody.server;
-    };
-    this.getTotalNumberOfRuns = function () {
-      return self.serverResponseBody.runs.totalNumberOfRuns;
-    };
-    this.getNumberOfCompletedRuns = function () {
-      return self.serverResponseBody.runs.completedNumberOfRuns;
-    };
-    this.getCompletedTestsPercent = function () {
-      return self.serverResponseBody.completedTestsPercent;
-    };
-    this.getCompletedTestsStatus = function () {
-      return self.serverResponseBody.analysisStatus;
     };
     this.getRunsOfSelectedTest = function (testName) {
       var runArr = [];
@@ -66,32 +59,33 @@
     this.testNamesTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.testNames',
       columnDefs: [
-        { field: 'testName', width: 100, displayName: 'Test Name'}
+        { field: 'testName', width: '100%', displayName: 'Test Name'}
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
         self.runsOfSelectedTest = self.getRunsOfSelectedTest(selectedRow.entity.testName);
+        self.chosenRunOfTest = selectedRow.entity.testName;
         self.testIsSelected = true;
         return true;
       },
-      init: init
+      init: resizeGridOnEventData
     };
     this.runsOfChosenTestTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTest',
       columnDefs: [
         { field: 'runStatus', width: '20%', displayName: 'Run Status'},
-        { field: 'numberOfTests', width: '40%', displayName: 'Num of Tests'},
-        { field: 'plannedExecutionTimeUtc', width: '40%', displayName: 'Start Time', cellFilter: 'date:\'MMM d, y -  h:mm a\'' }
+        { field: 'numberOfTests', width: '20%', displayName: 'Number of Tests'},
+        { field: 'plannedExecutionTimeUtc', width: '40%', displayName: 'Start Time', cellFilter: 'date:\'MMM d, y -  H:mm:ss\'' }
       ],
       enableRowSelection: false,
-      init: init
+      init: resizeGridOnEventData
     };
     this.runsTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runs',
       columnDefs: [
-        { field: 'runStatus', width: '30%', displayName: 'Run Status', resizable: true},
-        { field: 'startTime', displayName: 'Start Time', width: '30%', cellFilter: 'date: \'MMM d, y  - h:mm:ss a\'' },
-        { field: 'endTime', displayName: 'End Time', width: '30%', cellFilter: 'date: \'MMM d, y -  h:mm:ss a\'' }
+        { field: 'runStatus', displayName: 'Status', cellTemplate: 'views/runs-image-template.html', width: '20%'},
+        { field: 'startTime', displayName: 'Start Time', width: '40%', cellFilter: 'date: \'MMM d, y  - H:mm:ss\'' },
+        { field: 'endTime', displayName: 'End Time', width: '40%', cellFilter: 'date: \'MMM d, y -  H:mm:ss\'' }
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
@@ -101,22 +95,24 @@
         getTestsOfRunBasicTableData();
         return true;
       },
-      init: init
+      init: resizeGridOnEventData
     };
     this.testsOfSelectedRunBasicTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.tests',
       columnDefs: [
         { field: 'name', width: '30%', displayName: 'Test Name'},
-        { field: 'testStatus', displayName: 'Test Status', width: '50%' },
-        { field: 'analysisResultStatus', displayName: 'Results Status', width: '20%'}
+        { field: 'testStatus', displayName: 'Test Status', width: '30%' },
+        { field: 'analysisResultStatus', displayName: 'Results Status', cellTemplate: 'views/test-of-run-image-template.html', width: '40%'}
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
         getServersDataOfTestOfSelectedRun(selectedRow.entity);
         self.testOfRunIsSelected = true;
+        self.chosenTestOfRun = selectedRow.entity.name;
+//        self.chosenTestOfRun = '656374567';
         return true;
       },
-      init: init
+      init: resizeGridOnEventData
     };
     this.serversOfSelectedTestOfSelectedRunTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.serversDataOfTestOfSelectedRun',
@@ -134,7 +130,7 @@
         { field: 'errorRate', displayName: 'Error Rate', width: '20%'}
       ],
       enableRowSelection: false,
-      init: init
+      init: resizeGridOnEventData
     };
 
     function getTestNames(runs) {
@@ -162,15 +158,6 @@
     function getServersDataOfTestOfSelectedRun(selectedTestFromRun) {
       self.serversDataOfTestOfSelectedRun = (JSON.parse(selectedTestFromRun.resultsForDisplay)).referenceServers;
       self.serversDataOfTestOfSelectedRun.unshift((JSON.parse(selectedTestFromRun.resultsForDisplay)).testedServer);
-    }
-    function init(gridCtrl, gridScope) {
-      gridScope.$on('ngGridEventData', function () {
-        $timeout(function () {
-          angular.forEach(gridScope.columns, function (col) {
-            gridCtrl.resizeOnData(col);
-          });
-        });
-      });
     }
   }
 

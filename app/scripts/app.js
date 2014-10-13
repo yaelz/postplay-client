@@ -243,51 +243,7 @@ angular
             {
               runStatus: 'FINISHED',
               plannedExecutionTimeUtc: 1410959618239,
-              tests: [
-                {
-                  name: 'AppInfo Sanity2',
-                  testStatus: 'STATUS_COMPLETED_SUCCESSFULLY',
-                  analysisResultStatus: 'TEST_PASSED',
-                  analysisResultComments: 'Passed',
-                  resultsForDisplay: '{ "testedServer" : { "systemError": 0.0, "serverHostName": "app30.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, "referenceServers": [ { "systemError": 0.0, "serverHostName": "app33.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, { "systemError": 0.0, "serverHostName": "apu1.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0} ]}',
-                  referenceServerTest: true,
-                  errorFields: '',
-                  testErrors: null,
-                  testWarnings: null
-                },
-                {
-                  name: 'Another test',
-                  testStatus: 'STATUS_COMPLETED_SUCCESSFULLY',
-                  analysisResultStatus: 'TEST_PASSED',
-                  analysisResultComments: 'Passed',
-                  resultsForDisplay: '{ "testedServer" : { "systemError": 0.0, "serverHostName": "app30.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, "referenceServers": [ { "systemError": 0.0, "serverHostName": "app33.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, { "systemError": 0.0, "serverHostName": "apu1.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0} ]}',
-                  referenceServerTest: true,
-                  errorFields: '',
-                  testErrors: null,
-                  testWarnings: null
-                },
-                {
-                  name: 'Yet Another test',
-                  testStatus: 'STATUS_COMPLETED_SUCCESSFULLY',
-                  analysisResultStatus: 'TEST_PASSED',
-                  analysisResultComments: 'Passed',
-                  resultsForDisplay: '{ "testedServer" : { "systemError": 0.0, "serverHostName": "app30.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, "referenceServers": [ { "systemError": 0.0, "serverHostName": "app33.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0} ]}',
-                  referenceServerTest: true,
-                  errorFields: '',
-                  testErrors: null,
-                  testWarnings: null
-                }
-              ],
-              startTime: 1410959635683,
-              endTime: 1410959637697,
-              analysisStatus: 'TEST_PASSED',
-              analysisComments: [],
-              executionErrors: false,
-              numberOfTests: 3
-            },
-            {
-              runStatus: 'FINISHED',
-              plannedExecutionTimeUtc: 1410959678239,
+              imageCaption: 1,
               tests: [
                 {
                   name: 'AppInfo Sanity',
@@ -312,9 +268,55 @@ angular
                   testWarnings: null
                 }
               ],
+              startTime: 1410959635683,
+              endTime: 1410959637697,
+              analysisStatus: 'TEST_PASSED',
+              analysisComments: [],
+              executionErrors: false,
+              numberOfTests: 3
+            },
+            {
+              runStatus: 'FINISHED',
+              plannedExecutionTimeUtc: 1410959678239,
+              imageCaption: 1,
+              tests: [
+                {
+                  name: 'AppInfo Sanity2',
+                  testStatus: 'STATUS_COMPLETED_SUCCESSFULLY',
+                  analysisResultStatus: 'TEST_PASSED',
+                  analysisResultComments: 'Passed',
+                  resultsForDisplay: '{ "testedServer" : { "systemError": 0.0, "serverHostName": "app30.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, "referenceServers": [ { "systemError": 0.0, "serverHostName": "app33.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, { "systemError": 0.0, "serverHostName": "apu1.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0} ]}',
+                  referenceServerTest: true,
+                  errorFields: '',
+                  testErrors: null,
+                  testWarnings: null
+                },
+                {
+                  name: 'Another test',
+                  testStatus: 'STATUS_COMPLETED_SUCCESSFULLY',
+                  analysisResultStatus: 'TEST_FAILED',
+                  analysisResultComments: 'Failed on throughputTotalCalls',
+                  resultsForDisplay: '{ "testedServer" : { "systemError": 0.0, "serverHostName": "app30.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, "referenceServers": [ { "systemError": 0.0, "serverHostName": "app33.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, { "systemError": 0.0, "serverHostName": "apu1.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0} ]}',
+                  referenceServerTest: true,
+                  errorFields: '',
+                  testErrors: null,
+                  testWarnings: null
+                },
+                {
+                  name: 'Yet Another test',
+                  testStatus: 'STATUS_COMPLETED_SUCCESSFULLY',
+                  analysisResultStatus: 'TEST_PASSED',
+                  analysisResultComments: 'Passed',
+                  resultsForDisplay: '{ "testedServer" : { "systemError": 0.0, "serverHostName": "app30.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, "referenceServers": [ { "systemError": 0.0, "serverHostName": "app33.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0} ]}',
+                  referenceServerTest: true,
+                  errorFields: '',
+                  testErrors: null,
+                  testWarnings: null
+                }
+              ],
               startTime: 1410959695683,
               endTime: 1410959697696,
-              analysisStatus: 'TEST_PASSED',
+              analysisStatus: 'TEST_FAILED',
               analysisComments: [],
               executionErrors: false,
               numberOfTests: 2
