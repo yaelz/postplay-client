@@ -5,7 +5,7 @@
         .pp-server-basic-header-status-container
             .pp-ss-status-bars
                 .pp-ss-header-percent
-                    {{serverStatusCtrl.specificServerStatusServerApi.completedTestsPercent + '%'}}
+                    .pp-ss-header-percent-error(style="width: {{serverStatusCtrl.specificServerStatusServerApi.completedTestsPercent}}%") {{serverStatusCtrl.specificServerStatusServerApi.completedTestsPercent + '%'}}
                 .pp-ss-header-status-message
                     {{serverStatusCtrl.specificServerStatusServerApi.analysisStatus}}
             .pp-ss-header-server-status-titles

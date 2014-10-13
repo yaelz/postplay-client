@@ -232,7 +232,7 @@ angular
         artifactName: '2. Wix Public Html Renderer',
         totalTests: 13,
         completedTests: 13,
-        completedTestsPercent: 100,
+        completedTestsPercent: 50,
         runningTests: 0,
         analysisStatus: 'TEST_FAILED',
         runs: {
@@ -323,7 +323,7 @@ angular
             }
           ]
         },
-        runStatus: 'FINISHED',
+        runStatus: 'RUNNING',
         buildEvent: 'TESTBED',
         analysisComments: [
           'Failed on throughputTotalCalls'

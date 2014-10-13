@@ -7,7 +7,7 @@ $font-family: 'Open Sans', sans-serif;
 $header-font-size: 13px;
 
 $background-blue: rgb(140, 186, 241);
-$error-color: #9B5000;
+$error-color: #b90213;
 $background-light-blue: rgb(105, 159, 255);
 
 body {
@@ -56,10 +56,12 @@ body {
   font-weight: bold;
   width: 120px;
   margin: 0px 50px 35px 50px;
-  text-align: center;
-  background: linear-gradient(#b57813,#B95217);
-  background-color: $error-color;
-  border: 1px solid transparent;
+  text-indent: 50px;
+  .pp-ss-header-percent-error {
+    background: linear-gradient(#ff281e, #b90213);
+    background-color: $error-color;
+  }
+  border: 1px solid $error-color;
   border-radius: 4px;
 }
 .pp-ss-header-status-message {
@@ -126,7 +128,7 @@ body {
     color: #ffffff;
   }
   &#tests-table-under-tabs{
-    width: 100%;
+    width: 550px;
   }
   &#runs-table-under-tabs {
     width: 550px;
@@ -140,7 +142,6 @@ body {
 }
 .ppSsTestedServer {
   background-color: rgb(0, 108, 128);
-  border: solid 2px red;
   color: #ffffff;
   display: block;
 }

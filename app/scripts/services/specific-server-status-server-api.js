@@ -5,15 +5,22 @@
   /* @ngInject */
   function SpecificServerStatusServerApi($http, serverApiUrl, $timeout) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    this.serverResponseBody = {};
-    this.isDataLoaded = false;
-    this.selectedRun = {};
-    this.runIsSelected = false;
-    this.testIsSelected = false;
-    this.testOfRunIsSelected = false;
-    this.runsOfSelectedTest = [];
-    this.serversDataOfTestOfSelectedRun = [];
+    function init() {
+      self.serverResponseBody = {};
+      self.isDataLoaded = false;
+      self.selectedRun = {};
+      self.artifactName = '';
+      self.artifactId = '';
+      self.serverName = '';
+      self.version = '';
+      self.runIsSelected = false;
+      self.testIsSelected = false;
+      self.testOfRunIsSelected = false;
+      self.runsOfSelectedTest = [];
+      self.serversDataOfTestOfSelectedRun = [];
+    }
     var self = this;
+    init();
 
     function resizeGridOnEventData(gridCtrl, gridScope) {
       gridScope.$on('ngGridEventData', function () {
@@ -59,7 +66,7 @@
     this.testNamesTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.testNames',
       columnDefs: [
-        { field: 'testName', width: '100%', displayName: 'Test Name'}
+        { field: 'testName', width: '150px', displayName: 'Test Name'}
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
