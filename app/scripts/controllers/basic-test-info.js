@@ -24,9 +24,8 @@
         });
       },
       columnDefs: [
-        { field: 'artifactId', width: '40%', displayName: 'Artifact Id'},
-        { field: 'server', width: '40%', displayName: 'Server'},
-        { field: 'analysisResultStatus', width: '20%', displayName: 'Analysis Result Status'}
+        { field: 'artifactId', width: '70%', displayName: 'Artifact Id'},
+        { field: 'testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
       ],
       multiSelect: false,
       rowTemplate: '' +
