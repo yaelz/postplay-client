@@ -26,7 +26,20 @@ describe('Controller: BasicTestInfoController', function () {
       }),
       getVersionSummary: jasmine.createSpy('getVersionSummary').andCallFake(function () {
         deferred = $q.defer();
-        deferred.resolve({data: versionSummary});
+        function clone(obj) {
+          if (obj === null || typeof (obj) !== 'object') {
+            return obj;
+          }
+          var temp = obj.constructor(); // changed
+          for (var key in obj) {
+            if (obj.hasOwnProperty(key)) {
+              temp[key] = clone(obj[key]);
+            }
+          }
+          return temp;
+        }
+        var a = clone(versionSummary);
+        deferred.resolve(clone({data: a}));
         return deferred.promise;
       })
     };
@@ -53,11 +66,26 @@ describe('Controller: BasicTestInfoController', function () {
   }));
 
   describe('initialization and getting chosen artifact data', function () {
+    function mockGettingDataFromServer() {
+      scope.$apply();
+    }
     it('should hold all artifacts information on initialization', function () {
       expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
+      mockGettingDataFromServer();
+      expect(BasicTestInfoController.basicTestInfoServerApi.getArtifactVersions).toHaveBeenCalled();
+      expect(BasicTestInfoController.basicTestInfoServerApi.getVersionSummary).toHaveBeenCalled();
       // TODO is this supposed to be checked? or only if the function has been called?
-      scope.$apply();
       expect(BasicTestInfoController.artifacts).toEqual(allArtifacts);
+      expect(BasicTestInfoController.chosenVersionSummary).toEqual([]);
+      expect(BasicTestInfoController.artifactsWereChosen).toEqual(false);
+      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummary.responseBody[0], versionSummary.responseBody[0], versionSummary.responseBody[0]]);
+    });
+
+    it('should hold the chosen artifact data in the chosenVersionSummary table', function () {
+      mockGettingDataFromServer();
+      BasicTestInfoController.currentArtifactId = 'wix-public-html-renderer-webapp';
+      BasicTestInfoController.updateChosenArtifactData();
+      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummary.responseBody[0]]);
     });
   });
 

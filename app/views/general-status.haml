@@ -2,7 +2,8 @@
     .pp-header-container
         .pp-header-image-container
             %img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
-        %form(name = "choose-artifact-form")
+        %form(name = "choose-artifact-form"
+              ng-submit = "basicTestInfoCtrl.updateChosenArtifactData()")
             %input.pp-artifact-input(type = "text"
                                      name = "sheet-input"
                                      list = "artifactList"
@@ -12,10 +13,10 @@
     .pp-gs-page-container
         .pp-gs-table-container
             .pp-table-title Failed Artifacts
-            .pp-grid-container(ng-grid="basicTestInfoCtrl.serversTestResultsSummary")
-        .pp-gs-table-container
+            .pp-grid-container(ng-grid="basicTestInfoCtrl.failedArtifactsSummary")
+        .pp-gs-table-container(ng-if="basicTestInfoCtrl.artifactsWereChosen")
             .pp-table-title Chosen Artifacts
-            .pp-grid-container(ng-grid="basicTestInfoCtrl.serversTestResultsSummary")
+            .pp-grid-container(ng-grid="basicTestInfoCtrl.chosenArtifactsSummary")
 %datalist(ng-controller = "BasicTestInfoController as basicTestInfoCtrl"
           id = "artifactList")
     %option(ng-repeat = "artifactData in basicTestInfoCtrl.artifacts"

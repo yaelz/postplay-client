@@ -9,11 +9,13 @@
 
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.artifacts = [];
-    this.versionSummary = [];
+    this.allVersionSummary = [];
+    this.chosenVersionSummary = [];
+    this.artifactsWereChosen = false;
     this.isDataLoaded = false;
 
-    this.serversTestResultsSummary = {
-      data: 'basicTestInfoCtrl.versionSummary',
+    this.failedArtifactsSummary = {
+      data: 'basicTestInfoCtrl.allVersionSummary',
       init: function (gridCtrl, gridScope) {
         gridScope.$on('ngGridEventData', function () {
           $timeout(function () {
@@ -37,6 +39,31 @@
           '</div>' +
         '</div>'
     };
+    this.chosenArtifactsSummary = {
+      data: 'basicTestInfoCtrl.chosenVersionSummary',
+      init: function (gridCtrl, gridScope) {
+        gridScope.$on('ngGridEventData', function () {
+          $timeout(function () {
+            angular.forEach(gridScope.columns, function (col) {
+              gridCtrl.resizeOnData(col);
+            });
+          });
+        });
+      },
+      columnDefs: [
+        { field: 'artifactId', width: '70%', displayName: 'Artifact Id'},
+        { field: 'testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
+      ],
+      multiSelect: false,
+      rowTemplate: '' +
+        '<div style="height: 100%" >' +
+        '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell">' +
+        '<a href="#artifactId/{{row.entity.artifactId}}/server/{{row.entity.server}}/groupId/{{row.entity.groupId}}">' +
+        '<div ng-cell>' +
+        '</div>' +
+        '</div>' +
+        '</div>'
+    };
     this.serverRunEndedWithError = function (serverInfo) {
       // TODO get possibilities
       return didServerRunEndWithTestStatus(serverInfo, 'STATUS_COMPLETED_WITH_ERRORS') || didServerRunEndWithTestStatus(serverInfo, 'INCOMPLETE');
@@ -47,6 +74,20 @@
     this.serverRunEndedSuccessfully = function (serverInfo) {
       return didServerRunEndWithTestStatus(serverInfo, 'STATUS_COMPLETED_SUCCESSFULLY');
     };
+
+    this.updateChosenArtifactData = function () {
+      this.allVersionSummary.forEach(function (currentVersionSummary) {
+        if (self.currentArtifactId === currentVersionSummary.artifactId && chosenVersionSummaryDoesntHave(currentVersionSummary)) {
+          self.chosenVersionSummary.push(currentVersionSummary);
+        }
+      });
+      this.artifactsWereChosen = true;
+    };
+    function chosenVersionSummaryDoesntHave(currentVersionSummary) {
+      return self.chosenVersionSummary.every(function (versionSummary) {
+        return versionSummary.artifactId !== currentVersionSummary.artifactId;
+      });
+    }
     function didServerRunEndWithTestStatus(serverRunInfo, statusEnum) {
       return serverRunInfo.testStatusEnum === statusEnum;
     }
@@ -64,8 +105,8 @@
               var latestVersion = response.data[0];
               self.basicTestInfoServerApi.getVersionSummary(latestVersion, currentArtifact.artifactId, currentArtifact.groupId)
                 .then(function (response) {
-                  response.data.responseBody.forEach(function (versionSummaryOfCurrent) {
-                    self.versionSummary.push(versionSummaryOfCurrent);
+                  response.data.responseBody.forEach(function (responseBodyOfCurrent) {
+                    self.allVersionSummary.push(responseBodyOfCurrent);
                   });
                 });
             });
