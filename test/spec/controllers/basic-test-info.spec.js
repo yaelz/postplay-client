@@ -95,19 +95,24 @@ describe('Controller: BasicTestInfoController', function () {
       expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryResponseBodyForEditor, versionSummaryResponseBodyForRenderer, versionSummaryResponseBodyForWar]);
     });
 
-    it('should hold the chosen artifact data in the chosenVersionSummary table', function () {
-      mockGettingDataFromServer();
-      BasicTestInfoController.currentArtifactId = 'wix-public-html-renderer-webapp';
-      BasicTestInfoController.updateChosenArtifactData();
-      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummaryResponseBodyForRenderer]);
-      BasicTestInfoController.currentArtifactId = 'wix-html-editor-webapp';
-      BasicTestInfoController.updateChosenArtifactData();
-      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummaryResponseBodyForRenderer, versionSummaryResponseBodyForEditor]);
-    });
     it('should hold the error artifacts\' data in the failedVersionSummary table', function () {
       mockGettingDataFromServer();
       // TODO Change this to hold only failed from a list!
       expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryResponseBodyForRenderer, versionSummaryResponseBodyForWar]);
+    });
+    it('should hold the chosen artifact data in the chosenVersionSummary table', function () {
+      mockGettingDataFromServer();
+      BasicTestInfoController.currentArtifactId = 'wix-html-editor-webapp';
+      // TODO should this be tested here? Or is it UI?
+      BasicTestInfoController.updateChosenArtifactData();
+      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummaryResponseBodyForEditor]);
+    });
+    it('should hold the chosen artifacts only if they\'re not in the error table', function () {
+      mockGettingDataFromServer();
+      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryResponseBodyForRenderer, versionSummaryResponseBodyForWar]);
+      BasicTestInfoController.currentArtifactId = 'wix-public-html-renderer-webapp';
+      BasicTestInfoController.updateChosenArtifactData();
+      expect(BasicTestInfoController.chosenVersionSummary).toEqual([]);
     });
   });
 

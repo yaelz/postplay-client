@@ -3,51 +3,38 @@
 (function () {
 
   /* @ngInject */
-  function BasicTestInfoController(_basicTestInfoServerApi_, $timeout) {
+  function BasicTestInfoController(_basicTestInfoServerApi_, $timeout, $scope, $interval) {
     var self = this;
     this.basicTestInfoServerApi = _basicTestInfoServerApi_;
 
-    this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
-    this.artifacts = [];
-    this.allVersionSummary = [];
-    this.failedVersionSummary = [];
     this.chosenVersionSummary = [];
     this.artifactsWereChosen = false;
-    this.isDataLoaded = false;
+    this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
+    this.columnDefsForGrids = [
+      { field: 'artifactId', width: '70%', displayName: 'Artifact Id'},
+      { field: 'testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
+    ];
 
-    this.failedArtifactsSummary = {
-      data: 'basicTestInfoCtrl.failedVersionSummary',
-      init: function (gridCtrl, gridScope) {
-        gridScope.$on('ngGridEventData', function () {
-          $timeout(function () {
-            angular.forEach(gridScope.columns, function (col) {
-              gridCtrl.resizeOnData(col);
-            });
+    function initGrid(gridCtrl, gridScope) {
+      gridScope.$on('ngGridEventData', function () {
+        $timeout(function () {
+          angular.forEach(gridScope.columns, function (col) {
+            gridCtrl.resizeOnData(col);
           });
         });
-      },
-      columnDefs: [
-        { field: 'artifactId', width: '70%', displayName: 'Artifact Id'},
-        { field: 'testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
-      ],
+      });
+    }
+    this.failedArtifactsSummary = {
+      data: 'basicTestInfoCtrl.failedVersionSummary',
+      init: initGrid,
+      columnDefs: 'basicTestInfoCtrl.columnDefsForGrids',
       multiSelect: false,
       rowTemplate: 'views/basic-test-info-row-template.html'
     };
     this.chosenArtifactsSummary = {
       data: 'basicTestInfoCtrl.chosenVersionSummary',
-      init: function (gridCtrl, gridScope) {
-        gridScope.$on('ngGridEventData', function () {
-          $timeout(function () {
-            angular.forEach(gridScope.columns, function (col) {
-              gridCtrl.resizeOnData(col);
-            });
-          });
-        });
-      },
-      columnDefs: [
-        { field: 'artifactId', width: '70%', displayName: 'Artifact Id'},
-        { field: 'testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
-      ],
+      init: initGrid,
+      columnDefs: 'basicTestInfoCtrl.columnDefsForGrids',
       multiSelect: false,
       rowTemplate: 'views/basic-test-info-row-template.html'
     };
@@ -64,14 +51,20 @@
 
     this.updateChosenArtifactData = function () {
       this.allVersionSummary.forEach(function (currentVersionSummary) {
-        if (self.currentArtifactId === currentVersionSummary.artifactId && chosenVersionSummaryDoesntHave(currentVersionSummary)) {
+        if (self.currentArtifactId === currentVersionSummary.artifactId && chosenVersionSummaryDoesntHave(currentVersionSummary) && failedVersionSummaryDoesntHave(currentVersionSummary)) {
           self.chosenVersionSummary.push(currentVersionSummary);
+          self.artifactsWereChosen = true;
         }
       });
-      this.artifactsWereChosen = true;
     };
+
     function chosenVersionSummaryDoesntHave(currentVersionSummary) {
       return self.chosenVersionSummary.every(function (versionSummary) {
+        return versionSummary.artifactId !== currentVersionSummary.artifactId;
+      });
+    }
+    function failedVersionSummaryDoesntHave(currentVersionSummary) {
+      return self.failedVersionSummary.every(function (versionSummary) {
         return versionSummary.artifactId !== currentVersionSummary.artifactId;
       });
     }
@@ -85,7 +78,9 @@
       });
     }
     function getArtifactsDataFromService() {
+      var newAllVersionSummary = [];
       initArtifacts().then(function () {
+        self.failedVersionSummary = [];
         self.artifacts.forEach(function (currentArtifact) {
           self.basicTestInfoServerApi.getArtifactVersions(currentArtifact.artifactId, currentArtifact.groupId)
             .then(function (response) {
@@ -93,19 +88,28 @@
               self.basicTestInfoServerApi.getVersionSummary(latestVersion, currentArtifact.artifactId, currentArtifact.groupId)
                 .then(function (response) {
                   response.data.responseBody.forEach(function (responseBodyOfCurrent) {
-                    self.allVersionSummary.push(responseBodyOfCurrent);
+                    newAllVersionSummary.push(responseBodyOfCurrent);
                     if (responseBodyOfCurrent.testStatusEnum !== 'STATUS_COMPLETED_SUCCESSFULLY') {
                       self.failedVersionSummary.push(responseBodyOfCurrent);
                     }
                   });
-
+                  self.allVersionSummary = newAllVersionSummary;
                 });
             });
         });
-        self.isDataLoaded = true;
       });
     }
     getArtifactsDataFromService();
+    this.REFRESH_TIME = 5 * 60 * 1000; // five minutes
+    this.promise = $interval(getArtifactsDataFromService, this.REFRESH_TIME);
+
+// Cancel interval on page changes
+    $scope.$on('$destroy', function () {
+      if (angular.isDefined(self.promise)) {
+        $interval.cancel(self.promise);
+        self.promise = undefined;
+      }
+    });
   }
 
   angular
