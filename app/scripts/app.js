@@ -5,13 +5,16 @@
 angular
   .module('postplayTryAppInternal', ['ngGrid', 'ngAnimate'])
   .constant('basicTestInfoServerResponse', {
+    version: '2.487.0',
+    artifactId: 'wix-public-html-renderer-webapp',
+    groupId: 'com.wixpress',
     artifactVersions: ['2.487.0', '2.469.0', '2.468.0', '2.467.0', '2.466.0', '2.465.0', '2.464.0', '2.463.0', '2.462.0', '2.461.0'],
     allArtifacts: [
       {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.487.0', name: '2. Wix Html Editor', dynamic: false, tests: [], testRuns: []},
       {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', name: '2. Wix Public Html Renderer', dynamic: false, tests: [], testRuns: []},
       {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', name: 'Wix Public', dynamic: false, tests: [], testRuns: []}
     ],
-    versionSummary: {
+    versionSummaryForRenderer: {
       code: 0,
       message: 'OK',
       comments: null,
@@ -63,161 +66,6 @@ angular
         analysisComments: []
       }
     ]
-  })
-  .constant('dashboardServerResponse', {
-    currentlyRunningTests: {
-      code: 0,
-      message: 'OK',
-      comments: null,
-      responseBody: []
-    },
-    fieldMap: {
-      throughputTotalCalls: 'Throughput Total Calls',
-      systemError: 'System Error Rate',
-      rps: 'Requests Per Seconds',
-      totalIncomingCalls: 'Total Incoming Calls',
-      businessWarning: 'Business Warning Rate',
-      systemRecoverable: 'System Recoverable Rate',
-      totalIncomingSuccessfulCalls: 'Total Incoming Successful Calls',
-      businessFatal: 'Business Fatal Rate',
-      systemWarning: 'System Warning Rate',
-      systemFatal: 'System Fatal Rate',
-      businessRecoverable: 'Business Recoverable Rate',
-      businessError: 'Business Error Rate',
-      errorRate: 'Error Rate'
-    }
-  })
-  .constant('systemConfigurationServerResponse', {
-    testDataByTestId21: {
-      monitorTestId: 21,
-      monitoredArtifactId: 31,
-      name: 'AppInfo Sanity',
-      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-      runEveryMinute: 1,
-      times: 10,
-      delayInMinutes: 2,
-      inputParams: [],
-      validationExpressions: [{
-        name: 'Error rate',
-        monitorTestId: 21,
-        expression: 'errorRate > HIGHEST ^ -5%',
-        validationExpressionId: 71,
-        deleted: false
-      }],
-      monitorTestQueueId: 0,
-      active: true,
-      defaultTest: false,
-      deleted: false,
-      reference: true,
-      useBaseline: false
-    },
-    testDataByTestId31: {
-      monitorTestId: 31,
-      monitoredArtifactId: 31,
-      name: 'AppInfo Sanity2',
-      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-      runEveryMinute: 1,
-      times: 3,
-      delayInMinutes: 8,
-      inputParams: [],
-      validationExpressions: [{
-        name: 'Throughput',
-        monitorTestId: 31,
-        expression: 'throughputTotalCalls < LOWEST',
-        validationExpressionId: 81,
-        deleted: false
-      }],
-      monitorTestQueueId: 0,
-      active: true,
-      defaultTest: false,
-      deleted: false,
-      reference: true,
-      useBaseline: false
-    },
-    artifactData: {
-      monitoredArtifactId: 31,
-      artifactId: 'wix-public-html-renderer-webapp',
-      groupId: 'com.wixpress',
-      version: null,
-      name: '2. Wix Public Html Renderer',
-      dynamic: false,
-      tests: [{
-        monitorTestId: 21,
-        monitoredArtifactId: 31,
-        name: 'AppInfo Sanity',
-        implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-        runEveryMinute: 1,
-        times: 10,
-        delayInMinutes: 2,
-        inputParams: [],
-        validationExpressions: [],
-        monitorTestQueueId: 0,
-        active: true,
-        defaultTest: false,
-        deleted: false,
-        reference: true,
-        useBaseline: false
-      },
-      {
-        monitorTestId: 31,
-        monitoredArtifactId: 31,
-        name: 'AppInfo Sanity2',
-        implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-        runEveryMinute: 1,
-        times: 3,
-        delayInMinutes: 8,
-        inputParams: [],
-        validationExpressions: [],
-        monitorTestQueueId: 0,
-        active: true,
-        defaultTest: false,
-        deleted: false,
-        reference: true,
-        useBaseline: false
-      }],
-      testRuns: []
-    },
-    templates: [{
-      monitorTestTemplateId: 1,
-      name: 'AppInfo Sanity',
-      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-      runEveryMinute: 1,
-      times: 5,
-      delayInMinutes: 0,
-      inputParams: [],
-      validationExpressions: [],
-      defaultTest: false
-    }],
-    expressionSyntax: [{
-      operators: ['=', '>', '<', '<=', '>=', '!='],
-      refServersOprands: ['HIGHEST', 'LOWEST', 'AVG'],
-      fields: [{
-        name: 'totalIncomingCalls',
-        dataType: 'LONG'
-      }, {
-        name: 'totalIncomingSuccessfulCalls',
-        dataType: 'LONG'
-      }],
-      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest'
-    }]
-  })
-  .constant('specificServerData2', {
-    server: 'app30.aus.wixpress.com',
-    version: '2.487.0',
-    artifactId: 'wix-html-editor-webapp',
-    groupId: 'com.wixpress'
-  })
-  .constant('specificServerData', {
-    server: 'app30.aus.wixpress.com',
-    version: '2.487.0',
-    artifactId: 'wix-public-html-renderer-webapp',
-    groupId: 'com.wixpress'
-  })
-  .constant('specificServerData3', {
-    server: 'app30.aus.wixpress.com',
-    version: '2.487.0',
-    artifactId: 'wix-public-war',
-    groupId: 'com.wixpress'
   })
   .constant('specificServerServerResponse', {
     serverData: {
@@ -331,10 +179,25 @@ angular
       }
     }
   })
-  .constant('serverApiUrl', {
+  .constant('specificServerData', {
+    server: 'app30.aus.wixpress.com',
     version: '2.487.0',
     artifactId: 'wix-public-html-renderer-webapp',
-    groupId: 'com.wixpress',
+    groupId: 'com.wixpress'
+  })
+  .constant('specificServerData2', {
+    server: 'app30.aus.wixpress.com',
+    version: '2.487.0',
+    artifactId: 'wix-html-editor-webapp',
+    groupId: 'com.wixpress'
+  })
+  .constant('specificServerData3', {
+    server: 'app30.aus.wixpress.com',
+    version: '2.487.0',
+    artifactId: 'wix-public-war',
+    groupId: 'com.wixpress'
+  })
+  .constant('serverApiUrl', {
     ALL_ARTIFACTS_API_URL: '/_api/getAllArtifacts',
     CURRENTLY_RUNNING_ARTIFACTS_API_URL: '/_api/getCurrentlyRunningArtifacts/json',
     BUILDS_API_URL: '/_api/getLifecycleBuilds',
@@ -348,6 +211,121 @@ angular
     EXPRESSION_SYNTAX_API_URL: '_api/getExpressionSyntax',
     SERVER_STATUS_API_URL_PREFIX: 'api/status/json?server='
   });
+
+//.constant('systemConfigurationServerResponse', {
+//  testDataByTestId21: {
+//    monitorTestId: 21,
+//    monitoredArtifactId: 31,
+//    name: 'AppInfo Sanity',
+//    implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+//    runEveryMinute: 1,
+//    times: 10,
+//    delayInMinutes: 2,
+//    inputParams: [],
+//    validationExpressions: [{
+//      name: 'Error rate',
+//      monitorTestId: 21,
+//      expression: 'errorRate > HIGHEST ^ -5%',
+//      validationExpressionId: 71,
+//      deleted: false
+//    }],
+//    monitorTestQueueId: 0,
+//    active: true,
+//    defaultTest: false,
+//    deleted: false,
+//    reference: true,
+//    useBaseline: false
+//  },
+//  testDataByTestId31: {
+//    monitorTestId: 31,
+//    monitoredArtifactId: 31,
+//    name: 'AppInfo Sanity2',
+//    implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+//    runEveryMinute: 1,
+//    times: 3,
+//    delayInMinutes: 8,
+//    inputParams: [],
+//    validationExpressions: [{
+//      name: 'Throughput',
+//      monitorTestId: 31,
+//      expression: 'throughputTotalCalls < LOWEST',
+//      validationExpressionId: 81,
+//      deleted: false
+//    }],
+//    monitorTestQueueId: 0,
+//    active: true,
+//    defaultTest: false,
+//    deleted: false,
+//    reference: true,
+//    useBaseline: false
+//  },
+//  artifactData: {
+//    monitoredArtifactId: 31,
+//    artifactId: 'wix-public-html-renderer-webapp',
+//    groupId: 'com.wixpress',
+//    version: null,
+//    name: '2. Wix Public Html Renderer',
+//    dynamic: false,
+//    tests: [{
+//      monitorTestId: 21,
+//      monitoredArtifactId: 31,
+//      name: 'AppInfo Sanity',
+//      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+//      runEveryMinute: 1,
+//      times: 10,
+//      delayInMinutes: 2,
+//      inputParams: [],
+//      validationExpressions: [],
+//      monitorTestQueueId: 0,
+//      active: true,
+//      defaultTest: false,
+//      deleted: false,
+//      reference: true,
+//      useBaseline: false
+//    },
+//      {
+//        monitorTestId: 31,
+//        monitoredArtifactId: 31,
+//        name: 'AppInfo Sanity2',
+//        implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+//        runEveryMinute: 1,
+//        times: 3,
+//        delayInMinutes: 8,
+//        inputParams: [],
+//        validationExpressions: [],
+//        monitorTestQueueId: 0,
+//        active: true,
+//        defaultTest: false,
+//        deleted: false,
+//        reference: true,
+//        useBaseline: false
+//      }],
+//    testRuns: []
+//  },
+//  templates: [{
+//    monitorTestTemplateId: 1,
+//    name: 'AppInfo Sanity',
+//    implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
+//    runEveryMinute: 1,
+//    times: 5,
+//    delayInMinutes: 0,
+//    inputParams: [],
+//    validationExpressions: [],
+//    defaultTest: false
+//  }],
+//  expressionSyntax: [{
+//    operators: ['=', '>', '<', '<=', '>=', '!='],
+//    refServersOprands: ['HIGHEST', 'LOWEST', 'AVG'],
+//    fields: [{
+//      name: 'totalIncomingCalls',
+//      dataType: 'LONG'
+//    }, {
+//      name: 'totalIncomingSuccessfulCalls',
+//      dataType: 'LONG'
+//    }],
+//    implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest'
+//  }]
+//})
 
 //add module dependencies & config and run blocks in this module
 //load only the internal module in tests and mock any module dependency

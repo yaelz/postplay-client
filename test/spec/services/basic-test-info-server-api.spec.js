@@ -41,14 +41,14 @@ describe('Service: basicTestInfoServerApi', function () {
   });
 
   it('should get version summary of an artifact', function () {
-    API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + serverApiUrl.version + '&artifactId=' + serverApiUrl.artifactId + '&groupId=' + serverApiUrl.groupId;
-    var argsForFunc = [serverApiUrl.version, serverApiUrl.artifactId, serverApiUrl.groupId];
-    checkResponseFromServer(basicTestInfoServerApi.getVersionSummary, {}, basicTestInfoServerResponse.versionSummary, argsForFunc);
+    API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + basicTestInfoServerResponse.version + '&artifactId=' + basicTestInfoServerResponse.artifactId + '&groupId=' + basicTestInfoServerResponse.groupId;
+    var argsForFunc = [basicTestInfoServerResponse.version, basicTestInfoServerResponse.artifactId, basicTestInfoServerResponse.groupId];
+    checkResponseFromServer(basicTestInfoServerApi.getVersionSummary, {}, basicTestInfoServerResponse.versionSummaryForRenderer, argsForFunc);
   });
 
   it('should get all artifact versions', function () {
-    API_URL = serverApiUrl.ARTIFACT_VERS_API_URL_PREFIX + serverApiUrl.artifactId + '&groupId=' + serverApiUrl.groupId;
-    var argsForFunc = [serverApiUrl.artifactId, serverApiUrl.groupId];
+    API_URL = serverApiUrl.ARTIFACT_VERS_API_URL_PREFIX + basicTestInfoServerResponse.artifactId + '&groupId=' + basicTestInfoServerResponse.groupId;
+    var argsForFunc = [basicTestInfoServerResponse.artifactId, basicTestInfoServerResponse.groupId];
     checkResponseFromServer(basicTestInfoServerApi.getArtifactVersions, [], basicTestInfoServerResponse.artifactVersions, argsForFunc);
   });
 

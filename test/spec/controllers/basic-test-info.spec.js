@@ -2,7 +2,7 @@
 
 describe('Controller: BasicTestInfoController', function () {
 
-  var allArtifacts, artifactVersions, versionSummary;
+  var allArtifacts, artifactVersions, versionSummaryForRenderer;
   var serverInfoMockSuccess, serverInfoMockWarning, serverInfoMockErrors, serverInfoMockIncomplete, $q, deferred;
   // load the controller's module
   beforeEach(function () {
@@ -11,6 +11,20 @@ describe('Controller: BasicTestInfoController', function () {
     serverInfoMockWarning = {testStatusEnum: 'STATUS_COMPLETED_WITH_WARNINGS'};
     serverInfoMockErrors = {testStatusEnum: 'STATUS_COMPLETED_WITH_ERRORS'};
     serverInfoMockIncomplete = {testStatusEnum: 'INCOMPLETE'};
+    // TODO where should this function go?
+    function clone(obj) {
+      if (obj === null || typeof obj !== 'object') {
+        return obj;
+      }
+      var newObj = obj.constructor(); // changed
+      for (var key in obj) {
+        if (obj.hasOwnProperty(key)) {
+          newObj[key] = clone(obj[key]);
+        }
+      }
+      return newObj;
+    }
+
     //add your mocks here
     var basicTestInfoServerApiMock = {
       getArtifactVersions: jasmine.createSpy('getArtifactVersions').andCallFake(function () {
@@ -26,19 +40,8 @@ describe('Controller: BasicTestInfoController', function () {
       }),
       getVersionSummary: jasmine.createSpy('getVersionSummary').andCallFake(function () {
         deferred = $q.defer();
-        function clone(obj) {
-          if (obj === null || typeof (obj) !== 'object') {
-            return obj;
-          }
-          var temp = obj.constructor(); // changed
-          for (var key in obj) {
-            if (obj.hasOwnProperty(key)) {
-              temp[key] = clone(obj[key]);
-            }
-          }
-          return temp;
-        }
-        var a = clone(versionSummary);
+
+        var a = clone(versionSummaryForRenderer);
         deferred.resolve(clone({data: a}));
         return deferred.promise;
       })
@@ -56,7 +59,7 @@ describe('Controller: BasicTestInfoController', function () {
     // TODO don't think it should check the server response... :\
     artifactVersions = basicTestInfoServerResponse.artifactVersions;
     allArtifacts = basicTestInfoServerResponse.allArtifacts;
-    versionSummary = basicTestInfoServerResponse.versionSummary;
+    versionSummaryForRenderer = basicTestInfoServerResponse.versionSummaryForRenderer;
     $q = _$q_;
 
     scope = $rootScope.$new();
@@ -78,15 +81,19 @@ describe('Controller: BasicTestInfoController', function () {
       expect(BasicTestInfoController.artifacts).toEqual(allArtifacts);
       expect(BasicTestInfoController.chosenVersionSummary).toEqual([]);
       expect(BasicTestInfoController.artifactsWereChosen).toEqual(false);
-      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummary.responseBody[0], versionSummary.responseBody[0], versionSummary.responseBody[0]]);
+      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryForRenderer.responseBody[0], versionSummaryForRenderer.responseBody[0], versionSummaryForRenderer.responseBody[0]]);
     });
 
     it('should hold the chosen artifact data in the chosenVersionSummary table', function () {
       mockGettingDataFromServer();
       BasicTestInfoController.currentArtifactId = 'wix-public-html-renderer-webapp';
       BasicTestInfoController.updateChosenArtifactData();
-      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummary.responseBody[0]]);
+      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummaryForRenderer.responseBody[0]]);
     });
+//    it('should hold the error artifacts\' data in the failedVersionSummary table', function () {
+//      mockGettingDataFromServer();
+//      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummary.responseBody[0]]);
+//    });
   });
 
   describe('server run end status', function () {

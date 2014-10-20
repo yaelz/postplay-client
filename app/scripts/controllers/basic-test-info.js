@@ -10,6 +10,7 @@
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.artifacts = [];
     this.allVersionSummary = [];
+    this.failedVersionSummary = [];
     this.chosenVersionSummary = [];
     this.artifactsWereChosen = false;
     this.isDataLoaded = false;
@@ -107,7 +108,11 @@
                 .then(function (response) {
                   response.data.responseBody.forEach(function (responseBodyOfCurrent) {
                     self.allVersionSummary.push(responseBodyOfCurrent);
+//                    if (responseBodyOfCurrent.testStatusEnum !== 'STATUS_COMPLETED_SUCCESSFULLY') {
+//                      self.failedVersionSummary.push(responseBodyOfCurrent);
+//                    }
                   });
+
                 });
             });
         });

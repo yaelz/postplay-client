@@ -82,10 +82,7 @@
     <script src="scripts/app.js"></script>
     <script src="scripts/controllers/basic-test-info.js"></script>
     <script src="scripts/services/basic-test-info-server-api.js"></script>
-    <script src="scripts/controllers/test-results.js"></script>
     <script src="scripts/controllers/currently-running-artifacts.js"></script>
-    <script src="scripts/services/dashboard-server-api.js"></script>
-    <script src="scripts/services/system-configuration-server-api.js"></script>
     <script src="scripts/services/specific-server-status-server-api.js"></script>
     <script src="scripts/controllers/specific-server-status.js"></script>
     <!-- endbuild --><!-- scripts -->
