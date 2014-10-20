@@ -1,0 +1,4 @@
+%div(style="height: 100%")
+  %div(ng-style="{'cursor': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell")
+    %a(href="#artifactId/{{row.entity.artifactId}}/server/{{row.entity.server}}/groupId/{{row.entity.groupId}}")
+      %div(ng-cell)

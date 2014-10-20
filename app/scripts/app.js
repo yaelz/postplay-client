@@ -24,7 +24,41 @@ angular
         server: 'app30.aus.wixpress.com',
         version: '2.487.0',
         analysisResultStatus: 'TEST_FAILED',
+        testStatusEnum: 'STATUS_COMPLETED_WITH_ERRORS',
+        errorFields: null,
+        runStatus: 'FINISHED',
+        comments: 'Failed on errorRate',
+        event: 'TESTBED'
+      }]
+    },
+    versionSummaryForEditor: {
+      code: 0,
+      message: 'OK',
+      comments: null,
+      responseBody: [{
+        artifactId: 'wix-html-editor-webapp',
+        groupId: 'com.wixpress',
+        server: 'app30.aus.wixpress.com',
+        version: '2.487.0',
+        analysisResultStatus: 'TEST_FAILED',
         testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
+        errorFields: null,
+        runStatus: 'FINISHED',
+        comments: 'Failed on errorRate',
+        event: 'TESTBED'
+      }]
+    },
+    versionSummaryForWar: {
+      code: 0,
+      message: 'OK',
+      comments: null,
+      responseBody: [{
+        artifactId: 'wix-public-war',
+        groupId: 'com.wixpress',
+        server: 'app30.aus.wixpress.com',
+        version: '2.487.0',
+        analysisResultStatus: 'TEST_FAILED',
+        testStatusEnum: 'STATUS_COMPLETED_WITH_ERRORS',
         errorFields: null,
         runStatus: 'FINISHED',
         comments: 'Failed on errorRate',

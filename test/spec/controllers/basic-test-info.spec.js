@@ -2,7 +2,7 @@
 
 describe('Controller: BasicTestInfoController', function () {
 
-  var allArtifacts, artifactVersions, versionSummaryForRenderer;
+  var allArtifacts, artifactVersions, versionSummaryForRenderer, versionSummaryResponseBodyForRenderer, versionSummaryForWar, versionSummaryForEditor, versionSummaryResponseBodyForEditor, versionSummaryResponseBodyForWar;
   var serverInfoMockSuccess, serverInfoMockWarning, serverInfoMockErrors, serverInfoMockIncomplete, $q, deferred;
   // load the controller's module
   beforeEach(function () {
@@ -38,11 +38,17 @@ describe('Controller: BasicTestInfoController', function () {
         deferred.resolve({data: allArtifacts});
         return deferred.promise;
       }),
-      getVersionSummary: jasmine.createSpy('getVersionSummary').andCallFake(function () {
+      getVersionSummary: jasmine.createSpy('getVersionSummary').andCallFake(function (artifactVersion, artifactId) {
         deferred = $q.defer();
-
-        var a = clone(versionSummaryForRenderer);
-        deferred.resolve(clone({data: a}));
+        var newVersionSummary = clone(versionSummaryForRenderer);
+        if (artifactId === 'wix-public-html-renderer-webapp') {
+          newVersionSummary = clone(versionSummaryForRenderer);
+        } else if (artifactId === 'wix-html-editor-webapp') {
+          newVersionSummary = clone(versionSummaryForEditor);
+        } else if (artifactId === 'wix-public-war') {
+          newVersionSummary = clone(versionSummaryForWar);
+        }
+        deferred.resolve(clone({data: newVersionSummary}));
         return deferred.promise;
       })
     };
@@ -59,7 +65,12 @@ describe('Controller: BasicTestInfoController', function () {
     // TODO don't think it should check the server response... :\
     artifactVersions = basicTestInfoServerResponse.artifactVersions;
     allArtifacts = basicTestInfoServerResponse.allArtifacts;
+    versionSummaryForEditor = basicTestInfoServerResponse.versionSummaryForEditor;
     versionSummaryForRenderer = basicTestInfoServerResponse.versionSummaryForRenderer;
+    versionSummaryForWar = basicTestInfoServerResponse.versionSummaryForWar;
+    versionSummaryResponseBodyForEditor = basicTestInfoServerResponse.versionSummaryForEditor.responseBody[0];
+    versionSummaryResponseBodyForRenderer = basicTestInfoServerResponse.versionSummaryForRenderer.responseBody[0];
+    versionSummaryResponseBodyForWar = basicTestInfoServerResponse.versionSummaryForWar.responseBody[0];
     $q = _$q_;
 
     scope = $rootScope.$new();
@@ -81,19 +92,23 @@ describe('Controller: BasicTestInfoController', function () {
       expect(BasicTestInfoController.artifacts).toEqual(allArtifacts);
       expect(BasicTestInfoController.chosenVersionSummary).toEqual([]);
       expect(BasicTestInfoController.artifactsWereChosen).toEqual(false);
-      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryForRenderer.responseBody[0], versionSummaryForRenderer.responseBody[0], versionSummaryForRenderer.responseBody[0]]);
+      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryResponseBodyForEditor, versionSummaryResponseBodyForRenderer, versionSummaryResponseBodyForWar]);
     });
 
     it('should hold the chosen artifact data in the chosenVersionSummary table', function () {
       mockGettingDataFromServer();
       BasicTestInfoController.currentArtifactId = 'wix-public-html-renderer-webapp';
       BasicTestInfoController.updateChosenArtifactData();
-      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummaryForRenderer.responseBody[0]]);
+      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummaryResponseBodyForRenderer]);
+      BasicTestInfoController.currentArtifactId = 'wix-html-editor-webapp';
+      BasicTestInfoController.updateChosenArtifactData();
+      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummaryResponseBodyForRenderer, versionSummaryResponseBodyForEditor]);
     });
-//    it('should hold the error artifacts\' data in the failedVersionSummary table', function () {
-//      mockGettingDataFromServer();
-//      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummary.responseBody[0]]);
-//    });
+    it('should hold the error artifacts\' data in the failedVersionSummary table', function () {
+      mockGettingDataFromServer();
+      // TODO Change this to hold only failed from a list!
+      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryResponseBodyForRenderer, versionSummaryResponseBodyForWar]);
+    });
   });
 
   describe('server run end status', function () {

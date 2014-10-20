@@ -16,7 +16,7 @@
     this.isDataLoaded = false;
 
     this.failedArtifactsSummary = {
-      data: 'basicTestInfoCtrl.allVersionSummary',
+      data: 'basicTestInfoCtrl.failedVersionSummary',
       init: function (gridCtrl, gridScope) {
         gridScope.$on('ngGridEventData', function () {
           $timeout(function () {
@@ -31,14 +31,7 @@
         { field: 'testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
       ],
       multiSelect: false,
-      rowTemplate: '' +
-        '<div style="height: 100%" >' +
-          '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell">' +
-            '<a href="#artifactId/{{row.entity.artifactId}}/server/{{row.entity.server}}/groupId/{{row.entity.groupId}}">' +
-            '<div ng-cell>' +
-            '</div>' +
-          '</div>' +
-        '</div>'
+      rowTemplate: 'views/basic-test-info-row-template.html'
     };
     this.chosenArtifactsSummary = {
       data: 'basicTestInfoCtrl.chosenVersionSummary',
@@ -56,14 +49,7 @@
         { field: 'testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
       ],
       multiSelect: false,
-      rowTemplate: '' +
-        '<div style="height: 100%" >' +
-        '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell">' +
-        '<a href="#artifactId/{{row.entity.artifactId}}/server/{{row.entity.server}}/groupId/{{row.entity.groupId}}">' +
-        '<div ng-cell>' +
-        '</div>' +
-        '</div>' +
-        '</div>'
+      rowTemplate: 'views/basic-test-info-row-template.html'
     };
     this.serverRunEndedWithError = function (serverInfo) {
       // TODO get possibilities
@@ -108,9 +94,9 @@
                 .then(function (response) {
                   response.data.responseBody.forEach(function (responseBodyOfCurrent) {
                     self.allVersionSummary.push(responseBodyOfCurrent);
-//                    if (responseBodyOfCurrent.testStatusEnum !== 'STATUS_COMPLETED_SUCCESSFULLY') {
-//                      self.failedVersionSummary.push(responseBodyOfCurrent);
-//                    }
+                    if (responseBodyOfCurrent.testStatusEnum !== 'STATUS_COMPLETED_SUCCESSFULLY') {
+                      self.failedVersionSummary.push(responseBodyOfCurrent);
+                    }
                   });
 
                 });
