@@ -2,8 +2,9 @@
 
 describe('Controller: BasicTestInfoController', function () {
 
-  var allArtifacts, allFailedArtifacts, artifactVersions, versionSummaryForRenderer, versionSummaryWrapperForRenderer, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditor, versionSummaryWrapperBodyForWar;
+  var allArtifacts, allFailedArtifacts, allFailedArtifactsOnSecondServerCall, artifactVersions, versionSummaryForRenderer, versionSummaryWrapperForRenderer, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditor, versionSummaryWrapperBodyForWar;
   var mockServerFlush;
+  var spyFuncForGetAllFailedArtifacts;
   var serverInfoMockSuccess, serverInfoMockWarning, serverInfoMockErrors, serverInfoMockIncomplete, $q, deferred;
   // load the controller's module
   beforeEach(function () {
@@ -23,6 +24,13 @@ describe('Controller: BasicTestInfoController', function () {
     }
     mockServerFlush = function () {
       scope.$apply();
+    };
+    spyFuncForGetAllFailedArtifacts = function (allFailedArtifacts) {
+      return jasmine.createSpy('getAllFailedArtifacts').andCallFake(function () {
+        deferred = $q.defer();
+        deferred.resolve({data: allFailedArtifacts});
+        return deferred.promise;
+      });
     };
     //add your mocks here
     var basicTestInfoServerApiMock = {
@@ -45,12 +53,18 @@ describe('Controller: BasicTestInfoController', function () {
       getVersionSummary: jasmine.createSpy('getVersionSummary').andCallFake(function (artifactVersion, artifactId) {
         deferred = $q.defer();
         var newVersionSummary = clone(versionSummaryForRenderer);
-        if (artifactId === 'wix-public-html-renderer-webapp') {
-          newVersionSummary = clone(versionSummaryForRenderer);
-        } else if (artifactId === 'wix-html-editor-webapp') {
-          newVersionSummary = clone(versionSummaryForEditor);
-        } else if (artifactId === 'wix-public-war') {
-          newVersionSummary = clone(versionSummaryForWar);
+        switch (artifactId) {
+          case 'wix-public-html-renderer-webapp':
+            newVersionSummary = clone(versionSummaryForRenderer);
+            break;
+          case 'wix-html-editor-webapp':
+            newVersionSummary = clone(versionSummaryForEditor);
+            break;
+          case 'wix-public-war':
+            newVersionSummary = clone(versionSummaryForWar);
+            break;
+          default:
+            newVersionSummary = clone(versionSummaryForRenderer);
         }
         deferred.resolve(clone({data: newVersionSummary}));
         return deferred.promise;
@@ -70,6 +84,7 @@ describe('Controller: BasicTestInfoController', function () {
     artifactVersions = basicTestInfoServerResponse.artifactVersions;
     allArtifacts = basicTestInfoServerResponse.allArtifacts;
     allFailedArtifacts = basicTestInfoServerResponse.allFailedArtifacts;
+    allFailedArtifactsOnSecondServerCall = basicTestInfoServerResponse.allFailedArtifactsNEW;
     versionSummaryForEditor = basicTestInfoServerResponse.versionSummaryForEditor;
     versionSummaryForRenderer = basicTestInfoServerResponse.versionSummaryForRenderer;
     versionSummaryForWar = basicTestInfoServerResponse.versionSummaryForWar;
@@ -118,14 +133,19 @@ describe('Controller: BasicTestInfoController', function () {
       expect(BasicTestInfoController.chosenVersionSummary).toEqual([]);
     });
   });
-//  describe('getting different info from server on refresh', function () {
-//    beforeEach((inject(function (basicTestInfoServerApi) {
-//
-//    })));
-//    it('should return true', function () {
-//      expect(true).toBe(true);
-//    });
-//  });
+
+  describe('getting different info from server on refresh', function () {
+    it('should make one of the artifacts that failed - pass', (inject(function (basicTestInfoServerApi, $interval) {
+      mockServerFlush();
+      // TODO Change this to hold only failed from a list!
+      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
+      basicTestInfoServerApi.getAllFailedArtifacts = spyFuncForGetAllFailedArtifacts(allFailedArtifactsOnSecondServerCall);
+      $interval.flush(BasicTestInfoController.REFRESH_TIME);
+      mockServerFlush();
+      // TODO Change this to hold only failed from a list!
+      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryWrapperForRenderer]);
+    })));
+  });
 
   describe('server run end status', function () {
     beforeEach(function () {

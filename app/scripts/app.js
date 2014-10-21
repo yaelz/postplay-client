@@ -19,6 +19,9 @@ angular
       {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Public Html Renderer', dynamic: false, tests: [], testRuns: []},
       {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', name: 'Wix Public', event: 'TESTBED', dynamic: false, tests: [], testRuns: []}
     ],
+    allFailedArtifactsNEW: [
+      {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Public Html Renderer', dynamic: false, tests: [], testRuns: []}
+    ],
     versionSummaryForRenderer: {
       code: 0,
       message: 'OK',
