@@ -24,19 +24,27 @@
         });
       });
     }
+
+    function onRowClick(selectedRow) {
+      self.chosenArtifactServers = selectedRow.entity.artifactData.servers;
+      self.artifactIsSelected = true;
+      return false;
+    }
     this.failedArtifactsSummary = {
       data: 'basicTestInfoCtrl.failedVersionSummary',
       init: initGrid,
       columnDefs: 'basicTestInfoCtrl.columnDefsForGrids',
       multiSelect: false,
-      rowTemplate: 'views/basic-test-info-row-template.html'
+      beforeSelectionChange: onRowClick
+//      rowTemplate: 'views/basic-test-info-row-template.html'
     };
     this.chosenArtifactsSummary = {
       data: 'basicTestInfoCtrl.chosenVersionSummary',
       init: initGrid,
       columnDefs: 'basicTestInfoCtrl.columnDefsForGrids',
       multiSelect: false,
-      rowTemplate: 'views/basic-test-info-row-template.html'
+      beforeSelectionChange: onRowClick
+//      rowTemplate: 'views/basic-test-info-row-template.html'
     };
     this.serverRunEndedWithError = function (serverInfo) {
       // TODO get possibilities
