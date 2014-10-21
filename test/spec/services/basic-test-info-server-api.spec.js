@@ -23,6 +23,11 @@ describe('Service: basicTestInfoServerApi', function () {
     checkResponseFromServer(basicTestInfoServerApi.getAllArtifacts, [], basicTestInfoServerResponse.allArtifacts);
   });
 
+  it('should get all failed artifacts monitored by postplay', function () {
+    API_URL = serverApiUrl.ALL_FAILED_ARTIFACTS_API_URL;
+    checkResponseFromServer(basicTestInfoServerApi.getAllFailedArtifacts, [], basicTestInfoServerResponse.allFailedArtifacts);
+  });
+
   function checkResponseFromServer(functionToEval, valueBeforeServerResponse, responseFromServer, argsForFunc) {
     $httpBackend.expectGET(API_URL).respond(200, responseFromServer);
     var functionReturnValue = valueBeforeServerResponse;
@@ -41,8 +46,8 @@ describe('Service: basicTestInfoServerApi', function () {
   });
 
   it('should get version summary of an artifact', function () {
-    API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + basicTestInfoServerResponse.version + '&artifactId=' + basicTestInfoServerResponse.artifactId + '&groupId=' + basicTestInfoServerResponse.groupId;
-    var argsForFunc = [basicTestInfoServerResponse.version, basicTestInfoServerResponse.artifactId, basicTestInfoServerResponse.groupId];
+    API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + basicTestInfoServerResponse.version + '&artifactId=' + basicTestInfoServerResponse.artifactId + '&groupId=' + basicTestInfoServerResponse.groupId + '&event=' + basicTestInfoServerResponse.event;
+    var argsForFunc = [basicTestInfoServerResponse.version, basicTestInfoServerResponse.artifactId, basicTestInfoServerResponse.groupId, basicTestInfoServerResponse.event];
     checkResponseFromServer(basicTestInfoServerApi.getVersionSummary, {}, basicTestInfoServerResponse.versionSummaryForRenderer, argsForFunc);
   });
 

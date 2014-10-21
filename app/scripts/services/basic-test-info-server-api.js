@@ -5,11 +5,6 @@
   /* @ngInject */
   function BasicTestInfoServerApi($http, serverApiUrl) {
     // AngularJS will instantiate a singleton by calling "new" on this function
-    var allArtifacts = [];
-    var allLifeCycleBuilds = {};
-    var versionSummary = {};
-    var artifactVersions = [];
-//    var currentlyRunningArtifacts = [];
     this.thereWasServerError = false;
     this.serverErrors = {errorGettingRunningArtifacts: false};
     var self = this;
@@ -28,25 +23,27 @@
     this.getAllArtifacts = function () {
 //      allArtifacts = [];
       API_URL = serverApiUrl.ALL_ARTIFACTS_API_URL;
-      return runHttpGetSuccessAndError(API_URL, allArtifacts);
+      return runHttpGetSuccessAndError(API_URL);
+    };
+
+    this.getAllFailedArtifacts = function () {
+      API_URL = serverApiUrl.ALL_FAILED_ARTIFACTS_API_URL;
+      return runHttpGetSuccessAndError(API_URL);
     };
 
     this.getLifecycleBuilds = function () {
-      allLifeCycleBuilds = {};
       API_URL = serverApiUrl.BUILDS_API_URL;
-      return runHttpGetSuccessAndError(API_URL, allLifeCycleBuilds);
+      return runHttpGetSuccessAndError(API_URL);
     };
 
-    this.getVersionSummary = function (version, artifactId, groupId) {
-      versionSummary = {};
-      API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + version + '&artifactId=' + artifactId + '&groupId=' + groupId;
-      return runHttpGetSuccessAndError(API_URL, versionSummary);
+    this.getVersionSummary = function (version, artifactId, groupId, event) {
+      API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + version + '&artifactId=' + artifactId + '&groupId=' + groupId + '&event=' + event;
+      return runHttpGetSuccessAndError(API_URL);
     };
 
     this.getArtifactVersions = function (artifactId, groupId) {
-      artifactVersions = [];
       API_URL = serverApiUrl.ARTIFACT_VERS_API_URL_PREFIX + artifactId + '&groupId=' + groupId;
-      return runHttpGetSuccessAndError(API_URL, artifactVersions);
+      return runHttpGetSuccessAndError(API_URL);
     };
   }
 

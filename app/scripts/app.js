@@ -8,62 +8,73 @@ angular
     version: '2.487.0',
     artifactId: 'wix-public-html-renderer-webapp',
     groupId: 'com.wixpress',
+    event: 'TESTBED',
     artifactVersions: ['2.487.0', '2.469.0', '2.468.0', '2.467.0', '2.466.0', '2.465.0', '2.464.0', '2.463.0', '2.462.0', '2.461.0'],
     allArtifacts: [
-      {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.487.0', name: '2. Wix Html Editor', dynamic: false, tests: [], testRuns: []},
-      {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', name: '2. Wix Public Html Renderer', dynamic: false, tests: [], testRuns: []},
-      {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', name: 'Wix Public', dynamic: false, tests: [], testRuns: []}
+      {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Html Editor', dynamic: false, tests: [], testRuns: []},
+      {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Public Html Renderer', dynamic: false, tests: [], testRuns: []},
+      {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: 'Wix Public', dynamic: false, tests: [], testRuns: []}
+    ],
+    allFailedArtifacts: [
+      {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Public Html Renderer', dynamic: false, tests: [], testRuns: []},
+      {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', name: 'Wix Public', event: 'TESTBED', dynamic: false, tests: [], testRuns: []}
     ],
     versionSummaryForRenderer: {
       code: 0,
       message: 'OK',
       comments: null,
-      responseBody: [{
+      responseBody: {
         artifactId: 'wix-public-html-renderer-webapp',
         groupId: 'com.wixpress',
-        server: 'app30.aus.wixpress.com',
         version: '2.487.0',
-        analysisResultStatus: 'TEST_FAILED',
-        testStatusEnum: 'STATUS_COMPLETED_WITH_ERRORS',
-        errorFields: null,
-        runStatus: 'FINISHED',
-        comments: 'Failed on errorRate',
-        event: 'TESTBED'
-      }]
+        event: 'TESTBED',
+        servers: [{
+          ip: 'app30.aus.wixpress.com',
+          analysisResultStatus: 'TEST_FAILED',
+          testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
+          errorFields: null,
+          runStatus: 'FINISHED',
+          comments: 'Failed on errorRate'
+        }]
+      }
     },
     versionSummaryForEditor: {
       code: 0,
       message: 'OK',
       comments: null,
-      responseBody: [{
+      responseBody: {
         artifactId: 'wix-html-editor-webapp',
         groupId: 'com.wixpress',
-        server: 'app30.aus.wixpress.com',
         version: '2.487.0',
-        analysisResultStatus: 'TEST_FAILED',
-        testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
-        errorFields: null,
-        runStatus: 'FINISHED',
-        comments: 'Failed on errorRate',
-        event: 'TESTBED'
-      }]
+        event: 'TESTBED',
+        servers: [{
+          ip: 'app30.aus.wixpress.com',
+          analysisResultStatus: 'TEST_PASSED',
+          testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
+          errorFields: null,
+          runStatus: 'FINISHED',
+          comments: 'Failed on errorRate'
+        }]
+      }
     },
     versionSummaryForWar: {
       code: 0,
       message: 'OK',
       comments: null,
-      responseBody: [{
+      responseBody: {
         artifactId: 'wix-public-war',
         groupId: 'com.wixpress',
-        server: 'app30.aus.wixpress.com',
         version: '2.487.0',
-        analysisResultStatus: 'TEST_FAILED',
-        testStatusEnum: 'STATUS_COMPLETED_WITH_ERRORS',
-        errorFields: null,
-        runStatus: 'FINISHED',
-        comments: 'Failed on errorRate',
-        event: 'TESTBED'
-      }]
+        event: 'TESTBED',
+        servers: [{
+          ip: 'app30.aus.wixpress.com',
+          analysisResultStatus: 'TEST_FAILED',
+          testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
+          errorFields: null,
+          runStatus: 'FINISHED',
+          comments: 'Failed on errorRate'
+        }]
+      }
     },
     lifecycleBuilds: {
       '2. Wix Html Editor': {'wix-html-editor-webapp': {artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress'}}
@@ -217,22 +228,26 @@ angular
     server: 'app30.aus.wixpress.com',
     version: '2.487.0',
     artifactId: 'wix-public-html-renderer-webapp',
+    event: 'TESTBED',
     groupId: 'com.wixpress'
   })
   .constant('specificServerData2', {
     server: 'app30.aus.wixpress.com',
     version: '2.487.0',
     artifactId: 'wix-html-editor-webapp',
+    event: 'TESTBED',
     groupId: 'com.wixpress'
   })
   .constant('specificServerData3', {
     server: 'app30.aus.wixpress.com',
     version: '2.487.0',
     artifactId: 'wix-public-war',
+    event: 'TESTBED',
     groupId: 'com.wixpress'
   })
   .constant('serverApiUrl', {
     ALL_ARTIFACTS_API_URL: '/_api/getAllArtifacts',
+    ALL_FAILED_ARTIFACTS_API_URL: '/_api/getAllFailedArtifacts',
     CURRENTLY_RUNNING_ARTIFACTS_API_URL: '/_api/getCurrentlyRunningArtifacts/json',
     BUILDS_API_URL: '/_api/getLifecycleBuilds',
     VER_SUM_API_URL_PREFIX: '/_api/versionSummary/json?version=',

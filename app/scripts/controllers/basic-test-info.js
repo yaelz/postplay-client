@@ -11,8 +11,8 @@
     this.artifactsWereChosen = false;
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.columnDefsForGrids = [
-      { field: 'artifactId', width: '70%', displayName: 'Artifact Id'},
-      { field: 'testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
+      { field: 'artifactData.artifactId', width: '70%', displayName: 'Artifact Id'},
+      { field: 'artifactData.testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
     ];
 
     function initGrid(gridCtrl, gridScope) {
@@ -50,51 +50,62 @@
     };
 
     this.updateChosenArtifactData = function () {
-      this.allVersionSummary.forEach(function (currentVersionSummary) {
-        if (self.currentArtifactId === currentVersionSummary.artifactId && chosenVersionSummaryDoesntHave(currentVersionSummary) && failedVersionSummaryDoesntHave(currentVersionSummary)) {
-          self.chosenVersionSummary.push(currentVersionSummary);
+      this.allVersionSummary.forEach(function (currentVersionSummaryWrapper) {
+        if (self.currentArtifactId === currentVersionSummaryWrapper.artifactData.artifactId && !currentVersionSummaryWrapper.isChosen && !currentVersionSummaryWrapper.hasFailedServer) {
+          self.chosenVersionSummary.push(currentVersionSummaryWrapper);
+          currentVersionSummaryWrapper.isChosen = true;
           self.artifactsWereChosen = true;
         }
       });
     };
 
-    function chosenVersionSummaryDoesntHave(currentVersionSummary) {
-      return self.chosenVersionSummary.every(function (versionSummary) {
-        return versionSummary.artifactId !== currentVersionSummary.artifactId;
-      });
-    }
-    function failedVersionSummaryDoesntHave(currentVersionSummary) {
-      return self.failedVersionSummary.every(function (versionSummary) {
-        return versionSummary.artifactId !== currentVersionSummary.artifactId;
-      });
-    }
     function didServerRunEndWithTestStatus(serverRunInfo, statusEnum) {
       return serverRunInfo.testStatusEnum === statusEnum;
     }
     function initArtifacts() {
-      self.artifacts = [];
       return self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
-        angular.copy(response.data, self.artifacts);
+        self.artifacts = response.data;
       });
     }
+    function initFailedArtifacts() {
+      return self.basicTestInfoServerApi.getAllFailedArtifacts().then(function (response) {
+        self.failedArtifacts = response.data;
+      });
+    }
+    function artifactHoldsFailedServer(responseBody) {
+      var foundFailedServer = false;
+      responseBody.servers.forEach(function (currServerData) {
+        if (currServerData.analysisResultStatus === 'TEST_FAILED') {
+          foundFailedServer = true;
+        }
+      });
+      return foundFailedServer;
+    }
     function getArtifactsDataFromService() {
-      var newAllVersionSummary = [];
-      initArtifacts().then(function () {
+
+      initFailedArtifacts().then(function () {
         self.failedVersionSummary = [];
-        self.artifacts.forEach(function (currentArtifact) {
-          self.basicTestInfoServerApi.getArtifactVersions(currentArtifact.artifactId, currentArtifact.groupId)
+        self.failedArtifacts.forEach(function (currentArtifact) {
+          var latestVersion = currentArtifact.version;
+          self.basicTestInfoServerApi.getVersionSummary(latestVersion, currentArtifact.artifactId, currentArtifact.groupId, currentArtifact.event)
             .then(function (response) {
-              var latestVersion = response.data[0];
-              self.basicTestInfoServerApi.getVersionSummary(latestVersion, currentArtifact.artifactId, currentArtifact.groupId)
-                .then(function (response) {
-                  response.data.responseBody.forEach(function (responseBodyOfCurrent) {
-                    newAllVersionSummary.push(responseBodyOfCurrent);
-                    if (responseBodyOfCurrent.testStatusEnum !== 'STATUS_COMPLETED_SUCCESSFULLY') {
-                      self.failedVersionSummary.push(responseBodyOfCurrent);
-                    }
-                  });
-                  self.allVersionSummary = newAllVersionSummary;
-                });
+              var versionSummaryWrapper = {artifactData: response.data.responseBody, hasFailedServer: true, isChosen: false};
+              self.failedVersionSummary.push(versionSummaryWrapper);
+            });
+        });
+      });
+      initArtifacts().then(function () {
+        var newAllVersionSummary = [];
+        self.artifacts.forEach(function (currentArtifact) {
+          var latestVersion = currentArtifact.version;
+          self.basicTestInfoServerApi.getVersionSummary(latestVersion, currentArtifact.artifactId, currentArtifact.groupId, currentArtifact.event)
+            .then(function (response) {
+              var versionSummaryWrapper = {artifactData: response.data.responseBody, hasFailedServer: false, isChosen: false};
+              newAllVersionSummary.push(versionSummaryWrapper);
+              if (artifactHoldsFailedServer(versionSummaryWrapper.artifactData)) {
+                versionSummaryWrapper.hasFailedServer = true;
+              }
+              self.allVersionSummary = newAllVersionSummary;
             });
         });
       });
