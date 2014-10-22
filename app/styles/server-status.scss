@@ -100,7 +100,7 @@ body {
   float: left;
   background-color: rgb(200,200,200);
   padding: 5px 20px;
-  margin: 5px 2px 5px 0px;
+//  margin: 5px 2px 5px 0px;
   list-style: none;
   &.active {
     background-color: $background-light-blue;
@@ -187,6 +187,9 @@ body {
   font-weight: bold;
   font-size: larger;
   color: $background-light-blue;
+  &#failed-table-title {
+    color: $error-color;
+  }
 }
 .pp-ss-animation-first-table-on-right.ng-hide-remove {
   animation:1.5s fadeIn ease;

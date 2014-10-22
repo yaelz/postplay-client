@@ -1,4 +1,4 @@
 %img(ng-src='images/ok-icon.png'
-     ng-show="!row.getProperty('hasFailedServer')")
+     ng-show="row.getProperty('hasFailedServer') === false || row.getProperty('analysisResultStatus') === 'TEST_PASSED'")
 %img(ng-src='images/error-icon.png'
-     ng-show="row.getProperty('hasFailedServer')")
+     ng-show="row.getProperty('hasFailedServer') === true || row.getProperty('analysisResultStatus') === 'TEST_FAILED'")

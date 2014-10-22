@@ -1,38 +1,61 @@
 $background-light-blue: rgb(105, 159, 255);
 a {
   text-decoration:none;
+  color: black;
 }
 a:-webkit-any-link:active {
   color: -webkit-link;
 }
+.pp-gs-page-container {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 60px;
+}
+.pp-gs-artifacts-tables-container {
+  flex-direction: column;
+  -webkit-box-direction: normal;
+  box-sizing: border-box;
+  display: flex;
+  height: 80%;
+  min-width: 500px;
+  margin: 10px;
 
+  &#pp-gs-artifact-info-tables-container {
+    -webkit-flex: 2 1 auto;
+    flex: 2 1 auto;
+    .pp-gs-table-container {
+      min-width: 500px;
+    }
+  }
+  &#pp-gs-servers-info-table-container {
+    -webkit-flex: 1 1 auto;
+    flex: 1 1 auto;
+    .pp-gs-table-container {
+      min-width: 500px;
+    }
+  }
+}
 .pp-gs-table-container {
   padding: 85px;
   width: 30%;
-  min-width: 500px;
+//  min-width: 500px;
   -webkit-flex: 1;
   flex: 1;
   .pp-grid-container {
     width: 100%;
     margin-bottom: 50px;
-    .ngViewport, .ngTopPanel {
-      overflow: visible;
-    }
+//    .ngViewport, .ngTopPanel {
+//      overflow: visible;
+//    }
   }
 }
 .pp-artifact-input {
   margin-left: 30px;
 }
-.pp-gs-page-container {
-  flex-direction: column;
-  -webkit-box-direction: normal;
-  box-sizing: border-box;
-  display: flex;
-  position: absolute;
-  height: 60%;
-  width: 100%;
-  top: 60px;
-}
 input::-webkit-calendar-picker-indicator {
-   display: none;
- }
+  display: none;
+}

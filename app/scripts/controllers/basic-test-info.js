@@ -11,8 +11,9 @@
     this.artifactsWereChosen = false;
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.columnDefsForGrids = [
-      { field: 'artifactData.artifactId', width: '70%', displayName: 'Artifact Id'},
-      { field: 'artifactData.testStatusEnum', width: '30%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
+      { field: 'artifactData.artifactId', width: '60%', displayName: 'Artifact Id'},
+      { field: 'artifactData.version', width: '20%', displayName: 'Version'},
+      { field: 'artifactData.testStatusEnum', width: '20%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
     ];
 
     function initGrid(gridCtrl, gridScope) {
@@ -26,9 +27,15 @@
     }
 
     function onRowClick(selectedRow) {
-      self.chosenArtifactServers = selectedRow.entity.artifactData.servers;
-      self.artifactIsSelected = true;
-      return false;
+      self.serversFromClickedOnArtifacts = selectedRow.entity.artifactData.servers;
+      self.artifactIsClickedOn = true;
+      self.clickedOnArtifact = {
+        artifactId: selectedRow.entity.artifactData.artifactId,
+        groupId: selectedRow.entity.artifactData.groupId,
+        version: selectedRow.entity.artifactData.version,
+        event: selectedRow.entity.artifactData.event
+      };
+      return true;
     }
     this.failedArtifactsSummary = {
       data: 'basicTestInfoCtrl.failedVersionSummary',
@@ -45,6 +52,16 @@
       multiSelect: false,
       beforeSelectionChange: onRowClick
 //      rowTemplate: 'views/basic-test-info-row-template.html'
+    };
+    this.serversToShow = {
+      data: 'basicTestInfoCtrl.serversFromClickedOnArtifacts',
+      init: initGrid,
+      columnDefs: [
+        { field: 'ip', width: '60%', displayName: 'IP'},
+        { field: 'artifactData.analysisResultStatus', width: '40%', displayName: 'Status', cellTemplate: 'views/basic-test-info-image-template.html'}
+      ],
+      multiSelect: false,
+      rowTemplate: 'views/basic-test-info-row-template.html'
     };
     this.serverRunEndedWithError = function (serverInfo) {
       // TODO get possibilities

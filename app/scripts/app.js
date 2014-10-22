@@ -38,7 +38,23 @@ angular
           errorFields: null,
           runStatus: 'FINISHED',
           comments: 'Failed on errorRate'
-        }]
+        },
+          {
+            ip: 'app77.aus.wixpress.com',
+            analysisResultStatus: 'TEST_FAILED',
+            testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
+            errorFields: null,
+            runStatus: 'FINISHED',
+            comments: 'Failed on errorRate'
+          },
+          {
+            ip: 'app12.aus.wixpress.com',
+            analysisResultStatus: 'TEST_PASSED',
+            testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
+            errorFields: null,
+            runStatus: 'FINISHED',
+            comments: 'Failed on errorRate'
+          }]
       }
     },
     versionSummaryForEditor: {
@@ -386,16 +402,17 @@ angular
   .module('postplayTryApp', ['postplayTryAppInternal', 'postplayTryTranslations', 'wixAngular', 'ngRoute'])
   .config(function ($routeProvider) {
     $routeProvider
-      .when('/artifactId/:artifactId/server/:server/groupId/:groupId', {
+      .when('/artifactId/:artifactId/server/:server/groupId/:groupId/event/:event', {
         templateUrl: 'views/server-status.html',
         controller: 'SpecificServerStatusController',
         controllerAs: 'serverStatusCtrl',
         resolve: {
           serverStatusCtrlDTO: ['$route', function ($route) {
             return {
-              groupId: $route.current.params.groupId,
               artifactId: $route.current.params.artifactId,
-              server: $route.current.params.server
+              groupId: $route.current.params.groupId,
+              server: $route.current.params.server,
+              event: $route.current.params.event
             };
           }]
         }
