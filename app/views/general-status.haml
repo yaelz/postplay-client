@@ -11,12 +11,19 @@
                                      placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
                                      autofocus)
     .pp-gs-page-container
-        .pp-gs-table-container
-            .pp-table-title Failed Artifacts
-            .pp-grid-container(ng-grid="basicTestInfoCtrl.failedArtifactsSummary")
-        .pp-gs-table-container(ng-if="basicTestInfoCtrl.artifactsWereChosen")
-            .pp-table-title Chosen Artifacts
-            .pp-grid-container(ng-grid="basicTestInfoCtrl.chosenArtifactsSummary")
+        .pp-gs-artifacts-tables-container#pp-gs-artifact-info-tables-container
+            .pp-gs-table-container(ng-if="basicTestInfoCtrl.artifactsWereChosen")
+                .pp-table-title Chosen Artifacts
+                .pp-grid-container(ng-grid="basicTestInfoCtrl.chosenArtifactsSummary")
+            .pp-gs-table-container
+                .pp-table-title#failed-table-title Failed Artifacts
+                .pp-grid-container(ng-grid="basicTestInfoCtrl.failedArtifactsSummary")
+        .pp-gs-artifacts-tables-container#pp-gs-servers-info-table-container
+            .pp-gs-table-container(ng-if="basicTestInfoCtrl.artifactIsClickedOn")
+                .pp-table-title Servers of {{basicTestInfoCtrl.clickedOnArtifact.artifactId}}
+                .pp-grid-container(ng-grid="basicTestInfoCtrl.serversToShow")
+
+
 %datalist(ng-controller = "BasicTestInfoController as basicTestInfoCtrl"
           id = "artifactList")
     %option(ng-repeat = "artifactData in basicTestInfoCtrl.artifacts"
