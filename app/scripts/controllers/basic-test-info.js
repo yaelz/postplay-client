@@ -11,9 +11,11 @@
     this.artifactsWereChosen = false;
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.columnDefsForGrids = [
-      { field: 'artifactData.artifactId', width: '60%', displayName: 'Artifact Id'},
-      { field: 'artifactData.version', width: '20%', displayName: 'Version'},
-      { field: 'artifactData.testStatusEnum', width: '20%', displayName: 'Tests Status', cellTemplate: 'views/basic-test-info-image-template.html'}
+      { field: 'artifactData.artifactId', width: '30%', displayName: 'Artifact Id'},
+      { field: 'artifactData.version', width: '15%', displayName: 'Version'},
+      { field: 'artifactData.event', width: '15%', displayName: 'Event'},
+      { field: 'artifactData.testStatusEnum', width: '10%', displayName: 'Status', cellTemplate: 'views/basic-test-info-image-template.html'},
+      { field: 'artifactData.startTime', width: '30%', displayName: 'Start Time', cellFilter: 'date:\'MMM d, y -  H:mm:ss\'' }
     ];
 
     function initGrid(gridCtrl, gridScope) {

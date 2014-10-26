@@ -1,7 +1,9 @@
 %div(ng-show = "serverStatusCtrl.specificServerStatusServerApi.isDataLoaded")
     .pp-header-container
-        .pp-header-image-container
-            %img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
+        %form(action="http://google.com")
+            %a.pp-ss-home-btn(href = "#/") {{'HOME' | translate}}
+        -#.pp-header-image-container
+        -#    %img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
         .pp-server-basic-header-status-container
             .pp-ss-status-bars
                 .pp-ss-header-percent

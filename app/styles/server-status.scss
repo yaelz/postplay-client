@@ -6,6 +6,7 @@ $box-border-radius: 4px;
 $font-family: 'Open Sans', sans-serif;
 $header-font-size: 13px;
 
+$cell-bg-color: #E0E0E0;
 $background-blue: rgb(140, 186, 241);
 $error-color: #b90213;
 $background-light-blue: rgb(105, 159, 255);
@@ -207,3 +208,16 @@ body {
   float: left; margin-left: 10px; margin-right: 10px;
 }
 
+.pp-ss-home-btn {
+  background-color: $cell-bg-color;
+  text-align: center;
+  display: inline-block;
+  text-decoration: none;
+  color: #4c4c4c;
+  padding: 0.2em 0.4em;
+  width: 70px;
+  border-radius: 3px;
+  &:hover {
+    background-color: #a8a8a8;
+  }
+}

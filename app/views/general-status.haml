@@ -13,10 +13,11 @@
     .pp-gs-page-container
         .pp-gs-artifacts-tables-container#pp-gs-artifact-info-tables-container
             .pp-gs-table-container(ng-if="basicTestInfoCtrl.artifactsWereChosen")
-                .pp-table-title Chosen Artifacts
+                .pp-table-title {{'CHOSEN_ARTIFACTS' | translate}}
                 .pp-grid-container(ng-grid="basicTestInfoCtrl.chosenArtifactsSummary")
             .pp-gs-table-container
-                .pp-table-title#failed-table-title Failed Artifacts
+                .pp-table-title#failed-table-title(title="What am I doing wrong with the tooltip?") {{'FAILED_ARTIFACTS' | translate}}
+                -#<a tooltip="What am I doing wrong with the tooltip?" tooltip-placement="right" ng-cell-text>
                 .pp-grid-container(ng-grid="basicTestInfoCtrl.failedArtifactsSummary")
         .pp-gs-artifacts-tables-container#pp-gs-servers-info-table-container
             .pp-gs-table-container(ng-if="basicTestInfoCtrl.artifactIsClickedOn")

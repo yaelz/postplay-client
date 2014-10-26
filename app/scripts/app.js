@@ -30,6 +30,7 @@ angular
         artifactId: 'wix-public-html-renderer-webapp',
         groupId: 'com.wixpress',
         version: '2.487.0',
+        startTime: '1410959618239',
         event: 'TESTBED',
         servers: [{
           ip: 'app30.aus.wixpress.com',
@@ -65,6 +66,7 @@ angular
         artifactId: 'wix-html-editor-webapp',
         groupId: 'com.wixpress',
         version: '2.487.0',
+        startTime: '1410959618239',
         event: 'TESTBED',
         servers: [{
           ip: 'app30.aus.wixpress.com',
@@ -84,6 +86,7 @@ angular
         artifactId: 'wix-public-war',
         groupId: 'com.wixpress',
         version: '2.487.0',
+        startTime: '1410959618239',
         event: 'TESTBED',
         servers: [{
           ip: 'app30.aus.wixpress.com',

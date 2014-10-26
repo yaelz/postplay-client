@@ -1,3 +1,6 @@
+$min-width-artifact-table: 700px;
+
+
 $background-light-blue: rgb(105, 159, 255);
 a {
   text-decoration:none;
@@ -21,14 +24,14 @@ a:-webkit-any-link:active {
   box-sizing: border-box;
   display: flex;
   height: 80%;
-  min-width: 500px;
+  min-width: $min-width-artifact-table;
   margin: 10px;
 
   &#pp-gs-artifact-info-tables-container {
     -webkit-flex: 2 1 auto;
     flex: 2 1 auto;
     .pp-gs-table-container {
-      min-width: 500px;
+      min-width: $min-width-artifact-table;
     }
   }
   &#pp-gs-servers-info-table-container {
