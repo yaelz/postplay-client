@@ -50,17 +50,22 @@
           self.testNames = getTestNames(self.runs);
         });
     };
-    this.getRunsOfSelectedTest = function (testName) {
-      var runArr = [];
-      for (var i = 0; i < self.runs.length; i++) {
-        var run = self.runs[i];
-        for (var j = 0; j < run.tests.length; j++) {
-          if (self.runs[i].tests[j].name === testName) {
-            runArr[runArr.length] = self.runs[i];
+    this.getRunsDataOfSelectedTest = function (testName) {
+      var testServerDataArr = [];
+      for (var runIdx = 0; runIdx < self.runs.length; runIdx++) {
+        var run = self.runs[runIdx];
+        for (var testIdx = 0; testIdx < run.tests.length; testIdx++) {
+          var currTest = run.tests[testIdx];
+          if (currTest.name === testName) {
+            testServerDataArr[runIdx] = getTestedServerDataForTest(currTest);
+            testServerDataArr[runIdx]['runEndTime'] = run.endTime;
+            break;
           }
         }
       }
-      return runArr;
+
+      self.columnDefsForRunsOfSelectedTest = getColumnDefsForRunsOfSelectedTestArr(testServerDataArr);
+      return testServerDataArr;
     };
 
     this.testNamesTableData = {
@@ -70,8 +75,9 @@
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
-        self.runsOfSelectedTest = self.getRunsOfSelectedTest(selectedRow.entity.testName);
-        self.chosenRunOfTest = selectedRow.entity.testName;
+        self.runsOfSelectedTest = self.getRunsDataOfSelectedTest(selectedRow.entity.testName);
+
+        self.chosenTestName = selectedRow.entity.testName;
         self.testIsSelected = true;
         return true;
       },
@@ -79,11 +85,7 @@
     };
     this.runsOfChosenTestTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTest',
-      columnDefs: [
-        { field: 'runStatus', width: '20%', displayName: 'Run Status'},
-        { field: 'numberOfTests', width: '20%', displayName: 'Number of Tests'},
-        { field: 'plannedExecutionTimeUtc', width: '40%', displayName: 'Start Time', cellFilter: 'date:\'MMM d, y -  H:mm:ss\'' }
-      ],
+      columnDefs: self.columnDefsForRunsOfSelectedTest,
       enableRowSelection: false,
       init: resizeGridOnEventData
     };
@@ -113,7 +115,7 @@
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
-        getServersDataOfTestOfSelectedRun(selectedRow.entity);
+        self.serversDataOfTestOfSelectedRun = getServersDataOfTest(selectedRow.entity);
         self.testOfRunIsSelected = true;
         self.chosenTestOfRun = selectedRow.entity.name;
 //        self.chosenTestOfRun = '656374567';
@@ -125,10 +127,10 @@
       data: 'serverStatusCtrl.specificServerStatusServerApi.serversDataOfTestOfSelectedRun',
       rowTemplate: '' +
         '<div style="height: 100%" ng-class="{ppSsTestedServer: row.rowIndex == 0}">' +
-            '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
-            '<div ng-cell>' +
-            '</div>' +
-            '</div>' +
+        '<div ng-style="{ \'cursor\': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell ">' +
+        '<div ng-cell>' +
+        '</div>' +
+        '</div>' +
         '</div>',
       columnDefs: [
         { field: 'serverHostName', displayName: 'Server Host Name', width: '35%' },
@@ -162,9 +164,37 @@
     function getTestsOfRunBasicTableData() {
       self.tests = self.selectedRun.tests;
     }
-    function getServersDataOfTestOfSelectedRun(selectedTestFromRun) {
-      self.serversDataOfTestOfSelectedRun = (JSON.parse(selectedTestFromRun.resultsForDisplay)).referenceServers;
-      self.serversDataOfTestOfSelectedRun.unshift((JSON.parse(selectedTestFromRun.resultsForDisplay)).testedServer);
+    function getServersDataOfTest(test) {
+      var serversDataObjectsForTestArr = (JSON.parse(test.resultsForDisplay)).referenceServers;
+      var testedServerDataOfTest = getTestedServerDataForTest(test);
+      serversDataObjectsForTestArr.unshift(testedServerDataOfTest);
+      return serversDataObjectsForTestArr;
+    }
+    function getTestedServerDataForTest(test) {
+      return (JSON.parse(test.resultsForDisplay)).testedServer;
+    }
+
+    function getColumnDefsForRunsOfSelectedTestArr(runsOfSelectedTestArr) {
+      var defs = [];
+      var exampleRow = runsOfSelectedTestArr[0];
+      // TODO move this to setAttrValuesCols
+      var colNum = 0;
+      for(var key in exampleRow) {
+        var columnObj = {};
+        if (key === 'runEndTime') {
+          columnObj.cellFilter = 'date:\'MMM d, y -  H:mm:ss\'';
+        }
+        if (key === 'serverHostName') {
+          // TODO upgrade ng-grid to 2.4 / higher - this shouldn't hold the server host name
+          continue;
+        }
+        columnObj.field = key;
+        // cellFilter: 'date:\'MMM d, y -  H:mm:ss\''
+        columnObj.displayName = key.replace(/([A-Z])/g, ' $1');;
+        defs[colNum] = columnObj;
+        colNum++;
+      }
+      return defs;
     }
   }
 

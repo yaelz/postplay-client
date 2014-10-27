@@ -3,7 +3,7 @@
 //add services, directives, controllers, filters, etc. in this module
 //avoid adding module dependencies for this module
 angular
-  .module('postplayTryAppInternal', ['ngGrid', 'ngAnimate'])
+  .module('postplayTryAppInternal', ['ngGrid', 'ngAnimate', 'googlechart'])
   .constant('basicTestInfoServerResponse', {
     version: '2.487.0',
     artifactId: 'wix-public-html-renderer-webapp',
@@ -200,7 +200,7 @@ angular
                   testStatus: 'STATUS_COMPLETED_SUCCESSFULLY',
                   analysisResultStatus: 'TEST_PASSED',
                   analysisResultComments: 'Passed',
-                  resultsForDisplay: '{ "testedServer" : { "systemError": 0.0, "serverHostName": "app30.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, "referenceServers": [ { "systemError": 0.0, "serverHostName": "app33.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, { "systemError": 0.0, "serverHostName": "apu1.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0} ]}',
+                  resultsForDisplay: '{ "testedServer" : { "systemError": 0.0, "serverHostName": "app30.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.1}, "referenceServers": [ { "systemError": 0.0, "serverHostName": "app33.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0}, { "systemError": 0.0, "serverHostName": "apu1.aus.wixpress.com", "systemFatal": 0.0, "errorRate": 0.0} ]}',
                   referenceServerTest: true,
                   errorFields: '',
                   testErrors: null,
@@ -424,6 +424,11 @@ angular
         templateUrl: 'views/general-status.html',
         controller: 'BasicTestInfoController',
         controllerAs: 'basicTestInfoCtrl'
+      })
+      .when('/123', {
+        templateUrl: 'views/try-chart.html',
+        controller: 'MainController',
+        controllerAs: 'MainCtrl'
       })
       .otherwise({
         redirectTo: '/'

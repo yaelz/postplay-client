@@ -72,6 +72,7 @@
     <script src="bower_components/angular-animate/angular-animate.js"></script>
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/ng-grid/ng-grid-2.0.13.debug.js"></script>
+    <script src="bower_components/angular-google-chart/ng-google-chart.js"></script>
     <script src="bower_components/angular-i18n/angular-locale_${locale}.js"></script>
     <script src="scripts/locale/messages_${locale}.js"></script>
     <!-- build:js scripts/modules.js -->
@@ -85,6 +86,7 @@
     <script src="scripts/controllers/currently-running-artifacts.js"></script>
     <script src="scripts/services/specific-server-status-server-api.js"></script>
     <script src="scripts/controllers/specific-server-status.js"></script>
+    <script src="scripts/controllers/main.js"></script>
     <!-- endbuild --><!-- scripts -->
     <!-- end-process-tags -->
 

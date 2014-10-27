@@ -20,7 +20,7 @@
                 #artifact-name {{serverStatusCtrl.specificServerStatusServerApi.artifactName}}
                 #artifact-version {{serverStatusCtrl.specificServerStatusServerApi.version}}
                 #server {{serverStatusCtrl.specificServerStatusServerApi.serverName}}
-    .pp-page-container
+    .pp-gs-page-container
         #pp-ss-tabs-container
             %ul(ng-init="tab=1")
                 %li.pp-ss-test-runs-tabs#pp-ss-runs-tab-title(ng-class="{active:tab===1}")
@@ -43,6 +43,6 @@
             .pp-grid-container.pp-ss-animation-second-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.serversOfSelectedTestOfSelectedRunTableData"
                                                               ng-if = "serverStatusCtrl.specificServerStatusServerApi.testOfRunIsSelected")
         #pp-ss-tests-tables-container(ng-if="tab === 2")
-            .pp-table-title.pp-ss-animation-first-table-on-right(ng-if="serverStatusCtrl.specificServerStatusServerApi.testIsSelected") {{'RUNS_OF_TEST_TITLE' | translate}} "{{serverStatusCtrl.specificServerStatusServerApi.chosenRunOfTest}}"
+            .pp-table-title.pp-ss-animation-first-table-on-right(ng-if="serverStatusCtrl.specificServerStatusServerApi.testIsSelected") {{'RUNS_OF_TEST_TITLE' | translate}} "{{serverStatusCtrl.specificServerStatusServerApi.chosenTestName}}"
             .pp-grid-container.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsOfChosenTestTableData"
                                                              ng-if="serverStatusCtrl.specificServerStatusServerApi.testIsSelected")

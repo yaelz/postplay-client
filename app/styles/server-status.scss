@@ -89,8 +89,8 @@ body {
 #pp-ss-tabs-container {
   -webkit-flex: 1;
   flex: 1;
-  padding: 20px;
-  width: 550px;
+  padding: 25px;
+  min-width: 550px;
   float: left;
   ul {
     display: inline-block;
@@ -175,11 +175,10 @@ body {
   flex: 2;
   display: -webkit-flex;
   display: flex;
+  min-width: 500px;
   flex-direction: column;
   .pp-grid-container {
     height: auto;
-    -webkit-flex: 6;
-    flex: 6;
   }
 }
 .pp-table-title {
@@ -194,9 +193,15 @@ body {
 }
 .pp-ss-animation-first-table-on-right.ng-hide-remove {
   animation:1.5s fadeIn ease;
+  min-width: 500px;
+  -webkit-flex: 1;
+  flex: 1;
 }
 .pp-ss-animation-second-table-on-right.ng-hide-remove {
   animation:1.5s fadeIn ease;
+  min-width: 500px;
+  -webkit-flex: 1;
+  flex: 1;
 }
 .ngViewport {
   display: inline;

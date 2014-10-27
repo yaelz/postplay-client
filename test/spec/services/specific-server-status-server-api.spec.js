@@ -88,8 +88,22 @@ describe('Service: specificServerStatusServerApi', function () {
     it('should hold the completed tests status', function () {
       expect(specificServerStatusServerApi.analysisStatus).toEqual(specificServerServerResponse.serverData.responseBody.analysisStatus);
     });
-    it('should be able to get all runs for a specific test', function () {
-      expect(specificServerStatusServerApi.getRunsOfSelectedTest('AppInfo Sanity')).toEqual([specificServerStatusServerApi.runs[0]]);
+    it('should be able to get all runs\' data for a specific test', function () {
+      var runsDataOfSelectedTest = [
+        {runEndTime: 1410959637697,
+          systemError: 0.0,
+          serverHostName: 'app30.aus.wixpress.com',
+          systemFatal: 0.0,
+          errorRate: 0.0
+        },
+        {runEndTime: 1410959697696,
+          systemError: 0.0,
+          serverHostName: 'app30.aus.wixpress.com',
+          systemFatal: 0.0,
+          errorRate: 0.1
+        }
+      ];
+      expect(specificServerStatusServerApi.getRunsDataOfSelectedTest('AppInfo Sanity2')).toEqual(runsDataOfSelectedTest);
     });
   });
 });
