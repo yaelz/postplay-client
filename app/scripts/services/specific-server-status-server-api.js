@@ -52,19 +52,21 @@
     };
     this.getRunsDataOfSelectedTest = function (testName) {
       var testServerDataArr = [];
+      var testToInsertIdx = 0;
       for (var runIdx = 0; runIdx < self.runs.length; runIdx++) {
         var run = self.runs[runIdx];
         for (var testIdx = 0; testIdx < run.tests.length; testIdx++) {
           var currTest = run.tests[testIdx];
           if (currTest.name === testName) {
-            testServerDataArr[runIdx] = getTestedServerDataForTest(currTest);
-            testServerDataArr[runIdx]['runEndTime'] = run.endTime;
+            testServerDataArr[testToInsertIdx] = getTestedServerDataForTest(currTest);
+            testServerDataArr[testToInsertIdx]['runEndTime'] = run.endTime;
+            testToInsertIdx++;
             break;
           }
         }
       }
 
-      self.columnDefsForRunsOfSelectedTest = getColumnDefsForRunsOfSelectedTestArr(testServerDataArr);
+      self.columnDefsForRunsOfSelectedTest = getColumnDefsForRunsOfSelectedTestArr(testServerDataArr, true);
       return testServerDataArr;
     };
 
@@ -116,6 +118,7 @@
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
         self.serversDataOfTestOfSelectedRun = getServersDataOfTest(selectedRow.entity);
+        self.columnDefsOfServersOfTestsOfSelectedRuns = getColumnDefsForRunsOfSelectedTestArr(self.serversDataOfTestOfSelectedRun);
         self.testOfRunIsSelected = true;
         self.chosenTestOfRun = selectedRow.entity.name;
 //        self.chosenTestOfRun = '656374567';
@@ -132,12 +135,7 @@
         '</div>' +
         '</div>' +
         '</div>',
-      columnDefs: [
-        { field: 'serverHostName', displayName: 'Server Host Name', width: '35%' },
-        { field: 'systemError', width: '25%', displayName: 'System Error'},
-        { field: 'systemFatal', displayName: 'system Fatal', width: '20%' },
-        { field: 'errorRate', displayName: 'Error Rate', width: '20%'}
-      ],
+      columnDefs: 'serverStatusCtrl.specificServerStatusServerApi.columnDefsOfServersOfTestsOfSelectedRuns',
       enableRowSelection: false,
       init: resizeGridOnEventData
     };
@@ -174,7 +172,7 @@
       return (JSON.parse(test.resultsForDisplay)).testedServer;
     }
 
-    function getColumnDefsForRunsOfSelectedTestArr(runsOfSelectedTestArr) {
+    function getColumnDefsForRunsOfSelectedTestArr(runsOfSelectedTestArr, withoutServerHostName) {
       var defs = [];
       var exampleRow = runsOfSelectedTestArr[0];
       // TODO move this to setAttrValuesCols
@@ -184,7 +182,7 @@
         if (key === 'runEndTime') {
           columnObj.cellFilter = 'date:\'MMM d, y -  H:mm:ss\'';
         }
-        if (key === 'serverHostName') {
+        if (key === 'serverHostName' && withoutServerHostName) {
           // TODO upgrade ng-grid to 2.4 / higher - this shouldn't hold the server host name
           continue;
         }
