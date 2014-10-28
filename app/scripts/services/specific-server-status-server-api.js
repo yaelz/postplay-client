@@ -222,16 +222,7 @@
 
     this.getChartObjDataForSelectedTest = function (attrName) {
       var runsDataArr = self.runsOfSelectedTestAllServersData;
-      var cols = [
-        {
-          label: 'Run',
-          type: 'string'
-        },
-        {
-          label: 'Tested Server',
-          type: 'number'
-        }
-      ];
+      var cols = [{label: 'Run', type: 'string'}, {label: 'Tested Server', type: 'number'}];
       var numOfServersInRunInTest = runsDataArr[0].length;
       for (var idxInColsArr = 2; idxInColsArr <= numOfServersInRunInTest; idxInColsArr++) {
         cols[idxInColsArr] = {label: 'Reference Server', type: 'number'};
@@ -239,16 +230,20 @@
 
       var rows = [];
       var numOfRunsRelatedToTest = runsDataArr.length;
+
+      function insertAttributeDataToRowsArray(idxInRowsArr, serverIdx) {
+        runsDataArr[idxInRowsArr].forEach(function (runServerDataObj) {
+          rows[idxInRowsArr].c[serverIdx] = {v: runServerDataObj[attrName]};
+          serverIdx++;
+        });
+      }
       for (var idxInRowsArr = 0; idxInRowsArr < numOfRunsRelatedToTest; idxInRowsArr++) {
         var runIdx = idxInRowsArr + 1;
         rows[idxInRowsArr] = {c: [
           {v: 'Run ' + runIdx}
         ]};
         var serverIdx = 1;
-        runsDataArr[idxInRowsArr].forEach(function (runServerDataObj) {
-          rows[idxInRowsArr].c[serverIdx] = {v: runServerDataObj[attrName]};
-          serverIdx++;
-        });
+        insertAttributeDataToRowsArray(idxInRowsArr, serverIdx);
       }
       return {cols: cols, rows: rows};
     };
