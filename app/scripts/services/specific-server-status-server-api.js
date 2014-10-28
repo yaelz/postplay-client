@@ -165,7 +165,7 @@
       var testedServerDataOfTest = self.getTestedServerDataForTest(test);
       serversDataObjectsForTestArr.unshift(testedServerDataOfTest);
       return serversDataObjectsForTestArr;
-    }
+    };
     this.getTestedServerDataForTest = function(test) {
       return (JSON.parse(test.resultsForDisplay)).testedServer;
     };
@@ -183,17 +183,38 @@
         columnObj.field = key;
         columnObj.displayName = fieldToDisplayName(key);
         if (key === 'runEndTime') {
-          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)">{{row.entity[col.field] | date:\'MMM d, y -  H:mm:ss\'}}</div>';
+          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field] | date:\'MMM d, y -  H:mm:ss\'}}</div>';
         } else {
-          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)">{{row.entity[col.field]}}</div>';
+          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field]}}</div>';
         }
         defs[colNum] = columnObj;
         colNum++;
       }
       return defs;
     };
-    this.buildGraphByAttribute = function (attribute) {
+    this.buildGraphByAttribute = function (attribute, attributeDisplayName) {
       console.log(attribute);
+      self.chosenAttributeName = attributeDisplayName;
+      self.chartDataObject = self.getChartObjDataForSelectedTest(attribute);
+      self.chartObject = {
+        type: 'LineChart',
+        displayed: true,
+        data: self.chartDataObject,
+        options: {
+          title: 'Compare Runs for CHOSEN_ATTR',
+          fill: 20,
+          displayExactValues: true,
+          explorer: {actions: ['dragToZoom', 'rightClickToReset']},
+          vAxis: {
+            title: 'Attr Values'
+          },
+          hAxis: {
+            title: 'Runs'
+          }
+        },
+        formatters: {}
+      }
+      self.attributeIsSelected = true;
     };
     function fieldToDisplayName(key) {
       var displayName = key.replace(/([A-Z])/g, ' $1');
@@ -227,7 +248,8 @@
         });
       }
       return {cols: cols, rows: rows};
-    }
+    };
+
   }
 
   angular

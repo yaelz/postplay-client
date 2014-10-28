@@ -142,27 +142,29 @@ describe('Service: specificServerStatusServerApi', function () {
 //      expect(specificServerStatusServerApi.getRunsDataOfSelectedTest('AppInfo Sanity2', specificServerStatusServerApi.getAllServersDataForTest)).toEqual(runsDataOfSelectedTest);
 //    });
     it('should be able to get column defs for runs of selected test', function () {
+      var cellTemplate = "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field]}}</div>";
+      var cellTemplateWithDateFilter = "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field] | date:'MMM d, y -  H:mm:ss'}}</div>";
       var columnDefs = [
         {
 //          cellFilter: "date:'MMM d, y -  H:mm:ss'",
           field: 'runEndTime',
           displayName: 'Run End Time',
-          cellTemplate: "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)\">{{row.entity[col.field] | date:'MMM d, y -  H:mm:ss'}}</div>"
+          cellTemplate: cellTemplateWithDateFilter
         },
         {
           field: 'errorRate',
           displayName: 'Error Rate',
-          cellTemplate: "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)\">{{row.entity[col.field]}}</div>"
+          cellTemplate: cellTemplate
         },
         {
           field: 'systemError',
           displayName: 'System Error',
-          cellTemplate: "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)\">{{row.entity[col.field]}}</div>"
+          cellTemplate: cellTemplate
         },
         {
           field: 'systemFatal',
           displayName: 'System Fatal',
-          cellTemplate: "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)\">{{row.entity[col.field]}}</div>"
+          cellTemplate: cellTemplate
         }
       ];
       var exampleRow = {

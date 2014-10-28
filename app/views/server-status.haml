@@ -46,6 +46,7 @@
             .pp-table-title.pp-ss-animation-first-table-on-right(ng-if="serverStatusCtrl.specificServerStatusServerApi.testIsSelected") {{'RUNS_OF_TEST_TITLE' | translate}} "{{serverStatusCtrl.specificServerStatusServerApi.chosenTestName}}"
             .pp-grid-container.pp-ss-animation-first-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.runsOfChosenTestTableData"
                                                                     ng-if="serverStatusCtrl.specificServerStatusServerApi.testIsSelected")
-            -#.pp-table-title.pp-ss-animation-second-table-on-right(ng-if="serverStatusCtrl.specificServerStatusServerApi.testOfRunIsSelected") {{'SERVERS_OF_TESTS_OF_RUNS_TITLE' | translate}} "{{serverStatusCtrl.specificServerStatusServerApi.chosenTestOfRun}}"
-            -#.pp-grid-container.pp-ss-animation-second-table-on-right(ng-grid="serverStatusCtrl.specificServerStatusServerApi.serversOfSelectedTestOfSelectedRunTableData"
-            -#                                                         ng-if = "serverStatusCtrl.specificServerStatusServerApi.attributeIsSelected")
+            .pp-table-title.pp-ss-animation-second-table-on-right(ng-if="serverStatusCtrl.specificServerStatusServerApi.attributeIsSelected") {{'ATTRIBUTE_CHART_TITLE' | translate}} {{serverStatusCtrl.specificServerStatusServerApi.chosenAttributeName}}
+            .pp-grid-container.pp-ss-animation-second-table-on-right(chart="serverStatusCtrl.specificServerStatusServerApi.chartObject"
+                                                                     ng-if = "serverStatusCtrl.specificServerStatusServerApi.attributeIsSelected"
+                                                                     google-chart)
