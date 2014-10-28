@@ -144,21 +144,25 @@ describe('Service: specificServerStatusServerApi', function () {
     it('should be able to get column defs for runs of selected test', function () {
       var columnDefs = [
         {
-          cellFilter: "date:'MMM d, y -  H:mm:ss'",
+//          cellFilter: "date:'MMM d, y -  H:mm:ss'",
           field: 'runEndTime',
-          displayName: 'Run End Time'
+          displayName: 'Run End Time',
+          cellTemplate: "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)\">{{row.entity[col.field] | date:'MMM d, y -  H:mm:ss'}}</div>"
         },
         {
           field: 'errorRate',
-          displayName: 'Error Rate'
+          displayName: 'Error Rate',
+          cellTemplate: "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)\">{{row.entity[col.field]}}</div>"
         },
         {
           field: 'systemError',
-          displayName: 'System Error'
+          displayName: 'System Error',
+          cellTemplate: "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)\">{{row.entity[col.field]}}</div>"
         },
         {
           field: 'systemFatal',
-          displayName: 'System Fatal'
+          displayName: 'System Fatal',
+          cellTemplate: "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)\">{{row.entity[col.field]}}</div>"
         }
       ];
       var exampleRow = {

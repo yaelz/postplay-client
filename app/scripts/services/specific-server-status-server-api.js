@@ -88,13 +88,7 @@
       data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTestTestedServerData',
       columnDefs: 'serverStatusCtrl.specificServerStatusServerApi.getColumnDefsForRunsOfSelectedTestArr(serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTestTestedServerData, true)',
       multiSelect: false,
-      init: resizeGridOnEventData,
-      // TODO YAELLLLLLLLL
-      beforeSelectionChange: function (selectedRow){
-        console.log(selectedRow.entity);
-//        self.findAName = getAllServersDataForTest(selectedRow.entity);
-        return true;
-      }
+      init: resizeGridOnEventData
     };
     this.runsTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runs',
@@ -183,25 +177,28 @@
       var colNum = 0;
       for(var key in exampleRow) {
         var columnObj = {};
-        if (key === 'runEndTime') {
-          columnObj.cellFilter = 'date:\'MMM d, y -  H:mm:ss\'';
-        }
         if (key === 'serverHostName' && withoutServerHostName) {
-          // TODO upgrade ng-grid to 2.4 / higher - this shouldn't hold the server host name
           continue;
         }
         columnObj.field = key;
         columnObj.displayName = fieldToDisplayName(key);
-//        columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="$event.stopPropagation(); console.log(col.colIndex());">{{row.entity[col.field]}}</div>';
+        if (key === 'runEndTime') {
+          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)">{{row.entity[col.field] | date:\'MMM d, y -  H:mm:ss\'}}</div>';
+        } else {
+          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field)">{{row.entity[col.field]}}</div>';
+        }
         defs[colNum] = columnObj;
         colNum++;
       }
       return defs;
     };
-     function fieldToDisplayName(key) {
-       var displayName = key.replace(/([A-Z])/g, ' $1');
-       return displayName[0].toUpperCase() + displayName.slice(1);
-     }
+    this.buildGraphByAttribute = function (attribute) {
+      console.log(attribute);
+    };
+    function fieldToDisplayName(key) {
+      var displayName = key.replace(/([A-Z])/g, ' $1');
+      return displayName[0].toUpperCase() + displayName.slice(1);
+    }
 
     this.getChartObjDataForSelectedTest = function(attrName) {
       var runsDataArr = self.runsOfSelectedTestAllServersData;
