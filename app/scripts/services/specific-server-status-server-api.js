@@ -66,7 +66,6 @@
         }
       }
 
-      self.columnDefsForRunsOfSelectedTest = self.getColumnDefsForRunsOfSelectedTestArr(testServerDataArr, true);
       return testServerDataArr;
     };
 
@@ -87,15 +86,15 @@
     };
     this.runsOfChosenTestTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTestTestedServerData',
-      columnDefs: self.columnDefsForRunsOfSelectedTest,
+      columnDefs: 'serverStatusCtrl.specificServerStatusServerApi.getColumnDefsForRunsOfSelectedTestArr(serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTestTestedServerData, true)',
       multiSelect: false,
-      init: resizeGridOnEventData
+      init: resizeGridOnEventData,
       // TODO YAELLLLLLLLL
-//      beforeSelectionChange: function (selectedRow){
-//        console.log(selectedRow.entity);
+      beforeSelectionChange: function (selectedRow){
+        console.log(selectedRow.entity);
 //        self.findAName = getAllServersDataForTest(selectedRow.entity);
-//        return true;
-//      }
+        return true;
+      }
     };
     this.runsTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runs',
@@ -124,7 +123,6 @@
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
         self.serversDataOfTestOfSelectedRun = self.getAllServersDataForTest(selectedRow.entity);
-        self.columnDefsOfServersOfTestsOfSelectedRuns = self.getColumnDefsForRunsOfSelectedTestArr(self.serversDataOfTestOfSelectedRun);
         self.testOfRunIsSelected = true;
         self.chosenTestOfRun = selectedRow.entity.name;
 //        self.chosenTestOfRun = '656374567';
@@ -141,7 +139,7 @@
         '</div>' +
         '</div>' +
         '</div>',
-      columnDefs: 'serverStatusCtrl.specificServerStatusServerApi.columnDefsOfServersOfTestsOfSelectedRuns',
+      columnDefs: 'serverStatusCtrl.specificServerStatusServerApi.getColumnDefsForRunsOfSelectedTestArr(serverStatusCtrl.specificServerStatusServerApi.serversDataOfTestOfSelectedRun)',
       enableRowSelection: false,
       init: resizeGridOnEventData
     };
@@ -193,13 +191,17 @@
           continue;
         }
         columnObj.field = key;
-        // cellFilter: 'date:\'MMM d, y -  H:mm:ss\''
-        columnObj.displayName = key.replace(/([A-Z])/g, ' $1');
+        columnObj.displayName = fieldToDisplayName(key);
+//        columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="$event.stopPropagation(); console.log(col.colIndex());">{{row.entity[col.field]}}</div>';
         defs[colNum] = columnObj;
         colNum++;
       }
       return defs;
     };
+     function fieldToDisplayName(key) {
+       var displayName = key.replace(/([A-Z])/g, ' $1');
+       return displayName[0].toUpperCase() + displayName.slice(1);
+     }
 
     this.getChartObjDataForSelectedTest = function(attrName) {
       var runsDataArr = self.runsOfSelectedTestAllServersData;

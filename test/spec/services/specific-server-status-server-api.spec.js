@@ -146,19 +146,19 @@ describe('Service: specificServerStatusServerApi', function () {
         {
           cellFilter: "date:'MMM d, y -  H:mm:ss'",
           field: 'runEndTime',
-          displayName: 'run End Time'
+          displayName: 'Run End Time'
         },
         {
           field: 'errorRate',
-          displayName: 'error Rate'
+          displayName: 'Error Rate'
         },
         {
           field: 'systemError',
-          displayName: 'system Error'
+          displayName: 'System Error'
         },
         {
           field: 'systemFatal',
-          displayName: 'system Fatal'
+          displayName: 'System Fatal'
         }
       ];
       var exampleRow = {
