@@ -142,8 +142,8 @@ describe('Service: specificServerStatusServerApi', function () {
 //      expect(specificServerStatusServerApi.getRunsDataOfSelectedTest('AppInfo Sanity2', specificServerStatusServerApi.getAllServersDataForTest)).toEqual(runsDataOfSelectedTest);
 //    });
     it('should be able to get column defs for runs of selected test', function () {
-      var cellTemplate = "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field]}}</div>";
-      var cellTemplateWithDateFilter = "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field] | date:'d/M/yy H:mm'}}</div>";
+      var cellTemplate = '<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field]}}</div>';
+      var cellTemplateWithDateFilter = '<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field] | date:\'d/M/yy H:mm\'}}</div>';
       var columnDefs = [
         {
           field: 'runEndTime',
@@ -169,7 +169,7 @@ describe('Service: specificServerStatusServerApi', function () {
       var exampleRow = {
         runEndTime: 1410959637697,
         errorRate: 0,
-        serverHostName: "app30.aus.wixpress.com",
+        serverHostName: 'app30.aus.wixpress.com',
         systemError: 0,
         systemFatal: 0
       };
@@ -177,38 +177,42 @@ describe('Service: specificServerStatusServerApi', function () {
       expect(specificServerStatusServerApi.getColumnDefsForRunsOfSelectedTestArr(runsOfSelectedTestArr, true)).toEqual(columnDefs);
     });
     it('should be able to get data for the chart object', function () {
-      specificServerStatusServerApi.runsOfSelectedTestAllServersData = [[
-        {errorRate: 0,
-          serverHostName: "app30.aus.wixpress.com",
-          systemError: 3.789,
-          systemFatal: 0
-        },
-        {errorRate: 0,
-          serverHostName: "app33.aus.wixpress.com",
-          systemError: 4,
-          systemFatal: 0
-        },
-        {errorRate: 0,
-          serverHostName: "apu1.aus.wixpress.com",
-          systemError: 5,
-          systemFatal: 0
-        }], [
-        {errorRate: 0,
-          serverHostName: "app30.aus.wixpress.com",
-          systemError: 6,
-          systemFatal: 0
-        },
-        {errorRate: 0,
-          serverHostName: "app33.aus.wixpress.com",
-          systemError: 7,
-          systemFatal: 0
-        },
-        {errorRate: 0,
-          serverHostName: "apu1.aus.wixpress.com",
-          systemError: 8,
-          systemFatal: 0
-        }
-      ]];
+      specificServerStatusServerApi.runsOfSelectedTestAllServersData = [
+        [
+          {errorRate: 0,
+            serverHostName: 'app30.aus.wixpress.com',
+            systemError: 3.789,
+            systemFatal: 0
+          },
+          {errorRate: 0,
+            serverHostName: 'app33.aus.wixpress.com',
+            systemError: 4,
+            systemFatal: 0
+          },
+          {errorRate: 0,
+            serverHostName: 'apu1.aus.wixpress.com',
+            systemError: 5,
+            systemFatal: 0
+          }
+        ],
+        [
+          {errorRate: 0,
+            serverHostName: 'app30.aus.wixpress.com',
+            systemError: 6,
+            systemFatal: 0
+          },
+          {errorRate: 0,
+            serverHostName: 'app33.aus.wixpress.com',
+            systemError: 7,
+            systemFatal: 0
+          },
+          {errorRate: 0,
+            serverHostName: 'apu1.aus.wixpress.com',
+            systemError: 8,
+            systemFatal: 0
+          }
+        ]
+      ];
       var chartObjDataForTest = {
         cols: [
           {

@@ -32,14 +32,15 @@ angular
         version: '2.487.0',
         startTime: '1410959618239',
         event: 'TESTBED',
-        servers: [{
-          ip: 'app30.aus.wixpress.com',
-          analysisResultStatus: 'TEST_FAILED',
-          testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
-          errorFields: null,
-          runStatus: 'FINISHED',
-          comments: 'Failed on errorRate'
-        },
+        servers: [
+          {
+            ip: 'app30.aus.wixpress.com',
+            analysisResultStatus: 'TEST_FAILED',
+            testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
+            errorFields: null,
+            runStatus: 'FINISHED',
+            comments: 'Failed on errorRate'
+          },
           {
             ip: 'app77.aus.wixpress.com',
             analysisResultStatus: 'TEST_FAILED',
@@ -55,7 +56,8 @@ angular
             errorFields: null,
             runStatus: 'FINISHED',
             comments: 'Failed on errorRate'
-          }]
+          }
+        ]
       }
     },
     versionSummaryForEditor: {

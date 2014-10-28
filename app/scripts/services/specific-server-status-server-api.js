@@ -59,7 +59,7 @@
           var currTest = run.tests[testIdx];
           if (currTest.name === testName) {
             testServerDataArr[testToInsertIdx] = jsonOfTestDataGetterFunction(currTest);
-            testServerDataArr[testToInsertIdx]['runEndTime'] = run.endTime;
+            testServerDataArr[testToInsertIdx].runEndTime = run.endTime;
             testToInsertIdx++;
             break;
           }
@@ -160,22 +160,22 @@
     function getTestsOfRunBasicTableData() {
       self.tests = self.selectedRun.tests;
     }
-    this.getAllServersDataForTest = function(test) {
+    this.getAllServersDataForTest = function (test) {
       var serversDataObjectsForTestArr = (JSON.parse(test.resultsForDisplay)).referenceServers;
       var testedServerDataOfTest = self.getTestedServerDataForTest(test);
       serversDataObjectsForTestArr.unshift(testedServerDataOfTest);
       return serversDataObjectsForTestArr;
     };
-    this.getTestedServerDataForTest = function(test) {
+    this.getTestedServerDataForTest = function (test) {
       return (JSON.parse(test.resultsForDisplay)).testedServer;
     };
 
-    this.getColumnDefsForRunsOfSelectedTestArr = function(runsOfSelectedTestArr, withoutServerHostName) {
+    this.getColumnDefsForRunsOfSelectedTestArr = function (runsOfSelectedTestArr, withoutServerHostName) {
       var defs = [];
       var exampleRow = runsOfSelectedTestArr[0];
       // TODO move this to setAttrValuesCols
       var colNum = 0;
-      for(var key in exampleRow) {
+      for (var key in exampleRow) {
         var columnObj = {};
         if (key === 'serverHostName' && withoutServerHostName) {
           continue;
@@ -184,7 +184,7 @@
         columnObj.displayName = fieldToDisplayName(key);
         if (key === 'runEndTime') {
           columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field] | date:\'d/M/yy H:mm\'}}</div>';
-        } else if (withoutServerHostName){
+        } else if (withoutServerHostName) {
           columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field]}}</div>';
         }
         defs[colNum] = columnObj;
@@ -193,7 +193,6 @@
       return defs;
     };
     this.buildGraphByAttribute = function (attribute, attributeDisplayName) {
-      console.log(attribute);
       self.chosenAttributeName = attributeDisplayName;
       self.chartDataObject = self.getChartObjDataForSelectedTest(attribute);
       self.chartObject = {
@@ -213,7 +212,7 @@
           }
         },
         formatters: {}
-      }
+      };
       self.attributeIsSelected = true;
     };
     function fieldToDisplayName(key) {
@@ -221,26 +220,30 @@
       return displayName[0].toUpperCase() + displayName.slice(1);
     }
 
-    this.getChartObjDataForSelectedTest = function(attrName) {
+    this.getChartObjDataForSelectedTest = function (attrName) {
       var runsDataArr = self.runsOfSelectedTestAllServersData;
-      var cols = [{
-        label: 'Run',
-        type: 'string'
-      },
+      var cols = [
+        {
+          label: 'Run',
+          type: 'string'
+        },
         {
           label: 'Tested Server',
           type: 'number'
-        }];
+        }
+      ];
       var numOfServersInRunInTest = runsDataArr[0].length;
       for (var idxInColsArr = 2; idxInColsArr <= numOfServersInRunInTest; idxInColsArr++) {
-        cols[idxInColsArr] = {label: 'Reference Server', type: 'number'}
+        cols[idxInColsArr] = {label: 'Reference Server', type: 'number'};
       }
 
       var rows = [];
       var numOfRunsRelatedToTest = runsDataArr.length;
       for (var idxInRowsArr = 0; idxInRowsArr < numOfRunsRelatedToTest; idxInRowsArr++) {
         var runIdx = idxInRowsArr + 1;
-        rows[idxInRowsArr] = {c: [{v: 'Run ' + runIdx}]};
+        rows[idxInRowsArr] = {c: [
+          {v: 'Run ' + runIdx}
+        ]};
         var serverIdx = 1;
         runsDataArr[idxInRowsArr].forEach(function (runServerDataObj) {
           rows[idxInRowsArr].c[serverIdx] = {v: runServerDataObj[attrName]};
