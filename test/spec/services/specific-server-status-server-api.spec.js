@@ -143,10 +143,9 @@ describe('Service: specificServerStatusServerApi', function () {
 //    });
     it('should be able to get column defs for runs of selected test', function () {
       var cellTemplate = "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field]}}</div>";
-      var cellTemplateWithDateFilter = "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field] | date:'MMM d, y -  H:mm:ss'}}</div>";
+      var cellTemplateWithDateFilter = "<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field] | date:'d/M/yy H:mm'}}</div>";
       var columnDefs = [
         {
-//          cellFilter: "date:'MMM d, y -  H:mm:ss'",
           field: 'runEndTime',
           displayName: 'Run End Time',
           cellTemplate: cellTemplateWithDateFilter

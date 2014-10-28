@@ -425,11 +425,6 @@ angular
         controller: 'BasicTestInfoController',
         controllerAs: 'basicTestInfoCtrl'
       })
-      .when('/123', {
-        templateUrl: 'views/try-chart.html',
-        controller: 'MainController',
-        controllerAs: 'MainCtrl'
-      })
       .otherwise({
         redirectTo: '/'
       });

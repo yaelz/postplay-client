@@ -183,8 +183,8 @@
         columnObj.field = key;
         columnObj.displayName = fieldToDisplayName(key);
         if (key === 'runEndTime') {
-          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field] | date:\'MMM d, y -  H:mm:ss\'}}</div>';
-        } else {
+          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field] | date:\'d/M/yy H:mm\'}}</div>';
+        } else if (withoutServerHostName){
           columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field]}}</div>';
         }
         defs[colNum] = columnObj;

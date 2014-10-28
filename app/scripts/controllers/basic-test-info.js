@@ -15,7 +15,7 @@
       { field: 'artifactData.version', width: '15%', displayName: 'Version'},
       { field: 'artifactData.event', width: '15%', displayName: 'Event'},
       { field: 'artifactData.testStatusEnum', width: '10%', displayName: 'Status', cellTemplate: 'views/basic-test-info-image-template.html'},
-      { field: 'artifactData.startTime', width: '30%', displayName: 'Start Time', cellFilter: 'date:\'MMM d, y -  H:mm:ss\'' }
+      { field: 'artifactData.startTime', width: '30%', displayName: 'Start Time', cellFilter: 'date:\'d/M/yy H:mm\'' }
     ];
 
     function initGrid(gridCtrl, gridScope) {
