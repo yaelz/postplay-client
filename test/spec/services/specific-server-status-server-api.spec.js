@@ -88,22 +88,177 @@ describe('Service: specificServerStatusServerApi', function () {
     it('should hold the completed tests status', function () {
       expect(specificServerStatusServerApi.analysisStatus).toEqual(specificServerServerResponse.serverData.responseBody.analysisStatus);
     });
-    it('should be able to get all runs\' data for a specific test', function () {
+    it('should be able to get all runs\' data of the tested server for a specific test', function () {
       var runsDataOfSelectedTest = [
         {runEndTime: 1410959637697,
-          systemError: 0.0,
+          systemError: 3.789,
           serverHostName: 'app30.aus.wixpress.com',
           systemFatal: 0.0,
           errorRate: 0.0
         },
         {runEndTime: 1410959697696,
-          systemError: 0.0,
+          systemError: 6,
           serverHostName: 'app30.aus.wixpress.com',
           systemFatal: 0.0,
           errorRate: 0.1
         }
       ];
-      expect(specificServerStatusServerApi.getRunsDataOfSelectedTest('AppInfo Sanity2')).toEqual(runsDataOfSelectedTest);
+      expect(specificServerStatusServerApi.getRunsDataOfSelectedTest('AppInfo Sanity2', specificServerStatusServerApi.getTestedServerDataForTest)).toEqual(runsDataOfSelectedTest);
+    });
+//    it('should be able to get all runs\' data of all servers for a specific test', function () {
+//    TODO
+//      var runsDataOfSelectedTest = [
+//        [{systemError: 3.789,
+//          serverHostName: 'app30.aus.wixpress.com',
+//          systemFatal: 0.0,
+//          errorRate: 0.0
+//        },
+//          {systemError: 4,
+//            serverHostName: 'app33.aus.wixpress.com',
+//            systemFatal: 0.0,
+//            errorRate: 0.0
+//          },
+//          {systemError: 5,
+//            serverHostName: 'apu1.aus.wixpress.com',
+//            systemFatal: 0.0,
+//            errorRate: 0.0
+//          }],
+//        [{systemError: 6,
+//          serverHostName: 'app30.aus.wixpress.com',
+//          systemFatal: 0.0,
+//          errorRate: 0.1
+//        },
+//          {systemError: 7,
+//            serverHostName: 'app33.aus.wixpress.com',
+//            systemFatal: 0.0,
+//            errorRate: 0.0
+//          },
+//          {systemError: 8,
+//            serverHostName: 'apu1.aus.wixpress.com',
+//            systemFatal: 0.0,
+//            errorRate: 0.0
+//          }]
+//      ];
+//      expect(specificServerStatusServerApi.getRunsDataOfSelectedTest('AppInfo Sanity2', specificServerStatusServerApi.getAllServersDataForTest)).toEqual(runsDataOfSelectedTest);
+//    });
+    it('should be able to get column defs for runs of selected test', function () {
+      var columnDefs = [
+        {
+          cellFilter: "date:'MMM d, y -  H:mm:ss'",
+          field: 'runEndTime',
+          displayName: 'run End Time'
+        },
+        {
+          field: 'errorRate',
+          displayName: 'error Rate'
+        },
+        {
+          field: 'systemError',
+          displayName: 'system Error'
+        },
+        {
+          field: 'systemFatal',
+          displayName: 'system Fatal'
+        }
+      ];
+      var exampleRow = {
+        runEndTime: 1410959637697,
+        errorRate: 0,
+        serverHostName: "app30.aus.wixpress.com",
+        systemError: 0,
+        systemFatal: 0
+      };
+      var runsOfSelectedTestArr = [exampleRow];
+      expect(specificServerStatusServerApi.getColumnDefsForRunsOfSelectedTestArr(runsOfSelectedTestArr, true)).toEqual(columnDefs);
+    });
+    it('should be able to get data for the chart object', function () {
+      specificServerStatusServerApi.runsOfSelectedTestAllServersData = [[
+        {errorRate: 0,
+          serverHostName: "app30.aus.wixpress.com",
+          systemError: 3.789,
+          systemFatal: 0
+        },
+        {errorRate: 0,
+          serverHostName: "app33.aus.wixpress.com",
+          systemError: 4,
+          systemFatal: 0
+        },
+        {errorRate: 0,
+          serverHostName: "apu1.aus.wixpress.com",
+          systemError: 5,
+          systemFatal: 0
+        }], [
+        {errorRate: 0,
+          serverHostName: "app30.aus.wixpress.com",
+          systemError: 6,
+          systemFatal: 0
+        },
+        {errorRate: 0,
+          serverHostName: "app33.aus.wixpress.com",
+          systemError: 7,
+          systemFatal: 0
+        },
+        {errorRate: 0,
+          serverHostName: "apu1.aus.wixpress.com",
+          systemError: 8,
+          systemFatal: 0
+        }
+      ]];
+      var chartObjDataForTest = {
+        cols: [
+          {
+            label: 'Run',
+            type: 'string'
+          },
+          {
+            label: 'Tested Server',
+            type: 'number'
+          },
+          {
+            label: 'Reference Server',
+            type: 'number'
+          },
+          {
+            label: 'Reference Server',
+            type: 'number'
+          }
+        ],
+        rows: [
+          {
+            c: [
+              {
+                v: 'Run 1'
+              },
+              {
+                v: 3.789
+              },
+              {
+                v: 4
+              },
+              {
+                v: 5
+              }
+            ]
+          },
+          {
+            c: [
+              {
+                v: 'Run 2'
+              },
+              {
+                v: 6
+              },
+              {
+                v: 7
+              },
+              {
+                v: 8
+              }
+            ]
+          }
+        ]
+      };
+      expect(specificServerStatusServerApi.getChartObjDataForSelectedTest('systemError')).toEqual(chartObjDataForTest);
     });
   });
 });

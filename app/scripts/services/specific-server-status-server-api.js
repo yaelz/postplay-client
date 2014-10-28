@@ -16,7 +16,7 @@
       self.runIsSelected = false;
       self.testIsSelected = false;
       self.testOfRunIsSelected = false;
-      self.runsOfSelectedTest = [];
+      self.runsOfSelectedTestTestedServerData = [];
       self.serversDataOfTestOfSelectedRun = [];
     }
     var self = this;
@@ -50,7 +50,7 @@
           self.testNames = getTestNames(self.runs);
         });
     };
-    this.getRunsDataOfSelectedTest = function (testName) {
+    this.getRunsDataOfSelectedTest = function (testName, jsonOfTestDataGetterFunction) {
       var testServerDataArr = [];
       var testToInsertIdx = 0;
       for (var runIdx = 0; runIdx < self.runs.length; runIdx++) {
@@ -58,7 +58,7 @@
         for (var testIdx = 0; testIdx < run.tests.length; testIdx++) {
           var currTest = run.tests[testIdx];
           if (currTest.name === testName) {
-            testServerDataArr[testToInsertIdx] = getTestedServerDataForTest(currTest);
+            testServerDataArr[testToInsertIdx] = jsonOfTestDataGetterFunction(currTest);
             testServerDataArr[testToInsertIdx]['runEndTime'] = run.endTime;
             testToInsertIdx++;
             break;
@@ -66,7 +66,7 @@
         }
       }
 
-      self.columnDefsForRunsOfSelectedTest = getColumnDefsForRunsOfSelectedTestArr(testServerDataArr, true);
+      self.columnDefsForRunsOfSelectedTest = self.getColumnDefsForRunsOfSelectedTestArr(testServerDataArr, true);
       return testServerDataArr;
     };
 
@@ -77,8 +77,8 @@
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
-        self.runsOfSelectedTest = self.getRunsDataOfSelectedTest(selectedRow.entity.testName);
-
+        self.runsOfSelectedTestTestedServerData = self.getRunsDataOfSelectedTest(selectedRow.entity.testName, self.getTestedServerDataForTest);
+        self.runsOfSelectedTestAllServersData = self.getRunsDataOfSelectedTest(selectedRow.entity.testName, self.getAllServersDataForTest);
         self.chosenTestName = selectedRow.entity.testName;
         self.testIsSelected = true;
         return true;
@@ -86,10 +86,16 @@
       init: resizeGridOnEventData
     };
     this.runsOfChosenTestTableData = {
-      data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTest',
+      data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTestTestedServerData',
       columnDefs: self.columnDefsForRunsOfSelectedTest,
-      enableRowSelection: false,
+      multiSelect: false,
       init: resizeGridOnEventData
+      // TODO YAELLLLLLLLL
+//      beforeSelectionChange: function (selectedRow){
+//        console.log(selectedRow.entity);
+//        self.findAName = getAllServersDataForTest(selectedRow.entity);
+//        return true;
+//      }
     };
     this.runsTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runs',
@@ -117,8 +123,8 @@
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
-        self.serversDataOfTestOfSelectedRun = getServersDataOfTest(selectedRow.entity);
-        self.columnDefsOfServersOfTestsOfSelectedRuns = getColumnDefsForRunsOfSelectedTestArr(self.serversDataOfTestOfSelectedRun);
+        self.serversDataOfTestOfSelectedRun = self.getAllServersDataForTest(selectedRow.entity);
+        self.columnDefsOfServersOfTestsOfSelectedRuns = self.getColumnDefsForRunsOfSelectedTestArr(self.serversDataOfTestOfSelectedRun);
         self.testOfRunIsSelected = true;
         self.chosenTestOfRun = selectedRow.entity.name;
 //        self.chosenTestOfRun = '656374567';
@@ -162,17 +168,17 @@
     function getTestsOfRunBasicTableData() {
       self.tests = self.selectedRun.tests;
     }
-    function getServersDataOfTest(test) {
+    this.getAllServersDataForTest = function(test) {
       var serversDataObjectsForTestArr = (JSON.parse(test.resultsForDisplay)).referenceServers;
-      var testedServerDataOfTest = getTestedServerDataForTest(test);
+      var testedServerDataOfTest = self.getTestedServerDataForTest(test);
       serversDataObjectsForTestArr.unshift(testedServerDataOfTest);
       return serversDataObjectsForTestArr;
     }
-    function getTestedServerDataForTest(test) {
+    this.getTestedServerDataForTest = function(test) {
       return (JSON.parse(test.resultsForDisplay)).testedServer;
-    }
+    };
 
-    function getColumnDefsForRunsOfSelectedTestArr(runsOfSelectedTestArr, withoutServerHostName) {
+    this.getColumnDefsForRunsOfSelectedTestArr = function(runsOfSelectedTestArr, withoutServerHostName) {
       var defs = [];
       var exampleRow = runsOfSelectedTestArr[0];
       // TODO move this to setAttrValuesCols
@@ -188,11 +194,40 @@
         }
         columnObj.field = key;
         // cellFilter: 'date:\'MMM d, y -  H:mm:ss\''
-        columnObj.displayName = key.replace(/([A-Z])/g, ' $1');;
+        columnObj.displayName = key.replace(/([A-Z])/g, ' $1');
         defs[colNum] = columnObj;
         colNum++;
       }
       return defs;
+    };
+
+    this.getChartObjDataForSelectedTest = function(attrName) {
+      var runsDataArr = self.runsOfSelectedTestAllServersData;
+      var cols = [{
+        label: 'Run',
+        type: 'string'
+      },
+        {
+          label: 'Tested Server',
+          type: 'number'
+        }];
+      var numOfServersInRunInTest = runsDataArr[0].length;
+      for (var idxInColsArr = 2; idxInColsArr <= numOfServersInRunInTest; idxInColsArr++) {
+        cols[idxInColsArr] = {label: 'Reference Server', type: 'number'}
+      }
+
+      var rows = [];
+      var numOfRunsRelatedToTest = runsDataArr.length;
+      for (var idxInRowsArr = 0; idxInRowsArr < numOfRunsRelatedToTest; idxInRowsArr++) {
+        var runIdx = idxInRowsArr + 1;
+        rows[idxInRowsArr] = {c: [{v: 'Run ' + runIdx}]};
+        var serverIdx = 1;
+        runsDataArr[idxInRowsArr].forEach(function (runServerDataObj) {
+          rows[idxInRowsArr].c[serverIdx] = {v: runServerDataObj[attrName]};
+          serverIdx++;
+        });
+      }
+      return {cols: cols, rows: rows};
     }
   }
 

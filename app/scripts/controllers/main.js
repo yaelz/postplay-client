@@ -6,45 +6,36 @@
   function MainController($scope) {
     $scope.$emit('we are using controllerAs syntax, scope is used only for events and watches');
     $scope.chartObject = {
-      "type": "LineChart",
-      "displayed": true,
-      "data": {
-        "cols": [
+      type: 'LineChart',
+      displayed: true,
+      data: {
+        cols: [
           {
-            "id": "month",
-            "label": "Month",
-            "type": "string",
-            "p": {}
+            label: 'Run',
+            type: 'string'
           },
           {
-            "id": "laptop-id",
-            "label": "Laptop",
-            "type": "number",
-            "p": {}
+            label: 'Tested Server',
+            type: 'number'
           },
           {
-            "id": "desktop-id",
-            "label": "Desktop",
-            "type": "number",
-            "p": {}
+            label: 'Reference Server',
+            type: 'number'
           },
           {
-            "id": "server-id",
-            "label": "Server",
-            "type": "number",
-            "p": {}
+            label: 'Reference Server',
+            type: 'number'
           },
           {
-            "id": "cost-id",
-            "label": "Shipping",
-            "type": "number"
+            label: 'Reference Server',
+            type: 'number'
           }
         ],
-        "rows": [
+        rows: [
           {
             "c": [
               {
-                "v": "January"
+                "v": "Run1"
               },
               {
                 "v": 19,
@@ -66,7 +57,7 @@
           {
             "c": [
               {
-                "v": "February"
+                "v": "Run2"
               },
               {
                 "v": 13
@@ -86,7 +77,7 @@
           {
             "c": [
               {
-                "v": "March"
+                "v": "Run3"
               },
               {
                 "v": 24
@@ -104,23 +95,19 @@
           }
         ]
       },
-      "options": {
-        "title": "Sales per month",
-        "isStacked": "true",
-        "fill": 20,
-        "displayExactValues": true,
-        "explorer": {actions: ['dragToZoom', 'rightClickToReset']},
-        "vAxis": {
-          "title": "Sales unit",
-          "gridlines": {
-            "count": 5
-          }
+      options: {
+        title: 'Compare Runs for CHOSEN_ATTR',
+        fill: 20,
+        displayExactValues: true,
+        explorer: {actions: ['dragToZoom', 'rightClickToReset']},
+        vAxis: {
+          title: 'Attr Values'
         },
-        "hAxis": {
-          "title": "Date"
+        hAxis: {
+          title: 'Runs'
         }
       },
-      "formatters": {}
+      formatters: {}
     };
   }
 
