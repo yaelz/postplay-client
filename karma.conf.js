@@ -34,6 +34,7 @@ module.exports = function (config) {
       'app/bower_components/angular-animate/angular-animate.js',
       'app/bower_components/angular-route/angular-route.js',
       'app/bower_components/angular-google-chart/ng-google-chart.js',
+      'app/bower_components/angular-bootstrap/ui-bootstrap.js',
       '{app,.tmp}/*.js',
       '{app,.tmp}/scripts/*.js',
       '{app,.tmp}/scripts/*/**/*.js',

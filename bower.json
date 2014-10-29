@@ -22,7 +22,8 @@
     "uri.js": "~1.13.1",
     "wix-angular": "~0.1.1",
     "ng-grid": "~2.0.13",
-    "jquery-ui": "~1.11.1"
+    "jquery-ui": "~1.11.1",
+    "angular-bootstrap": "~0.11.2"
   },
   "devDependencies": {
     "angular-mocks": "~1.2.0",

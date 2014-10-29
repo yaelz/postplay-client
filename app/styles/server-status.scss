@@ -5,6 +5,7 @@ $box-border: 1px solid;
 $box-border-radius: 4px;
 $font-family: 'Open Sans', sans-serif;
 $header-font-size: 13px;
+$left-container-min-width: 300px;
 
 $cell-bg-color: #E0E0E0;
 $background-blue: rgb(140, 186, 241);
@@ -57,13 +58,6 @@ body {
   font-weight: bold;
   width: 120px;
   margin: 0px 50px 35px 50px;
-  text-indent: 50px;
-  .pp-ss-header-percent-error {
-    background: linear-gradient(#ff281e, #b90213);
-    background-color: $error-color;
-  }
-  border: 1px solid $error-color;
-  border-radius: 4px;
 }
 .pp-ss-header-status-message {
   text-align: center;
@@ -89,7 +83,6 @@ body {
 #pp-ss-tabs-container {
   -webkit-flex: 1;
   flex: 1;
-  padding: 25px;
   min-width: 550px;
   float: left;
   ul {
@@ -122,17 +115,17 @@ body {
 }
 .pp-ss-tables-under-tabs-container {
   display: table-caption;
-  width: 550px;
+  width: $left-container-min-width;
   height: 100%;
   .ngTopPanel {
     background-color: $background-light-blue;
     color: #ffffff;
   }
   &#tests-table-under-tabs{
-    width: 550px;
+    width: $left-container-min-width;
   }
   &#runs-table-under-tabs {
-    width: 550px;
+    width: $left-container-min-width;
   }
 //  overflow: visible;
   .pp-grid-container {
@@ -152,30 +145,16 @@ body {
   margin: auto;
   display: block
 }
-//#runs-table-under-tabs, #tests-table-under-tabs {
-//  .ngRow.selected:after {
-//    content: ' ';
-//    position: absolute;
-//    width: 0;
-//    height: 0;
-//    left: 105%;
-//    top: 15%;
-//    border: 10px solid rgb(88, 78, 78);
-//    border-color: rgba(88, 78, 78, 0) transparent transparent rgba(88, 78, 78, 1);
-//  }
-//}
-//*:after {
-//  box-sizing: border-box;
-//}
+
 #pp-ss-runs-tables-container, #pp-ss-tests-tables-container {
   float: right;
-  padding: 85px;
+  padding: 50px;
   box-sizing: border-box;
   -webkit-flex: 2;
   flex: 2;
   display: -webkit-flex;
   display: flex;
-  min-width: 500px;
+  min-width: $left-container-min-width;
   flex-direction: column;
   .pp-grid-container {
     height: auto;
@@ -193,13 +172,13 @@ body {
 }
 .pp-ss-animation-first-table-on-right.ng-hide-remove {
   animation:1.5s fadeIn ease;
-  min-width: 500px;
+  min-width: $left-container-min-width;
   -webkit-flex: 1;
   flex: 1;
 }
 .pp-ss-animation-second-table-on-right.ng-hide-remove {
   animation:1.5s fadeIn ease;
-  min-width: 500px;
+  min-width: $left-container-min-width;
   -webkit-flex: 1;
   flex: 1;
 }

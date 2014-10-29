@@ -11,11 +11,11 @@
     this.artifactsWereChosen = false;
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.columnDefsForGrids = [
-      { field: 'artifactData.artifactId', width: '30%', displayName: 'Artifact Id'},
-      { field: 'artifactData.version', width: '15%', displayName: 'Version'},
-      { field: 'artifactData.event', width: '15%', displayName: 'Event'},
-      { field: 'artifactData.testStatusEnum', width: '10%', displayName: 'Status', cellTemplate: 'views/basic-test-info-image-template.html'},
-      { field: 'artifactData.startTime', width: '30%', displayName: 'Start Time', cellFilter: 'date:\'d/M/yy H:mm\'' }
+      { field: 'artifactData.testStatusEnum', width: '5%', displayName: '', cellTemplate: 'views/basic-test-info-image-template.html'},
+      { field: 'artifactData.artifactId', width: '35%', displayName: 'Artifact Id', cellTemplate: '<div class="ngCellText" popover="{{row.entity.artifactData.artifactId}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true"><span ng-cell-text>{{row.entity.artifactData.artifactId}}</span></div>'},
+      { field: 'artifactData.version', width: '20%', displayName: 'Version'},
+      { field: 'artifactData.event', width: '20%', displayName: 'Event'},
+      { field: 'artifactData.startTime', width: '20%', displayName: 'Start Time', cellFilter: 'date:\'d/M/yy H:mm\'' }
     ];
 
     function initGrid(gridCtrl, gridScope) {
@@ -59,8 +59,8 @@
       data: 'basicTestInfoCtrl.serversFromClickedOnArtifacts',
       init: initGrid,
       columnDefs: [
-        { field: 'ip', width: '60%', displayName: 'IP'},
-        { field: 'artifactData.analysisResultStatus', width: '40%', displayName: 'Status', cellTemplate: 'views/basic-test-info-image-template.html'}
+        { field: 'artifactData.analysisResultStatus', width: '5%', displayName: '', cellTemplate: 'views/basic-test-info-image-template.html'},
+        { field: 'ip', width: '95%', displayName: 'IP'}
       ],
       multiSelect: false,
       rowTemplate: 'views/basic-test-info-row-template.html'

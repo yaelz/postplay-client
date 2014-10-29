@@ -46,6 +46,7 @@
     <link rel="stylesheet" href="styles/general-status.css">
     <link rel="stylesheet" href="styles/animate.css">
     <link rel="stylesheet" href="bower_components/ng-grid/ng-grid.css">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet">
     <!-- endbuild -->
     <!-- end-process-tags -->
 
@@ -73,6 +74,9 @@
     <script src="bower_components/angular-route/angular-route.js"></script>
     <script src="bower_components/ng-grid/ng-grid-2.0.13.debug.js"></script>
     <script src="bower_components/angular-google-chart/ng-google-chart.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap.js"></script>
+    <script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.11.2.js"></script>
     <script src="bower_components/angular-i18n/angular-locale_${locale}.js"></script>
     <script src="scripts/locale/messages_${locale}.js"></script>
     <!-- build:js scripts/modules.js -->

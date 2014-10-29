@@ -137,8 +137,8 @@ describe('Service: specificServerStatusServerApi', function () {
 //      expect(specificServerStatusServerApi.getServersDataOfSelectedTest('AppInfo Sanity2', specificServerStatusServerApi.getAllServersDataForTest)).toEqual(runsDataOfSelectedTest);
 //    });
     it('should be able to get column defs for runs of selected test', function () {
-      var cellTemplateWithClick = '<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildChartByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field]}}</div>';
-      var cellTemplateWithDateFilter = '<div class=\"grid-action-cell\">{{row.entity[col.field] | date:\'d/M/yy H:mm\'}}</div>';
+      var cellTemplateWithClick = '<div class=\"ngCellText\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildChartByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field]}}</div>';
+      var cellTemplateWithDateFilter = '<div class=\"ngCellText\">{{row.entity[col.field] | date:\'d/M/yy H:mm\'}}</div>';
       var columnDefs = [
         {
           field: 'runEndTime',

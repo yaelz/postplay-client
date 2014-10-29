@@ -3,7 +3,7 @@
 //add services, directives, controllers, filters, etc. in this module
 //avoid adding module dependencies for this module
 angular
-  .module('postplayTryAppInternal', ['ngGrid', 'ngAnimate', 'googlechart'])
+  .module('postplayTryAppInternal', ['ngGrid', 'ngAnimate', 'googlechart', 'ui.bootstrap'])
   .constant('basicTestInfoServerResponse', {
     version: '2.487.0',
     artifactId: 'wix-public-html-renderer-webapp',

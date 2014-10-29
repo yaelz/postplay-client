@@ -1,4 +1,2 @@
-%img(ng-src='images/ok-icon.png'
-     ng-show="row.getProperty('hasFailedServer') === false || row.getProperty('analysisResultStatus') === 'TEST_PASSED'")
-%img(ng-src='images/error-icon.png'
-     ng-show="row.getProperty('hasFailedServer') === true || row.getProperty('analysisResultStatus') === 'TEST_FAILED'")
+%div(class = "ngCellText"
+     ng-class = "{green: row.getProperty('hasFailedServer') === false || row.getProperty('analysisResultStatus') === 'TEST_PASSED', red: row.getProperty('hasFailedServer') === true || row.getProperty('analysisResultStatus') === 'TEST_FAILED'}")
