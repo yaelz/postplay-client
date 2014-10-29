@@ -4,23 +4,8 @@
 
   /* @ngInject */
   function SpecificServerStatusServerApi($http, serverApiUrl, $timeout) {
-    // AngularJS will instantiate a singleton by calling "new" on this function
-    function init() {
-      self.serverResponseBody = {};
-      self.isDataLoaded = false;
-      self.selectedRun = {};
-      self.artifactName = '';
-      self.artifactId = '';
-      self.serverName = '';
-      self.version = '';
-      self.runIsSelected = false;
-      self.testIsSelected = false;
-      self.testOfRunIsSelected = false;
-      self.runsOfSelectedTestTestedServerData = [];
-      self.serversDataOfTestOfSelectedRun = [];
-    }
     var self = this;
-    init();
+    var cellFilterString = 'date:\'d/M/yy H:mm\'';
 
     function resizeGridOnEventData(gridCtrl, gridScope) {
       gridScope.$on('ngGridEventData', function () {
@@ -31,7 +16,6 @@
         });
       });
     }
-    // Public API here
     this.getServerData = function (server, artifactId, groupId) {
       var API_URL = serverApiUrl.SERVER_STATUS_API_URL_PREFIX + server + '&artifactId=' + artifactId + '&groupId=' + groupId;
       $http.get(API_URL)
@@ -39,18 +23,17 @@
           self.serverResponseBody = response.data.responseBody;
           self.completedTestsPercent = self.serverResponseBody.completedTestsPercent;
           self.completedNumberOfRuns = self.serverResponseBody.runs.completedNumberOfRuns;
-          self.totalNumberOfRuns = self.serverResponseBody.runs.totalNumberOfRuns;
           self.analysisStatus = self.serverResponseBody.analysisStatus;
           self.artifactName = self.serverResponseBody.artifactName;
           self.artifactId = self.serverResponseBody.artifactId;
           self.serverName = self.serverResponseBody.server;
           self.version = self.serverResponseBody.version;
+          self.runs = self.serverResponseBody.runs.runs;
+          self.testNames = getTestNames();
           self.isDataLoaded = true;
-          self.runs = response.data.responseBody.runs.runs;
-          self.testNames = getTestNames(self.runs);
         });
     };
-    this.getRunsDataOfSelectedTest = function (testName, jsonOfTestDataGetterFunction) {
+    this.getServersDataOfSelectedTest = function (testName, jsonOfTestDataGetterFunction) {
       var testServerDataArr = [];
       var testToInsertIdx = 0;
       for (var runIdx = 0; runIdx < self.runs.length; runIdx++) {
@@ -72,12 +55,13 @@
     this.testNamesTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.testNames',
       columnDefs: [
-        { field: 'testName', width: '150px', displayName: 'Test Name'}
+        { field: 'testName', displayName: 'Test Name'}
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
-        self.runsOfSelectedTestTestedServerData = self.getRunsDataOfSelectedTest(selectedRow.entity.testName, self.getTestedServerDataForTest);
-        self.runsOfSelectedTestAllServersData = self.getRunsDataOfSelectedTest(selectedRow.entity.testName, self.getAllServersDataForTest);
+        self.attributeIsSelected = false;
+        self.runsOfSelectedTestTestedServerData = self.getServersDataOfSelectedTest(selectedRow.entity.testName, self.getTestedServerDataForTest);
+        self.runsOfSelectedTestAllServersData = self.getServersDataOfSelectedTest(selectedRow.entity.testName, self.getAllServersDataForTest);
         self.chosenTestName = selectedRow.entity.testName;
         self.testIsSelected = true;
         return true;
@@ -88,38 +72,41 @@
       data: 'serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTestTestedServerData',
       columnDefs: 'serverStatusCtrl.specificServerStatusServerApi.getColumnDefsForRunsOfSelectedTestArr(serverStatusCtrl.specificServerStatusServerApi.runsOfSelectedTestTestedServerData, true)',
       multiSelect: false,
-      init: resizeGridOnEventData
+      init: resizeGridOnEventData,
+      beforeSelectionChange: function () {
+        return false;
+      }
     };
     this.runsTableData = {
       data: 'serverStatusCtrl.specificServerStatusServerApi.runs',
       columnDefs: [
         { field: 'runStatus', displayName: 'Status', cellTemplate: 'views/runs-image-template.html', width: '20%'},
-        { field: 'startTime', displayName: 'Start Time', width: '40%', cellFilter: 'date: \'MMM d, y  - H:mm:ss\'' },
-        { field: 'endTime', displayName: 'End Time', width: '40%', cellFilter: 'date: \'MMM d, y -  H:mm:ss\'' }
+        { field: 'startTime', displayName: 'Start Time', width: '40%', cellFilter: cellFilterString },
+        { field: 'endTime', displayName: 'End Time', width: '40%', cellFilter: cellFilterString }
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
-        self.selectedRun = selectedRow.entity;
-        self.runIsSelected = true;
         self.testOfRunIsSelected = false;
-        getTestsOfRunBasicTableData();
+        self.selectedRun = selectedRow.entity;
+        self.testsOfSelectedRunData = self.selectedRun.tests;
+        self.runIsSelected = true;
         return true;
       },
       init: resizeGridOnEventData
     };
     this.testsOfSelectedRunBasicTableData = {
-      data: 'serverStatusCtrl.specificServerStatusServerApi.tests',
+      data: 'serverStatusCtrl.specificServerStatusServerApi.testsOfSelectedRunData',
       columnDefs: [
-        { field: 'name', width: '30%', displayName: 'Test Name'},
+        { field: 'name', displayName: 'Test Name', width: '30%'},
         { field: 'testStatus', displayName: 'Test Status', width: '30%' },
-        { field: 'analysisResultStatus', displayName: 'Results Status', cellTemplate: 'views/test-of-run-image-template.html', width: '40%'}
+        { field: 'analysisResultStatus', displayName: 'Results Status', width: '40%', cellTemplate: 'views/test-of-run-image-template.html'}
       ],
       multiSelect: false,
       beforeSelectionChange: function (selectedRow) {
-        self.serversDataOfTestOfSelectedRun = self.getAllServersDataForTest(selectedRow.entity);
+        var selectedTestData = selectedRow.entity;
+        self.serversDataOfTestOfSelectedRun = self.getAllServersDataForTest(selectedTestData);
+        self.chosenTestOfRun = selectedTestData.name;
         self.testOfRunIsSelected = true;
-        self.chosenTestOfRun = selectedRow.entity.name;
-//        self.chosenTestOfRun = '656374567';
         return true;
       },
       init: resizeGridOnEventData
@@ -138,27 +125,33 @@
       init: resizeGridOnEventData
     };
 
-    function getTestNames(runs) {
-      var testNames = [];
-      for (var runsIdx = 0; runsIdx < runs.length; ++runsIdx) {
-        var run = runs[runsIdx];
-        for (var testIdx = 0; testIdx < run.tests.length; ++testIdx) {
-          var test = run.tests[testIdx];
-          var isFound = false;
-          for (var testNamesIdx = 0; testNamesIdx < testNames.length; ++testNamesIdx) {
-            if (test.name === testNames[testNamesIdx].testName)  {
-              isFound = true;
+    function getTestNames() {
+      var testNamesArray = [];
+
+      function insertTestNameIfNotAlreadyInArray(testName) {
+        function testNameExistsInTestNamesArray() {
+          var testNameExists = false;
+          for (var testNamesIdx = 0; testNamesIdx < testNamesArray.length; testNamesIdx++) {
+            if (testName === testNamesArray[testNamesIdx].testName) {
+              testNameExists = true;
             }
           }
-          if (!isFound) {
-            testNames[testNames.length] = {testName: test.name};
-          }
+          return testNameExists;
+        }
+
+        if (!testNameExistsInTestNamesArray(testName)) {
+          testNamesArray[testNamesArray.length] = {testName: testName};
         }
       }
-      return testNames;
-    }
-    function getTestsOfRunBasicTableData() {
-      self.tests = self.selectedRun.tests;
+
+      for (var runsIdx = 0; runsIdx < self.runs.length; runsIdx++) {
+        var run = self.runs[runsIdx];
+        for (var testIdx = 0; testIdx < run.tests.length; testIdx++) {
+          var testName = run.tests[testIdx].name;
+          insertTestNameIfNotAlreadyInArray(testName);
+        }
+      }
+      return testNamesArray;
     }
     this.getAllServersDataForTest = function (test) {
       var serversDataObjectsForTestArr = (JSON.parse(test.resultsForDisplay)).referenceServers;
@@ -173,7 +166,6 @@
     this.getColumnDefsForRunsOfSelectedTestArr = function (runsOfSelectedTestArr, withoutServerHostName) {
       var defs = [];
       var exampleRow = runsOfSelectedTestArr[0];
-      // TODO move this to setAttrValuesCols
       var colNum = 0;
       for (var key in exampleRow) {
         var columnObj = {};
@@ -183,16 +175,16 @@
         columnObj.field = key;
         columnObj.displayName = fieldToDisplayName(key);
         if (key === 'runEndTime') {
-          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field] | date:\'d/M/yy H:mm\'}}</div>';
+          columnObj.cellTemplate = '<div class="grid-action-cell">{{row.entity[col.field] | date:\'d/M/yy H:mm\'}}</div>';
         } else if (withoutServerHostName) {
-          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field]}}</div>';
+          columnObj.cellTemplate = '<div class="grid-action-cell" ng-click="serverStatusCtrl.specificServerStatusServerApi.buildChartByAttribute(col.colDef.field, col.colDef.displayName)">{{row.entity[col.field]}}</div>';
         }
         defs[colNum] = columnObj;
         colNum++;
       }
       return defs;
     };
-    this.buildGraphByAttribute = function (attribute, attributeDisplayName) {
+    this.buildChartByAttribute = function (attribute, attributeDisplayName) {
       self.chosenAttributeName = attributeDisplayName;
       self.chartDataObject = self.getChartObjDataForSelectedTest(attribute);
       self.chartObject = {
@@ -200,7 +192,6 @@
         displayed: true,
         data: self.chartDataObject,
         options: {
-          title: 'Compare Runs for CHOSEN_ATTR',
           fill: 20,
           displayExactValues: true,
           explorer: {actions: ['dragToZoom', 'rightClickToReset']},
@@ -231,7 +222,8 @@
       var rows = [];
       var numOfRunsRelatedToTest = runsDataArr.length;
 
-      function insertAttributeDataToRowsArray(idxInRowsArr, serverIdx) {
+      function insertAttributeDataToRowsArray(idxInRowsArr) {
+        var serverIdx = 1;
         runsDataArr[idxInRowsArr].forEach(function (runServerDataObj) {
           rows[idxInRowsArr].c[serverIdx] = {v: runServerDataObj[attrName]};
           serverIdx++;
@@ -242,8 +234,8 @@
         rows[idxInRowsArr] = {c: [
           {v: 'Run ' + runIdx}
         ]};
-        var serverIdx = 1;
-        insertAttributeDataToRowsArray(idxInRowsArr, serverIdx);
+
+        insertAttributeDataToRowsArray(idxInRowsArr);
       }
       return {cols: cols, rows: rows};
     };

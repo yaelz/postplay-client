@@ -10,82 +10,77 @@ describe('Service: specificServerStatusServerApi', function () {
   });
 
   // instantiate service
-  var specificServerStatusServerApi, $httpBackend, serverApiUrl, specificServerServerResponse, specificServerData, $rootScope;
-  beforeEach(inject(function (_specificServerStatusServerApi_, _$httpBackend_, _serverApiUrl_, _specificServerServerResponse_, _specificServerData_, _$rootScope_) {
+  var specificServerStatusServerApi, $httpBackend, specificServerServerResponse, $rootScope, API_URL, responseBody;
+  beforeEach(inject(function (_specificServerStatusServerApi_, _serverApiUrl_, _specificServerServerResponse_, _$httpBackend_, _$rootScope_) {
     specificServerStatusServerApi = _specificServerStatusServerApi_;
-    $httpBackend = _$httpBackend_;
-    serverApiUrl = _serverApiUrl_;
     specificServerServerResponse = _specificServerServerResponse_;
-    specificServerData = _specificServerData_;
+    API_URL = _serverApiUrl_.SERVER_STATUS_API_URL_PREFIX + specificServerServerResponse.serverData.responseBody.server + '&artifactId=' + specificServerServerResponse.serverData.responseBody.artifactId + '&groupId=' + specificServerServerResponse.serverData.responseBody.groupId;
+    $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
   }));
 
   function callGetServerStatusMethodAndFlushHttpBackend() {
-    var API_URL = serverApiUrl.SERVER_STATUS_API_URL_PREFIX + specificServerServerResponse.serverData.responseBody.server + '&artifactId=' + specificServerServerResponse.serverData.responseBody.artifactId + '&groupId=' + specificServerServerResponse.serverData.responseBody.groupId;
     $httpBackend.expectGET(API_URL).respond(200, specificServerServerResponse.serverData);
-    specificServerStatusServerApi.getServerData(specificServerServerResponse.serverData.responseBody.server, specificServerServerResponse.serverData.responseBody.artifactId, specificServerServerResponse.serverData.responseBody.groupId);
+    responseBody = specificServerServerResponse.serverData.responseBody;
+    specificServerStatusServerApi.getServerData(responseBody.server, responseBody.artifactId, responseBody.groupId);
     $httpBackend.flush();
   }
 
   it('should get the server\'s status', function () {
-    expect(specificServerStatusServerApi.serverResponseBody).toEqual({});
     callGetServerStatusMethodAndFlushHttpBackend();
-    expect(specificServerStatusServerApi.serverResponseBody).toEqual(specificServerServerResponse.serverData.responseBody);
+    expect(specificServerStatusServerApi.serverResponseBody).toEqual(responseBody);
   });
-  it('should know whether the data is loaded or not', function () {
-    expect(specificServerStatusServerApi.isDataLoaded).toBe(false);
+  it('should hold a variable which tells whether the server data is loaded', function () {
+    expect(specificServerStatusServerApi.isDataLoaded).not.toBeTruthy();
     callGetServerStatusMethodAndFlushHttpBackend();
     expect(specificServerStatusServerApi.isDataLoaded).toBe(true);
   });
 
-  describe('After getting the server status', function () {
+  describe('After getting the server data', function () {
     beforeEach(function () {
       callGetServerStatusMethodAndFlushHttpBackend();
     });
-    it('should hold the runs', function () {
-      expect(specificServerStatusServerApi.runs).toEqual(specificServerServerResponse.serverData.responseBody.runs.runs);
+    function chooseCertainRowInCertainTable(tableData, selectedRow) {
+      tableData.beforeSelectionChange(selectedRow);
+    }
+    it('should hold the runs data', function () {
+      expect(specificServerStatusServerApi.runs).toEqual(responseBody.runs.runs);
     });
+
     it('should hold the tests data for a specific run', function () {
-      expect(specificServerStatusServerApi.runIsSelected).toBe(false);
-      var selectedRow = {entity: specificServerServerResponse.serverData.responseBody.runs.runs[0]};
-      specificServerStatusServerApi.runsTableData.beforeSelectionChange(selectedRow);
-      expect(specificServerStatusServerApi.tests).toEqual(selectedRow.entity.tests);
+      expect(specificServerStatusServerApi.runIsSelected).not.toBeTruthy();
+      //TODO should this be done here or in the e2e? It's testing this service but also the click...
+      var selectedRunRow = {entity: specificServerServerResponse.serverData.responseBody.runs.runs[0]};
+      chooseCertainRowInCertainTable(specificServerStatusServerApi.runsTableData, selectedRunRow);
       expect(specificServerStatusServerApi.runIsSelected).toBe(true);
-      expect(specificServerStatusServerApi.testOfRunIsSelected).toBe(false);
+      expect(specificServerStatusServerApi.testsOfSelectedRunData).toEqual(selectedRunRow.entity.tests);
+      expect(specificServerStatusServerApi.testOfRunIsSelected).not.toBeTruthy();
     });
     it('should hold server data for a specific test in a specific run', function () {
-      var selectedTestForSelectedRun = {entity: specificServerServerResponse.serverData.responseBody.runs.runs[0].tests[0]};
-      specificServerStatusServerApi.testsOfSelectedRunBasicTableData.beforeSelectionChange(selectedTestForSelectedRun);
-      var resultsToDisplayJson = JSON.parse(selectedTestForSelectedRun.entity.resultsForDisplay);
-      var arr = resultsToDisplayJson.referenceServers;
-      arr.unshift(resultsToDisplayJson.testedServer);
-      expect(specificServerStatusServerApi.serversDataOfTestOfSelectedRun).toEqual(arr);
+      expect(specificServerStatusServerApi.testOfRunIsSelected).not.toBeTruthy();
+      var selectedTestRow = {entity: responseBody.runs.runs[0].tests[0]};
+      //TODO should this be done here or in the e2e? It's testing this service but also the click...
+      chooseCertainRowInCertainTable(specificServerStatusServerApi.testsOfSelectedRunBasicTableData, selectedTestRow);
+      expect(specificServerStatusServerApi.testOfRunIsSelected).toBe(true);
+      function createServersDataOfTestOfSelectedRun(selectedTestRow) {
+        var resultsToDisplayJson = JSON.parse(selectedTestRow.entity.resultsForDisplay);
+        var serversData = resultsToDisplayJson.referenceServers;
+        serversData.unshift(resultsToDisplayJson.testedServer);
+        return serversData;
+      }
+      var serversDataOfTestOfSelectedRun = createServersDataOfTestOfSelectedRun(selectedTestRow);
+      expect(specificServerStatusServerApi.serversDataOfTestOfSelectedRun).toEqual(serversDataOfTestOfSelectedRun);
     });
-    it('should hold all test names, each test name once!', function () {
+    it('should hold all test names, each test name once', function () {
       expect(specificServerStatusServerApi.testNames).toEqual([{testName: 'AppInfo Sanity'}, {testName: 'AppInfo Sanity2'}, {testName: 'Another test'}, {testName: 'Yet Another test'}]);
     });
-    it('should hold the artifactId', function () {
+    it('should hold the server status basic data', function () {
       expect(specificServerStatusServerApi.artifactId).toEqual(specificServerServerResponse.serverData.responseBody.artifactId);
-    });
-    it('should hold the artifactName', function () {
       expect(specificServerStatusServerApi.artifactName).toEqual(specificServerServerResponse.serverData.responseBody.artifactName);
-    });
-    it('should hold the version', function () {
       expect(specificServerStatusServerApi.version).toEqual(specificServerServerResponse.serverData.responseBody.version);
-    });
-    it('should hold the server name', function () {
       expect(specificServerStatusServerApi.serverName).toEqual(specificServerServerResponse.serverData.responseBody.server);
-    });
-    it('should hold the total number of runs', function () {
-      expect(specificServerStatusServerApi.totalNumberOfRuns).toEqual(specificServerServerResponse.serverData.responseBody.runs.totalNumberOfRuns);
-    });
-    it('should hold the number of completed runs', function () {
       expect(specificServerStatusServerApi.completedNumberOfRuns).toEqual(specificServerServerResponse.serverData.responseBody.runs.completedNumberOfRuns);
-    });
-    it('should hold the completed tests percent', function () {
       expect(specificServerStatusServerApi.completedTestsPercent).toEqual(specificServerServerResponse.serverData.responseBody.completedTestsPercent);
-    });
-    it('should hold the completed tests status', function () {
       expect(specificServerStatusServerApi.analysisStatus).toEqual(specificServerServerResponse.serverData.responseBody.analysisStatus);
     });
     it('should be able to get all runs\' data of the tested server for a specific test', function () {
@@ -103,7 +98,7 @@ describe('Service: specificServerStatusServerApi', function () {
           errorRate: 0.1
         }
       ];
-      expect(specificServerStatusServerApi.getRunsDataOfSelectedTest('AppInfo Sanity2', specificServerStatusServerApi.getTestedServerDataForTest)).toEqual(runsDataOfSelectedTest);
+      expect(specificServerStatusServerApi.getServersDataOfSelectedTest('AppInfo Sanity2', specificServerStatusServerApi.getTestedServerDataForTest)).toEqual(runsDataOfSelectedTest);
     });
 //    it('should be able to get all runs\' data of all servers for a specific test', function () {
 //    TODO
@@ -139,11 +134,11 @@ describe('Service: specificServerStatusServerApi', function () {
 //            errorRate: 0.0
 //          }]
 //      ];
-//      expect(specificServerStatusServerApi.getRunsDataOfSelectedTest('AppInfo Sanity2', specificServerStatusServerApi.getAllServersDataForTest)).toEqual(runsDataOfSelectedTest);
+//      expect(specificServerStatusServerApi.getServersDataOfSelectedTest('AppInfo Sanity2', specificServerStatusServerApi.getAllServersDataForTest)).toEqual(runsDataOfSelectedTest);
 //    });
     it('should be able to get column defs for runs of selected test', function () {
-      var cellTemplate = '<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field]}}</div>';
-      var cellTemplateWithDateFilter = '<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildGraphByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field] | date:\'d/M/yy H:mm\'}}</div>';
+      var cellTemplateWithClick = '<div class=\"grid-action-cell\" ng-click=\"serverStatusCtrl.specificServerStatusServerApi.buildChartByAttribute(col.colDef.field, col.colDef.displayName)\">{{row.entity[col.field]}}</div>';
+      var cellTemplateWithDateFilter = '<div class=\"grid-action-cell\">{{row.entity[col.field] | date:\'d/M/yy H:mm\'}}</div>';
       var columnDefs = [
         {
           field: 'runEndTime',
@@ -153,17 +148,17 @@ describe('Service: specificServerStatusServerApi', function () {
         {
           field: 'errorRate',
           displayName: 'Error Rate',
-          cellTemplate: cellTemplate
+          cellTemplate: cellTemplateWithClick
         },
         {
           field: 'systemError',
           displayName: 'System Error',
-          cellTemplate: cellTemplate
+          cellTemplate: cellTemplateWithClick
         },
         {
           field: 'systemFatal',
           displayName: 'System Fatal',
-          cellTemplate: cellTemplate
+          cellTemplate: cellTemplateWithClick
         }
       ];
       var exampleRow = {
@@ -176,7 +171,8 @@ describe('Service: specificServerStatusServerApi', function () {
       var runsOfSelectedTestArr = [exampleRow];
       expect(specificServerStatusServerApi.getColumnDefsForRunsOfSelectedTestArr(runsOfSelectedTestArr, true)).toEqual(columnDefs);
     });
-    it('should be able to get data for the chart object', function () {
+    it('should be able to get data for the chart object, for a specific attribute', function () {
+      // TODO how do I choose a run? Is this suppose to be in the E2E after clicking a test name?
       specificServerStatusServerApi.runsOfSelectedTestAllServersData = [
         [
           {errorRate: 0,
@@ -267,7 +263,8 @@ describe('Service: specificServerStatusServerApi', function () {
           }
         ]
       };
-      expect(specificServerStatusServerApi.getChartObjDataForSelectedTest('systemError')).toEqual(chartObjDataForTest);
+      var attrName = 'systemError';
+      expect(specificServerStatusServerApi.getChartObjDataForSelectedTest(attrName)).toEqual(chartObjDataForTest);
     });
   });
 });
