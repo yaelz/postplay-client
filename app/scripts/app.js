@@ -15,6 +15,28 @@ angular
       {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Public Html Renderer', runStatusEnum: 'FINISHED_WITH_EXECUTION_ERRORS', testStatusEnum: 'FAILED', analysisResultEnum: 'TEST_FAILED'},
       {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: 'Wix Public', runStatusEnum: 'FINISHED', testStatusEnum: 'FAILED', analysisResultEnum: 'TEST_FAILED'}
     ],
+    allArtifactsNewNotFailed: [
+      {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'FAILED', analysisResultEnum: 'TEST_PASSED'},
+      {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Public Html Renderer', runStatusEnum: 'FINISHED_WITH_EXECUTION_ERRORS', testStatusEnum: 'FAILED', analysisResultEnum: 'TEST_FAILED'},
+      {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: 'Wix Public', runStatusEnum: 'FINISHED', testStatusEnum: 'FAILED', analysisResultEnum: 'TEST_PASSED'}
+    ],
+    allArtifactsDifferentVersionForFailedServer: [
+      {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'FAILED', analysisResultEnum: 'TEST_PASSED'},
+      {monitoredArtifactId: 31, artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '3.487.0', event: 'TESTBED', name: '2. Wix Public Html Renderer', runStatusEnum: 'FINISHED_WITH_EXECUTION_ERRORS', testStatusEnum: 'FAILED', analysisResultEnum: 'TEST_FAILED'},
+      {monitoredArtifactId: 21, artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: 'Wix Public', runStatusEnum: 'FINISHED', testStatusEnum: 'FAILED', analysisResultEnum: 'TEST_FAILED'}
+    ],
+    versionSummaryForRendererNewVersion: {
+      code: 0,
+      message: 'OK',
+      comments: null,
+      responseBody: {
+        artifactId: 'wix-public-html-renderer-webapp',
+        groupId: 'com.wixpress',
+        version: '3.487.0',
+        startTime: '1410959618239',
+        event: 'TESTBED'
+      }
+    },
     versionSummaryForRenderer: {
       code: 0,
       message: 'OK',
