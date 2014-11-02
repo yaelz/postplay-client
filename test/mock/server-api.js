@@ -3,7 +3,6 @@
 angular.module('postplayTryAppMocks', ['ngMockE2E'])
   .run(function ($httpBackend, basicTestInfoServerResponse, serverApiUrl, specificServerData, specificServerData2, specificServerData3, specificServerServerResponse) {
     $httpBackend.whenGET(serverApiUrl.ALL_ARTIFACTS_API_URL).respond(basicTestInfoServerResponse.allArtifacts);
-    $httpBackend.whenGET(serverApiUrl.ALL_FAILED_ARTIFACTS_API_URL).respond(basicTestInfoServerResponse.allFailedArtifacts);
 
     $httpBackend.whenGET(serverApiUrl.BUILDS_API_URL).respond(basicTestInfoServerResponse.lifecycleBuilds);
 

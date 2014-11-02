@@ -23,11 +23,6 @@ describe('Service: basicTestInfoServerApi', function () {
     checkResponseFromServer(basicTestInfoServerApi.getAllArtifacts, [], basicTestInfoServerResponse.allArtifacts);
   });
 
-  it('should get all failed artifacts monitored by postplay', function () {
-    API_URL = serverApiUrl.ALL_FAILED_ARTIFACTS_API_URL;
-    checkResponseFromServer(basicTestInfoServerApi.getAllFailedArtifacts, [], basicTestInfoServerResponse.allFailedArtifacts);
-  });
-
   function checkResponseFromServer(functionToEval, valueBeforeServerResponse, responseFromServer, argsForFunc) {
     $httpBackend.expectGET(API_URL).respond(200, responseFromServer);
     var functionReturnValue = valueBeforeServerResponse;

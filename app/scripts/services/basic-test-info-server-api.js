@@ -26,11 +26,6 @@
       return runHttpGetSuccessAndError(API_URL);
     };
 
-    this.getAllFailedArtifacts = function () {
-      API_URL = serverApiUrl.ALL_FAILED_ARTIFACTS_API_URL;
-      return runHttpGetSuccessAndError(API_URL);
-    };
-
     this.getLifecycleBuilds = function () {
       API_URL = serverApiUrl.BUILDS_API_URL;
       return runHttpGetSuccessAndError(API_URL);

@@ -166,9 +166,6 @@ body {
   font-weight: bold;
   font-size: larger;
   color: $background-light-blue;
-  &#failed-table-title {
-    color: $error-color;
-  }
 }
 .pp-ss-animation-first-table-on-right.ng-hide-remove {
   animation:1.5s fadeIn ease;

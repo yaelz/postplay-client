@@ -7,10 +7,10 @@
     var self = this;
     this.basicTestInfoServerApi = _basicTestInfoServerApi_;
 
-    this.chosenVersionSummary = [];
-    this.artifactsWereChosen = false;
+    this.failedAndChosenArtifactsSummary = [];
+    this.allVersionSummary = [];
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
-    this.columnDefsForGrids = [
+    this.columnDefsForArtifactsGrid = [
       { field: 'artifactData.testStatusEnum', width: '5%', displayName: '', cellTemplate: 'views/basic-test-info-image-template.html'},
       { field: 'artifactData.artifactId', width: '35%', displayName: 'Artifact Id', cellTemplate: '<div class="ngCellText" popover="{{row.entity.artifactData.artifactId}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true"><span ng-cell-text>{{row.entity.artifactData.artifactId}}</span></div>'},
       { field: 'artifactData.version', width: '20%', displayName: 'Version'},
@@ -18,46 +18,24 @@
       { field: 'artifactData.startTime', width: '20%', displayName: 'Start Time', cellFilter: 'date:\'d/M/yy H:mm\'' }
     ];
 
-    function initGrid(gridCtrl, gridScope) {
-      gridScope.$on('ngGridEventData', function () {
-        $timeout(function () {
-          angular.forEach(gridScope.columns, function (col) {
-            gridCtrl.resizeOnData(col);
-          });
-        });
-      });
-    }
-
     function onRowClick(selectedRow) {
-      self.serversFromClickedOnArtifacts = selectedRow.entity.artifactData.servers;
+      var artifactData = selectedRow.entity.artifactData;
+      self.serversFromClickedOnArtifacts = artifactData.servers;
       self.artifactIsClickedOn = true;
       self.clickedOnArtifact = {
-        artifactId: selectedRow.entity.artifactData.artifactId,
-        groupId: selectedRow.entity.artifactData.groupId,
-        version: selectedRow.entity.artifactData.version,
-        event: selectedRow.entity.artifactData.event
+        artifactId: artifactData.artifactId
       };
       return true;
     }
-    this.failedArtifactsSummary = {
-      data: 'basicTestInfoCtrl.failedVersionSummary',
-      init: initGrid,
-      columnDefs: 'basicTestInfoCtrl.columnDefsForGrids',
+    this.failedAndChosenArtifactsSummaryTableData = {
+      data: 'basicTestInfoCtrl.failedAndChosenArtifactsSummary',
+//      init: initGrid,
+      columnDefs: 'basicTestInfoCtrl.columnDefsForArtifactsGrid',
       multiSelect: false,
       beforeSelectionChange: onRowClick
-//      rowTemplate: 'views/basic-test-info-row-template.html'
-    };
-    this.chosenArtifactsSummary = {
-      data: 'basicTestInfoCtrl.chosenVersionSummary',
-      init: initGrid,
-      columnDefs: 'basicTestInfoCtrl.columnDefsForGrids',
-      multiSelect: false,
-      beforeSelectionChange: onRowClick
-//      rowTemplate: 'views/basic-test-info-row-template.html'
     };
     this.serversToShow = {
       data: 'basicTestInfoCtrl.serversFromClickedOnArtifacts',
-      init: initGrid,
       columnDefs: [
         { field: 'artifactData.analysisResultStatus', width: '5%', displayName: '', cellTemplate: 'views/basic-test-info-image-template.html'},
         { field: 'ip', width: '95%', displayName: 'IP'}
@@ -65,6 +43,9 @@
       multiSelect: false,
       rowTemplate: 'views/basic-test-info-row-template.html'
     };
+    function didServerRunEndWithTestStatus(serverRunInfo, statusEnum) {
+      return serverRunInfo.testStatusEnum === statusEnum;
+    }
     this.serverRunEndedWithError = function (serverInfo) {
       // TODO get possibilities
       return didServerRunEndWithTestStatus(serverInfo, 'STATUS_COMPLETED_WITH_ERRORS') || didServerRunEndWithTestStatus(serverInfo, 'INCOMPLETE');
@@ -77,60 +58,37 @@
     };
 
     this.updateChosenArtifactData = function () {
+      function isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentVersionSummaryWrapper) {
+        return currentVersionSummaryWrapper.artifactData.artifactId === self.currentArtifactId && !currentVersionSummaryWrapper.isChosen && !currentVersionSummaryWrapper.hasFailedServer;
+      }
+
       this.allVersionSummary.forEach(function (currentVersionSummaryWrapper) {
-        if (self.currentArtifactId === currentVersionSummaryWrapper.artifactData.artifactId && !currentVersionSummaryWrapper.isChosen && !currentVersionSummaryWrapper.hasFailedServer) {
-          self.chosenVersionSummary.push(currentVersionSummaryWrapper);
+        if (isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentVersionSummaryWrapper)) {
+          self.failedAndChosenArtifactsSummary.unshift(currentVersionSummaryWrapper);
           currentVersionSummaryWrapper.isChosen = true;
-          self.artifactsWereChosen = true;
         }
       });
     };
 
-    function didServerRunEndWithTestStatus(serverRunInfo, statusEnum) {
-      return serverRunInfo.testStatusEnum === statusEnum;
-    }
     function initArtifacts() {
       return self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
         self.artifacts = response.data;
       });
     }
-    function initFailedArtifacts() {
-      return self.basicTestInfoServerApi.getAllFailedArtifacts().then(function (response) {
-        self.failedArtifacts = response.data;
-      });
-    }
-    function artifactHoldsFailedServer(responseBody) {
-      var foundFailedServer = false;
-      responseBody.servers.forEach(function (currServerData) {
-        if (currServerData.analysisResultStatus === 'TEST_FAILED') {
-          foundFailedServer = true;
-        }
-      });
-      return foundFailedServer;
-    }
     function getArtifactsDataFromService() {
-
-      initFailedArtifacts().then(function () {
-        self.failedVersionSummary = [];
-        self.failedArtifacts.forEach(function (currentArtifact) {
-          var latestVersion = currentArtifact.version;
-          self.basicTestInfoServerApi.getVersionSummary(latestVersion, currentArtifact.artifactId, currentArtifact.groupId, currentArtifact.event)
-            .then(function (response) {
-              var versionSummaryWrapper = {artifactData: response.data.responseBody, hasFailedServer: true, isChosen: false};
-              self.failedVersionSummary.push(versionSummaryWrapper);
-            });
-        });
-      });
       initArtifacts().then(function () {
         var newAllVersionSummary = [];
         self.artifacts.forEach(function (currentArtifact) {
           var latestVersion = currentArtifact.version;
           self.basicTestInfoServerApi.getVersionSummary(latestVersion, currentArtifact.artifactId, currentArtifact.groupId, currentArtifact.event)
             .then(function (response) {
-              var versionSummaryWrapper = {artifactData: response.data.responseBody, hasFailedServer: false, isChosen: false};
+              var versionSummaryWrapper = {artifactData: response.data.responseBody, isChosen: false};
               newAllVersionSummary.push(versionSummaryWrapper);
-              if (artifactHoldsFailedServer(versionSummaryWrapper.artifactData)) {
+              if (currentArtifact.analysisResultEnum === 'TEST_FAILED') {
+                self.failedAndChosenArtifactsSummary.push(versionSummaryWrapper);
                 versionSummaryWrapper.hasFailedServer = true;
+              } else {
+                versionSummaryWrapper.hasFailedServer = false;
               }
               self.allVersionSummary = newAllVersionSummary;
             });

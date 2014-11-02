@@ -2,9 +2,8 @@
 
 describe('Controller: BasicTestInfoController', function () {
 
-  var allArtifacts, allFailedArtifacts, allFailedArtifactsOnSecondServerCall, artifactVersions, versionSummaryForRenderer, versionSummaryWrapperForRenderer, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditor, versionSummaryWrapperBodyForWar;
+  var allArtifacts, artifactVersions, versionSummaryForRenderer, versionSummaryWrapperForRenderer, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditorChosen, versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperBodyForWar;
   var mockServerFlush;
-  var spyFuncForGetAllFailedArtifacts;
   var serverInfoMockSuccess, serverInfoMockWarning, serverInfoMockErrors, serverInfoMockIncomplete, $q, deferred;
   // load the controller's module
   beforeEach(function () {
@@ -25,13 +24,6 @@ describe('Controller: BasicTestInfoController', function () {
     mockServerFlush = function () {
       scope.$apply();
     };
-    spyFuncForGetAllFailedArtifacts = function (allFailedArtifacts) {
-      return jasmine.createSpy('getAllFailedArtifacts').andCallFake(function () {
-        deferred = $q.defer();
-        deferred.resolve({data: allFailedArtifacts});
-        return deferred.promise;
-      });
-    };
     //add your mocks here
     var basicTestInfoServerApiMock = {
       getArtifactVersions: jasmine.createSpy('getArtifactVersions').andCallFake(function () {
@@ -43,11 +35,6 @@ describe('Controller: BasicTestInfoController', function () {
       getAllArtifacts: jasmine.createSpy('getAllArtifacts').andCallFake(function () {
         deferred = $q.defer();
         deferred.resolve({data: allArtifacts});
-        return deferred.promise;
-      }),
-      getAllFailedArtifacts: jasmine.createSpy('getAllFailedArtifacts').andCallFake(function () {
-        deferred = $q.defer();
-        deferred.resolve({data: allFailedArtifacts});
         return deferred.promise;
       }),
       getVersionSummary: jasmine.createSpy('getVersionSummary').andCallFake(function (artifactVersion, artifactId) {
@@ -83,14 +70,13 @@ describe('Controller: BasicTestInfoController', function () {
     // TODO don't think it should check the server response... :\
     artifactVersions = basicTestInfoServerResponse.artifactVersions;
     allArtifacts = basicTestInfoServerResponse.allArtifacts;
-    allFailedArtifacts = basicTestInfoServerResponse.allFailedArtifacts;
-    allFailedArtifactsOnSecondServerCall = basicTestInfoServerResponse.allFailedArtifactsNEW;
     versionSummaryForEditor = basicTestInfoServerResponse.versionSummaryForEditor;
     versionSummaryForRenderer = basicTestInfoServerResponse.versionSummaryForRenderer;
     versionSummaryForWar = basicTestInfoServerResponse.versionSummaryForWar;
-    versionSummaryWrapperForEditor = {artifactData: basicTestInfoServerResponse.versionSummaryForEditor.responseBody, hasFailedServer: false, isChosen: false};
-    versionSummaryWrapperForRenderer = {artifactData: basicTestInfoServerResponse.versionSummaryForRenderer.responseBody, hasFailedServer: true, isChosen: false};
-    versionSummaryWrapperBodyForWar = {artifactData: basicTestInfoServerResponse.versionSummaryForWar.responseBody, hasFailedServer: true, isChosen: false};
+    versionSummaryWrapperForEditorNotChosen = {artifactData: basicTestInfoServerResponse.versionSummaryForEditor.responseBody, isChosen: false, hasFailedServer: false};
+    versionSummaryWrapperForEditorChosen = {artifactData: basicTestInfoServerResponse.versionSummaryForEditor.responseBody, isChosen: true, hasFailedServer: false};
+    versionSummaryWrapperForRenderer = {artifactData: basicTestInfoServerResponse.versionSummaryForRenderer.responseBody, isChosen: false, hasFailedServer: true};
+    versionSummaryWrapperBodyForWar = {artifactData: basicTestInfoServerResponse.versionSummaryForWar.responseBody, isChosen: false, hasFailedServer: true};
     $q = _$q_;
 
     scope = $rootScope.$new();
@@ -102,49 +88,53 @@ describe('Controller: BasicTestInfoController', function () {
   describe('initialization and getting artifact data from server', function () {
     it('should hold all artifacts\' information on initialization', function () {
       expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
-      expect(BasicTestInfoController.basicTestInfoServerApi.getAllFailedArtifacts).toHaveBeenCalled();
       mockServerFlush();
       expect(BasicTestInfoController.basicTestInfoServerApi.getVersionSummary).toHaveBeenCalled();
       // TODO is this supposed to be checked? or only if the function has been called?
       expect(BasicTestInfoController.artifacts).toEqual(allArtifacts);
-      expect(BasicTestInfoController.chosenVersionSummary).toEqual([]);
-      expect(BasicTestInfoController.artifactsWereChosen).toEqual(false);
-      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryWrapperForEditor, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
+      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
     });
-
-    it('should hold the error artifacts\' data in the failedVersionSummary table', function () {
+//
+    it('should hold the error artifacts\' data in the failedAndChosenArtifactsSummary table', function () {
       mockServerFlush();
-      // TODO Change this to hold only failed from a list!
-      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
+      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
     });
-    it('should hold the chosen artifact data in the chosenVersionSummary table', function () {
+    it('should add a chosen artifact to the failedAndChosenArtifactsSummary table, and change its isChosen field in the allVersionSummary to true', function () {
+      mockServerFlush();
+      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
+      BasicTestInfoController.currentArtifactId = 'wix-html-editor-webapp';
+      BasicTestInfoController.updateChosenArtifactData();
+      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForEditorChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
+      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryWrapperForEditorChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
+    });
+    it('should not add a chosen artifact if it\'s already chosen', function () {
       mockServerFlush();
       BasicTestInfoController.currentArtifactId = 'wix-html-editor-webapp';
-      // TODO should this be tested here? Or is it UI?
       BasicTestInfoController.updateChosenArtifactData();
-      versionSummaryWrapperForEditor.isChosen =  true;
-      expect(BasicTestInfoController.chosenVersionSummary).toEqual([versionSummaryWrapperForEditor]);
+      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForEditorChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
+      BasicTestInfoController.updateChosenArtifactData();
+      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForEditorChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
     });
-    it('should hold the chosen artifacts only if they\'re not in the error table', function () {
+    it('should not add a chosen artifact if it\'s a failed artifact', function () {
       mockServerFlush();
-      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
+      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
       BasicTestInfoController.currentArtifactId = 'wix-public-html-renderer-webapp';
       BasicTestInfoController.updateChosenArtifactData();
-      expect(BasicTestInfoController.chosenVersionSummary).toEqual([]);
+      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
     });
   });
 
   describe('getting different info from server on refresh', function () {
-    it('should make one of the artifacts that failed - pass', (inject(function (basicTestInfoServerApi, $interval) {
-      mockServerFlush();
-      // TODO Change this to hold only failed from a list!
-      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-      basicTestInfoServerApi.getAllFailedArtifacts = spyFuncForGetAllFailedArtifacts(allFailedArtifactsOnSecondServerCall);
-      $interval.flush(BasicTestInfoController.REFRESH_TIME);
-      mockServerFlush();
-      // TODO Change this to hold only failed from a list!
-      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryWrapperForRenderer]);
-    })));
+//    it('should make one of the artifacts that failed - pass', (inject(function (basicTestInfoServerApi, $interval) {
+//      mockServerFlush();
+//      // TODO Change this to hold only failed from a list!
+//      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
+//      basicTestInfoServerApi.getAllFailedArtifacts = spyFuncForGetAllFailedArtifacts(allFailedArtifactsOnSecondServerCall);
+//      $interval.flush(BasicTestInfoController.REFRESH_TIME);
+//      mockServerFlush();
+//      // TODO Change this to hold only failed from a list!
+//      expect(BasicTestInfoController.failedVersionSummary).toEqual([versionSummaryWrapperForRenderer]);
+//    })));
   });
 
   describe('server run end status', function () {
