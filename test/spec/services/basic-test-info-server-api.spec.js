@@ -10,12 +10,13 @@ describe('Service: basicTestInfoServerApi', function () {
   });
 
   // instantiate service
-  var $httpBackend, API_URL, basicTestInfoServerApi, basicTestInfoServerResponse, serverApiUrl;
+  var $httpBackend, BASIC_API_URL, API_URL, basicTestInfoServerApi, basicTestInfoServerResponse, serverApiUrl;
   beforeEach(inject(function (_basicTestInfoServerApi_, _$httpBackend_, _basicTestInfoServerResponse_, _serverApiUrl_) {
     basicTestInfoServerResponse = _basicTestInfoServerResponse_;
     serverApiUrl = _serverApiUrl_;
     basicTestInfoServerApi = _basicTestInfoServerApi_;
     $httpBackend = _$httpBackend_;
+    BASIC_API_URL = serverApiUrl.PREFIX;
   }));
 
   it('should get all artifacts monitored by postplay', function () {
@@ -24,6 +25,7 @@ describe('Service: basicTestInfoServerApi', function () {
   });
 
   function checkResponseFromServer(functionToEval, valueBeforeServerResponse, responseFromServer, argsForFunc) {
+    API_URL = BASIC_API_URL + API_URL;
     $httpBackend.expectGET(API_URL).respond(200, responseFromServer);
     var functionReturnValue = valueBeforeServerResponse;
     // TODO what should I send as 'this' in the apply..?

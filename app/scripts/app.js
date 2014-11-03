@@ -285,19 +285,19 @@ angular
     groupId: 'com.wixpress'
   })
   .constant('serverApiUrl', {
-    ALL_ARTIFACTS_API_URL: '/_api/getAllArtifacts',
-    ALL_FAILED_ARTIFACTS_API_URL: '/_api/getAllFailedArtifacts',
-    CURRENTLY_RUNNING_ARTIFACTS_API_URL: '/_api/getCurrentlyRunningArtifacts/json',
-    BUILDS_API_URL: '/_api/getLifecycleBuilds',
-    VER_SUM_API_URL_PREFIX: '/_api/versionSummary/json?version=',
-    ARTIFACT_VERS_API_URL_PREFIX: '/_api/getArtifactVersions/json?artifactId=',
-    CURRENTLY_RUNNING_TESTS_API_URL: '/_api/getCurrentlyRunningTests/json',
-    FIELD_MAP_API_URL: '/_api/fieldMap',
-    TEST_DATA_BY_ID_API_URL_PREFIX: '_api/getTest',
-    ARTIFACT_DATA_API_URL_PREFIX: '_api/getArtifact',
-    TEMPLATES_API_URL: '_api/getAllTemplates',
-    EXPRESSION_SYNTAX_API_URL: '_api/getExpressionSyntax',
-    SERVER_STATUS_API_URL_PREFIX: 'api/status/json?server='
+    PREFIX: 'http://127.0.0.1:8080/api/v2/',
+    ALL_ARTIFACTS_API_URL: 'getLatestMonitoredArtifactsEventSummary',
+    VER_SUM_API_URL_PREFIX: 'versionSummary?version=',
+    CURRENTLY_RUNNING_ARTIFACTS_API_URL: 'getCurrentlyRunningArtifacts/json',
+    BUILDS_API_URL: 'getLifecycleBuilds',
+    ARTIFACT_VERS_API_URL_PREFIX: 'getArtifactVersions/json?artifactId=',
+    CURRENTLY_RUNNING_TESTS_API_URL: 'getCurrentlyRunningTests/json',
+    FIELD_MAP_API_URL: 'fieldMap',
+    TEST_DATA_BY_ID_API_URL_PREFIX: 'getTest',
+    ARTIFACT_DATA_API_URL_PREFIX: 'getArtifact',
+    TEMPLATES_API_URL: 'getAllTemplates',
+    EXPRESSION_SYNTAX_API_URL: 'getExpressionSyntax',
+    SERVER_STATUS_API_URL_PREFIX: 'status/json?server='
   });
 
 //.constant('systemConfigurationServerResponse', {

@@ -2,7 +2,7 @@
 
 module.exports = {
   '${debug}': 'true',
-  '${enableMocks}': 'true',
+  '${enableMocks}': 'false',
   '${experiments}': '{}',
   '${locale}': 'en',
 

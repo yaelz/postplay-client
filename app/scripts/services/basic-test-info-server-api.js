@@ -5,12 +5,14 @@
   /* @ngInject */
   function BasicTestInfoServerApi($http, serverApiUrl) {
     // AngularJS will instantiate a singleton by calling "new" on this function
+    $http.defaults.headers.common = {Accept: 'application/json', 'Content-Type': 'application/json'};
     this.thereWasServerError = false;
     this.serverErrors = {errorGettingRunningArtifacts: false};
     var self = this;
     var API_URL;
 
     function runHttpGetSuccessAndError(API_URL) {
+      API_URL = serverApiUrl.PREFIX + API_URL;
       return $http.get(API_URL)
         .then(function (response) {
           self.thereWasServerError = false;

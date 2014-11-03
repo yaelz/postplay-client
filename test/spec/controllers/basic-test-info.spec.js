@@ -4,7 +4,7 @@ describe('Controller: BasicTestInfoController', function () {
 
   var allArtifactsTwoServersFailed, artifactVersions, versionSummaryForRenderer, versionSummaryForRendererNewVersion, versionSummaryWrapperForRenderer, versionSummaryWrapperForRendererNewVersion, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditorChosen, versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperBodyForWar, allArtifactsOneServerFailed, allArtifactsDifferentVersionForFailedServer;
   var mockServerFlush, spyFuncForGetAllArtifacts;
-  var serverInfoMockSuccess, serverInfoMockWarning, serverInfoMockErrors, serverInfoMockIncomplete, $q, deferred;
+  var $q, deferred;
   function clone(obj) {
     if (obj === null || typeof obj !== 'object') {
       return obj;
@@ -180,34 +180,5 @@ describe('Controller: BasicTestInfoController', function () {
 //      // TODO Change this to hold only failed from a list!
       expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperBodyForWar, versionSummaryWrapperForRendererNewVersion]);
     })));
-  });
-
-  describe('server run end status', function () {
-    beforeEach(function () {
-      serverInfoMockSuccess = {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY'};
-      serverInfoMockWarning = {testStatusEnum: 'STATUS_COMPLETED_WITH_WARNINGS'};
-      serverInfoMockErrors = {testStatusEnum: 'STATUS_COMPLETED_WITH_ERRORS'};
-      serverInfoMockIncomplete = {testStatusEnum: 'INCOMPLETE'};
-    });
-    it('should notify whether a server run ended with an error', function () {
-      expect(BasicTestInfoController.serverRunEndedWithError(serverInfoMockSuccess)).toBe(false);
-      expect(BasicTestInfoController.serverRunEndedWithError(serverInfoMockWarning)).toBe(false);
-      expect(BasicTestInfoController.serverRunEndedWithError(serverInfoMockErrors)).toBe(true);
-      expect(BasicTestInfoController.serverRunEndedWithError(serverInfoMockIncomplete)).toBe(true);
-    });
-
-    it('should notify whether a server run ended with a warning', function () {
-      expect(BasicTestInfoController.serverRunEndedWithWarning(serverInfoMockWarning)).toBe(true);
-      expect(BasicTestInfoController.serverRunEndedWithWarning(serverInfoMockSuccess)).toBe(false);
-      expect(BasicTestInfoController.serverRunEndedWithWarning(serverInfoMockErrors)).toBe(false);
-      expect(BasicTestInfoController.serverRunEndedWithWarning(serverInfoMockIncomplete)).toBe(false);
-    });
-
-    it('should notify whether a server run ended successfully', function () {
-      expect(BasicTestInfoController.serverRunEndedSuccessfully(serverInfoMockWarning)).toBe(false);
-      expect(BasicTestInfoController.serverRunEndedSuccessfully(serverInfoMockSuccess)).toBe(true);
-      expect(BasicTestInfoController.serverRunEndedSuccessfully(serverInfoMockErrors)).toBe(false);
-      expect(BasicTestInfoController.serverRunEndedSuccessfully(serverInfoMockIncomplete)).toBe(false);
-    });
   });
 });

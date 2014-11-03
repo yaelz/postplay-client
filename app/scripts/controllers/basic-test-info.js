@@ -46,19 +46,6 @@
       multiSelect: false,
       rowTemplate: 'views/basic-test-info-row-template.html'
     };
-    function didServerRunEndWithTestStatus(serverRunInfo, statusEnum) {
-      return serverRunInfo.testStatusEnum === statusEnum;
-    }
-    this.serverRunEndedWithError = function (serverInfo) {
-      // TODO get possibilities
-      return didServerRunEndWithTestStatus(serverInfo, 'STATUS_COMPLETED_WITH_ERRORS') || didServerRunEndWithTestStatus(serverInfo, 'INCOMPLETE');
-    };
-    this.serverRunEndedWithWarning = function (serverInfo) {
-      return didServerRunEndWithTestStatus(serverInfo, 'STATUS_COMPLETED_WITH_WARNINGS');
-    };
-    this.serverRunEndedSuccessfully = function (serverInfo) {
-      return didServerRunEndWithTestStatus(serverInfo, 'STATUS_COMPLETED_SUCCESSFULLY');
-    };
 
     this.updateChosenArtifactData = function () {
       function isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentVersionSummaryWrapper) {
