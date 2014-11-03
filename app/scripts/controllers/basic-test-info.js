@@ -7,8 +7,8 @@
     var self = this;
     this.basicTestInfoServerApi = _basicTestInfoServerApi_;
 
-    this.failedAndChosenArtifactsSummary = [];
-    this.allVersionSummary = [];
+    this.allArtifactWrappers = [];
+    this.failedAndChosenArtifacts = [];
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.columnDefsForArtifactsGrid = [
       { field: 'artifactData.testStatusEnum', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-image-template.html'},
@@ -31,7 +31,7 @@
       return true;
     }
     this.failedAndChosenArtifactsSummaryTableData = {
-      data: 'basicTestInfoCtrl.failedAndChosenArtifactsSummary',
+      data: 'basicTestInfoCtrl.failedAndChosenArtifacts',
 //      init: initGrid,
       columnDefs: 'basicTestInfoCtrl.columnDefsForArtifactsGrid',
       multiSelect: false,
@@ -47,88 +47,34 @@
       rowTemplate: 'views/basic-test-info-row-template.html'
     };
 
-    this.updateChosenArtifactData = function () {
-      function isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentVersionSummaryWrapper) {
-        return currentVersionSummaryWrapper.artifactData.artifactId === self.currentArtifactId && !currentVersionSummaryWrapper.isChosen && !currentVersionSummaryWrapper.hasFailedServer;
-      }
+//    this.updateChosenArtifactDataToAddToTable = function () {
+//      function isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentVersionSummaryWrapper) {
+//        return currentVersionSummaryWrapper.artifactData.artifactId === self.currentArtifactId && !currentVersionSummaryWrapper.isChosen && !currentVersionSummaryWrapper.hasFailedServer;
+//      }
+//
+//      this.allVersionSummary.forEach(function (currentVersionSummaryWrapper) {
+//        if (isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentVersionSummaryWrapper)) {
+//          self.failedAndChosenArtifacts.unshift(currentVersionSummaryWrapper);
+//          currentVersionSummaryWrapper.isChosen = true;
+//        }
+//      });
+//    };
 
-      this.allVersionSummary.forEach(function (currentVersionSummaryWrapper) {
-        if (isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentVersionSummaryWrapper)) {
-          self.failedAndChosenArtifactsSummary.unshift(currentVersionSummaryWrapper);
-          currentVersionSummaryWrapper.isChosen = true;
-        }
-      });
-    };
-
-    function initArtifacts() {
-      return self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
-        self.artifacts = response.data;
-      });
-    }
-
-    function artifactsAreTheSameById(firstArtifact, secondArtifact) {
-      return firstArtifact.artifactId === secondArtifact.artifactId;
-    }
-    function artifactsAreTheSameByIdVersionANDEvent(firstArtifact, secondArtifact) {
-      return firstArtifact.artifactId === secondArtifact.artifactId && firstArtifact.version === secondArtifact.version && firstArtifact.event === secondArtifact.event;
-    }
-
-    function sameArtifactHasFailedBefore(artifact) {
-      var found = false;
-      self.failedAndChosenArtifactsSummary.forEach(function (artifactWrapperFromFailedAndChosen) {
-        if (artifactWrapperFromFailedAndChosen.hasFailedServer === true && artifactsAreTheSameByIdVersionANDEvent(artifactWrapperFromFailedAndChosen.artifactData, artifact)) {
-          found = true;
-        }
-      });
-      return found;
-    }
-    function sameArtifactHasFailedBeforeWithDifferentEventOrVersion(currentArtifact) {
-      var found = false;
-      self.failedAndChosenArtifactsSummary.forEach(function (artifactWrapperFromFailedAndChosen) {
-        if (artifactWrapperFromFailedAndChosen.hasFailedServer === true && currentArtifact.artifactId === artifactWrapperFromFailedAndChosen.artifactData.artifactId &&
-          (currentArtifact.version !== artifactWrapperFromFailedAndChosen.artifactData.version || currentArtifact.event !== artifactWrapperFromFailedAndChosen.artifactData.event)) {
-          found = true;
-        }
-      });
-      return found;
-    }
     function getArtifactsDataFromService() {
-      initArtifacts().then(function () {
-        var newAllVersionSummary = [];
-        self.artifacts.forEach(function (currentArtifact) {
-          var latestVersion = currentArtifact.version;
-          self.basicTestInfoServerApi.getVersionSummary(latestVersion, currentArtifact.artifactId, currentArtifact.groupId, currentArtifact.event)
-            .then(function (response) {
-              var versionSummaryWrapper = {artifactData: response.data.responseBody, isChosen: false, hasFailedServer: false};
-              newAllVersionSummary.push(versionSummaryWrapper);
-              if (sameArtifactHasFailedBeforeWithDifferentEventOrVersion(currentArtifact)) {
-                self.failedAndChosenArtifactsSummary = self.failedAndChosenArtifactsSummary.filter(function (artifactWrapperFromFailedAndChosen) {
-                  return !(artifactWrapperFromFailedAndChosen.hasFailedServer && artifactsAreTheSameById(artifactWrapperFromFailedAndChosen.artifactData, currentArtifact));
-                });
-              }
-              if (currentArtifact.analysisResultEnum === 'TEST_FAILED') {
-                if (!sameArtifactHasFailedBefore(currentArtifact)) {
-                  self.failedAndChosenArtifactsSummary.push(versionSummaryWrapper);
-                  versionSummaryWrapper.hasFailedServer = true;
-                }
-              } else {
-                // The artifact hasn't failed now
-                if (sameArtifactHasFailedBefore(currentArtifact)) {
-                  self.failedAndChosenArtifactsSummary = self.failedAndChosenArtifactsSummary.filter(function (artifactWrapperFromFailedAndChosen) {
-                    return !(artifactWrapperFromFailedAndChosen.hasFailedServer && artifactsAreTheSameByIdVersionANDEvent(artifactWrapperFromFailedAndChosen.artifactData, currentArtifact));
-                  });
-                }
-              }
-
-              self.allVersionSummary = newAllVersionSummary;
-            });
+      self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
+        self.allArtifactWrappers = [];
+        response.data.forEach(function (currentArtifact) {
+          var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: currentArtifact.analysisResultEnum};
+          if (currentArtifactWrapped.status === 'TEST_FAILED') {
+            self.failedAndChosenArtifacts.push(currentArtifactWrapped);
+          }
+          self.allArtifactWrappers.push(currentArtifactWrapped);
         });
       });
     }
     getArtifactsDataFromService();
-    this.REFRESH_TIME = 5 * 60 * 1000; // five minutes
-//    this.REFRESH_TIME = 1000;
-    this.promise = $interval(getArtifactsDataFromService, this.REFRESH_TIME);
+//    this.REFRESH_TIME = 5 * 60 * 1000; // five minutes
+//    this.promise = $interval(getArtifactsDataFromService, this.REFRESH_TIME);
 
 // Cancel interval on page changes
     $scope.$on('$destroy', function () {

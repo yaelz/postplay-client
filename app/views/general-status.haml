@@ -3,11 +3,11 @@
         .pp-header-image-container
             %img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
         %form(name = "choose-artifact-form"
-              ng-submit = "basicTestInfoCtrl.updateChosenArtifactData()")
+              ng-submit = "basicTestInfoCtrl.updateChosenArtifactDataToAddToTable()")
             %input.pp-artifact-input(type = "text"
                                      name = "sheet-input"
                                      list = "artifactList"
-                                     ng-model = "basicTestInfoCtrl.currentArtifactId"
+                                     ng-model = "basicTestInfoCtrl.currentArtifactIdToAddToTable"
                                      placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
                                      autofocus)
     .pp-gs-page-container
