@@ -47,25 +47,26 @@
       rowTemplate: 'views/basic-test-info-row-template.html'
     };
 
-//    this.updateChosenArtifactDataToAddToTable = function () {
-//      function isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentVersionSummaryWrapper) {
-//        return currentVersionSummaryWrapper.artifactData.artifactId === self.currentArtifactId && !currentVersionSummaryWrapper.isChosen && !currentVersionSummaryWrapper.hasFailedServer;
-//      }
+    this.updateChosenArtifactDataToAddToTable = function () {
+      function isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentArtifactWrapper) {
+        return currentArtifactWrapper.artifactData.artifactId === self.currentArtifactToAddToTable && !currentArtifactWrapper.isChosen && currentArtifactWrapper.status !== 'FAILED' && currentArtifactWrapper.status !== 'WARNING';
+      }
 //
-//      this.allVersionSummary.forEach(function (currentVersionSummaryWrapper) {
-//        if (isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentVersionSummaryWrapper)) {
-//          self.failedAndChosenArtifacts.unshift(currentVersionSummaryWrapper);
-//          currentVersionSummaryWrapper.isChosen = true;
-//        }
-//      });
-//    };
+      this.allArtifactWrappers.forEach(function (currentArtifactWrapper) {
+        if (isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentArtifactWrapper)) {
+          self.failedAndChosenArtifacts.unshift(currentArtifactWrapper);
+          currentArtifactWrapper.isChosen = true;
+        }
+      });
+      self.currentArtifactToAddToTable = '';
+    };
 
     function getArtifactStatus(currentArtifact) {
       if (currentArtifact.testStatusEnum === 'INCOMPLETE' || currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_WARNINGS' || currentArtifact.analysisResultEnum === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED') {
         return 'WARNING';
       } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_ERRORS' || currentArtifact.analysisResultEnum === 'TEST_FAILED') {
         return 'FAILED';
-      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_SUCCESFULLY' && currentArtifact.analysisResultEnum === 'TEST_PASSED') {
+      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_SUCCESSFULLY' && currentArtifact.analysisResultEnum === 'TEST_PASSED') {
         return 'PASSED';
       }
     }
@@ -73,8 +74,9 @@
       self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
         self.allArtifactWrappers = [];
         response.data.forEach(function (currentArtifact) {
-          var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: getArtifactStatus(currentArtifact)};
-          if (currentArtifactWrapped.status === 'FAILED' || currentArtifactWrapped.status === 'WARNING') {
+          var artifactStatus = getArtifactStatus(currentArtifact);
+          var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: artifactStatus};
+          if (artifactStatus === 'FAILED' || artifactStatus === 'WARNING') {
             self.failedAndChosenArtifacts.push(currentArtifactWrapped);
           }
           self.allArtifactWrappers.push(currentArtifactWrapped);

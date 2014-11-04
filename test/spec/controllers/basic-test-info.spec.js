@@ -5,6 +5,7 @@ describe('Controller: BasicTestInfoController', function () {
   var allArtifactsTwoServersFailed, artifactVersions, versionSummaryForRenderer, versionSummaryForRendererNewVersion, versionSummaryWrapperForRenderer, versionSummaryWrapperForRendererNewVersion, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditorChosen, versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperBodyForWar, allArtifactsOneServerFailed, allArtifactsDifferentVersionForFailedServer;
   var mockServerFlush, spyFuncForGetAllArtifacts;
   var $q, $httpBackend, deferred;
+  var allArtifactArray, failedArtifactArray;
   function clone(obj) {
     if (obj === null || typeof obj !== 'object') {
       return obj;
@@ -97,10 +98,7 @@ describe('Controller: BasicTestInfoController', function () {
   }));
 
   describe('initialization and getting artifact data from server', function () {
-    it('should hold all artifacts\' information on initialization', function () {
-      expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
-      mockServerFlush();
-      // TODO is this supposed to be checked? or only if the function has been called?
+    beforeEach(function () {
       var artifactWrapper0 = {artifactData: allArtifactsTwoServersFailed[0], isChosen: false, status: 'PASSED'};
       var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'FAILED'};
       var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'WARNING'};
@@ -108,28 +106,28 @@ describe('Controller: BasicTestInfoController', function () {
       var artifactWrapper4 = {artifactData: allArtifactsTwoServersFailed[4], isChosen: false, status: 'FAILED'};
       var artifactWrapper5 = {artifactData: allArtifactsTwoServersFailed[5], isChosen: false, status: 'WARNING'};
       var artifactWrapper6 = {artifactData: allArtifactsTwoServersFailed[6], isChosen: false, status: 'WARNING'};
-      var allArtifactArray = [artifactWrapper0, artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
+      allArtifactArray = [artifactWrapper0, artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
+      failedArtifactArray = [artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
+    });
+    it('should hold all artifacts\' information on initialization', function () {
+      expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
+      mockServerFlush();
+      // TODO is this supposed to be checked? or only if the function has been called?
       expect(BasicTestInfoController.allArtifactWrappers).toEqual(allArtifactArray);
     });
     it('should only hold the error/warning artifacts\' data in the failedAndChosenArtifacts table', function () {
       mockServerFlush();
-      var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'FAILED'};
-      var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'WARNING'};
-      var artifactWrapper3 = {artifactData: allArtifactsTwoServersFailed[3], isChosen: false, status: 'WARNING'};
-      var artifactWrapper4 = {artifactData: allArtifactsTwoServersFailed[4], isChosen: false, status: 'FAILED'};
-      var artifactWrapper5 = {artifactData: allArtifactsTwoServersFailed[5], isChosen: false, status: 'WARNING'};
-      var artifactWrapper6 = {artifactData: allArtifactsTwoServersFailed[6], isChosen: false, status: 'WARNING'};
-      var failedArtifactArray = [artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactArray);
     });
-//    it('should add a chosen artifact to the failedAndChosenArtifactsSummary table, and change its isChosen field in the allVersionSummary to true', function () {
-//      mockServerFlush();
-//      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-//      BasicTestInfoController.currentArtifactId = 'wix-html-editor-webapp';
-//      BasicTestInfoController.updateChosenArtifactData();
-//      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForEditorChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-//      expect(BasicTestInfoController.allVersionSummary).toEqual([versionSummaryWrapperForEditorChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-//    });
+    it('should add a chosen artifact to the failedAndChosenArtifactsSummary table, and change its isChosen field in the allVersionSummary to true', function () {
+      mockServerFlush();
+      BasicTestInfoController.currentArtifactToAddToTable = 'wix-html-editor-webapp';
+      expect(BasicTestInfoController.currentArtifactToAddToTable).toEqual('wix-html-editor-webapp');
+      BasicTestInfoController.updateChosenArtifactDataToAddToTable();
+      expect(BasicTestInfoController.currentArtifactToAddToTable).toEqual('');
+      allArtifactArray[0].isChosen = true;
+      expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(allArtifactArray);
+    });
 //    it('should not add a chosen artifact if it\'s already chosen', function () {
 //      mockServerFlush();
 //      BasicTestInfoController.currentArtifactId = 'wix-html-editor-webapp';
