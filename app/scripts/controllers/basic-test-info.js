@@ -49,7 +49,6 @@
       multiSelect: false,
       rowTemplate: 'views/basic-test-info-row-template.html'
     };
-
     this.updateChosenArtifactDataToAddToTable = function () {
       function isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentArtifactWrapper) {
         return currentArtifactWrapper.artifactData.artifactId === self.currentArtifactToAddToTable && !currentArtifactWrapper.isChosen && currentArtifactWrapper.status !== 'FAILED' && currentArtifactWrapper.status !== 'WARNING';
@@ -63,39 +62,6 @@
       });
       self.currentArtifactToAddToTable = '';
     };
-
-    function artifactDidntExistBefore(artifact) {
-      // TODO should I add in the function name that it's only by artifactId and groupId?
-      return self.allArtifactWrappers.every(function (currentArtifactWrapper) {
-        return currentArtifactWrapper.artifactData.artifactId !== artifact.artifactId || currentArtifactWrapper.artifactData.groupId !== artifact.groupId;
-      });
-    }
-
-    function artifactExistsWithDifferentVersion(newArtifact) {
-      return self.allArtifactWrappers.some(function (currentArtifactWrapper) {
-        return currentArtifactWrapper.artifactData.artifactId === newArtifact.artifactId && currentArtifactWrapper.artifactData.groupId === newArtifact.groupId &&
-          currentArtifactWrapper.artifactData.version !== newArtifact.version;
-      });
-    }
-    function getSameArtifactWrapperWithOldVersion(newArtifact) {
-      var oldArtifact;
-      self.allArtifactWrappers.forEach(function (oldArtifactWrapperToCheck) {
-        if (oldArtifactWrapperToCheck.artifactData.artifactId === newArtifact.artifactId && oldArtifactWrapperToCheck.artifactData.groupId === newArtifact.groupId) {
-          oldArtifact = oldArtifactWrapperToCheck;
-        }
-      });
-      return oldArtifact;
-    }
-
-    function filterObjectFromTable(table, oldToRemove) {
-      return table.filter(function (curreObjInTable) {
-        return oldToRemove !== curreObjInTable;
-      });
-    }
-
-    function addArtifactWrapperToAllArtifactsTable(artifactToAddWrapped) {
-      self.allArtifactWrappers.push(artifactToAddWrapped);
-    }
     this.getArtifactStatus = function (currentArtifact) {
       var defaultStatus = '';
       if (currentArtifact.testStatusEnum === 'INCOMPLETE' || currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_WARNINGS' || currentArtifact.analysisResultEnum === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED' || currentArtifact.analysisResultStatus === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED') {
@@ -107,20 +73,53 @@
       }
       return defaultStatus;
     };
+    function artifactDidNotExistBefore(newArtifact) {
+      // TODO should I add in the function name that it's only by artifactId and groupId?
+      return self.allArtifactWrappers.every(function (currentArtifactWrapper) {
+        return !artifactsHaveSameArtifactIdAndGroupId(currentArtifactWrapper.artifactData, newArtifact);
+      });
+    }
+    function artifactsHaveSameArtifactIdAndGroupId(firstArtifactData, secondArtifactData) {
+      return firstArtifactData.artifactId === secondArtifactData.artifactId && firstArtifactData.groupId === secondArtifactData.groupId;
+    }
+    function artifactExistsWithDifferentVersionOrEvent(newArtifact) {
+      return self.allArtifactWrappers.some(function (currentArtifactWrapper) {
+        return artifactsHaveSameArtifactIdAndGroupId(currentArtifactWrapper.artifactData, newArtifact) &&
+          currentArtifactWrapper.artifactData.version !== newArtifact.version || currentArtifactWrapper.artifactData.event !== newArtifact.event;
+      });
+    }
+    function getSameArtifactWrapperWithOldVersionOrEvent(newArtifact) {
+      var oldArtifact;
+      self.allArtifactWrappers.forEach(function (oldArtifactWrapperToCheck) {
+        if (artifactsHaveSameArtifactIdAndGroupId(oldArtifactWrapperToCheck.artifactData, newArtifact)) {
+          oldArtifact = oldArtifactWrapperToCheck;
+        }
+      });
+      return oldArtifact;
+    }
+    function filterObjectFromTable(table, oldToRemove) {
+      return table.filter(function (currObjInTable) {
+        return oldToRemove !== currObjInTable;
+      });
+    }
+    function addArtifactWrapperToAllArtifactsTable(artifactToAddWrapped) {
+      self.allArtifactWrappers.push(artifactToAddWrapped);
+    }
+
     function getArtifactsDataFromService() {
       self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
         response.data.forEach(function (currentArtifact) {
           var artifactStatus = self.getArtifactStatus(currentArtifact);
           var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: artifactStatus};
-          if (artifactDidntExistBefore(currentArtifact)) {
+          if (artifactDidNotExistBefore(currentArtifact)) {
             self.allArtifactWrappers.push(currentArtifactWrapped);
             if (artifactStatus === 'FAILED' || artifactStatus === 'WARNING') {
               self.failedAndChosenArtifacts.push(currentArtifactWrapped);
             }
           } else {
             // did exist
-            if (artifactExistsWithDifferentVersion(currentArtifact)) {
-              var oldArtifactWrapper = getSameArtifactWrapperWithOldVersion(currentArtifact);
+            if (artifactExistsWithDifferentVersionOrEvent(currentArtifact)) {
+              var oldArtifactWrapper = getSameArtifactWrapperWithOldVersionOrEvent(currentArtifact);
               self.allArtifactWrappers = filterObjectFromTable(self.allArtifactWrappers, oldArtifactWrapper);
               addArtifactWrapperToAllArtifactsTable(currentArtifactWrapped);
             }
