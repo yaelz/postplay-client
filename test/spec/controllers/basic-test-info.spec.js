@@ -111,7 +111,7 @@ describe('Controller: BasicTestInfoController', function () {
       var allArtifactArray = [artifactWrapper0, artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
       expect(BasicTestInfoController.allArtifactWrappers).toEqual(allArtifactArray);
     });
-    it('should only hold the error artifacts\' data in the failedAndChosenArtifacts table', function () {
+    it('should only hold the error/warning artifacts\' data in the failedAndChosenArtifacts table', function () {
       mockServerFlush();
       var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'FAILED'};
       var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'WARNING'};

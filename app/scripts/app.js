@@ -12,12 +12,12 @@ angular
     artifactVersions: ['2.487.0', '2.469.0', '2.468.0', '2.467.0', '2.466.0', '2.465.0', '2.464.0', '2.463.0', '2.462.0', '2.461.0'],
     allArtifacts: [
       {artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESFULLY', analysisResultEnum: 'TEST_PASSED', startTime: 1414663552086},
-      {artifactId: 'wix-html-artifact', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESFULLY', analysisResultEnum: 'TEST_FAILED', startTime: 1414663552086},
-      {artifactId: 'wix-html-artifact', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'INCOMPLETE', analysisResultEnum: '*', startTime: 1414663552086},
-      {artifactId: 'wix-html-artifact', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_WITH_WARNINGS', analysisResultEnum: '*', startTime: 1414663552086},
+      {artifactId: 'wix-html-artifact1', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESFULLY', analysisResultEnum: 'TEST_FAILED', startTime: 1414663552086},
+      {artifactId: 'wix-html-artifact2', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'INCOMPLETE', analysisResultEnum: '*', startTime: 1414663552086},
+      {artifactId: 'wix-html-artifact3', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_WITH_WARNINGS', analysisResultEnum: '*', startTime: 1414663552086},
       {artifactId: 'wix-public-html-renderer-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Public Html Renderer', runStatusEnum: 'FINISHED_WITH_EXECUTION_ERRORS', testStatusEnum: 'STATUS_COMPLETED_WITH_ERRORS', analysisResultEnum: '*', startTime: 1414663552086},
       {artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: 'Wix Public', runStatusEnum: 'FINISHED', testStatusEnum: '*', analysisResultEnum: 'TEST_INCONCLUSIVE', startTime: 1414663552086},
-      {artifactId: 'wix-public-war', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: 'Wix Public', runStatusEnum: 'FINISHED', testStatusEnum: '*', analysisResultEnum: 'TEST_NOT_ANALYSED', startTime: 1414663552086}
+      {artifactId: 'wix-public-war1', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: 'Wix Public', runStatusEnum: 'FINISHED', testStatusEnum: '*', analysisResultEnum: 'TEST_NOT_ANALYSED', startTime: 1414663552086}
     ],
     allArtifactsNewNotFailed: [
       {monitoredArtifactId: 1, artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', name: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'FAILED', analysisResultEnum: 'TEST_PASSED'},
@@ -289,7 +289,8 @@ angular
     groupId: 'com.wixpress'
   })
   .constant('serverApiUrl', {
-    PREFIX: 'http://127.0.0.1:8080/api/v2/',
+//    PREFIX: 'http://127.0.0.1:8080/api/v2/',
+    PREFIX: '',
     ALL_ARTIFACTS_API_URL: 'getLatestMonitoredArtifactsEventSummary',
     VER_SUM_API_URL_PREFIX: 'versionSummary?version=',
     CURRENTLY_RUNNING_ARTIFACTS_API_URL: 'getCurrentlyRunningArtifacts/json',
