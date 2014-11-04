@@ -119,7 +119,9 @@ describe('Controller: BasicTestInfoController', function () {
       mockServerFlush();
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactArray);
     });
-    it('should add a chosen artifact to the failedAndChosenArtifactsSummary table, and change its isChosen field in the allVersionSummary to true', function () {
+  });
+  describe('choosing an artifact to add', function () {
+    it('should add it to the failedAndChosenArtifactsSummary table, and change its isChosen field in the allVersionSummary to true', function () {
       mockServerFlush();
       BasicTestInfoController.currentArtifactToAddToTable = 'wix-html-editor-webapp';
       expect(BasicTestInfoController.currentArtifactToAddToTable).toEqual('wix-html-editor-webapp');
@@ -128,7 +130,7 @@ describe('Controller: BasicTestInfoController', function () {
       expect(BasicTestInfoController.currentArtifactToAddToTable).toEqual('');
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(allArtifactArray);
     });
-    it('should not add a chosen artifact if it\'s already chosen', function () {
+    it('should not add a it if it\'s already chosen', function () {
       mockServerFlush();
       BasicTestInfoController.currentArtifactToAddToTable = 'wix-html-editor-webapp';
       BasicTestInfoController.updateChosenArtifactDataToAddToTable();
@@ -137,7 +139,7 @@ describe('Controller: BasicTestInfoController', function () {
       BasicTestInfoController.updateChosenArtifactDataToAddToTable();
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(allArtifactArray);
     });
-    it('should not add a chosen artifact if it\'s a failed artifact', function () {
+    it('should not add it if it\'s a failed artifact', function () {
       mockServerFlush();
       BasicTestInfoController.currentArtifactToAddToTable = 'wix-public-html-renderer-webapp';
       BasicTestInfoController.updateChosenArtifactDataToAddToTable();
