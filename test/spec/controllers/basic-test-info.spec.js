@@ -124,18 +124,19 @@ describe('Controller: BasicTestInfoController', function () {
       BasicTestInfoController.currentArtifactToAddToTable = 'wix-html-editor-webapp';
       expect(BasicTestInfoController.currentArtifactToAddToTable).toEqual('wix-html-editor-webapp');
       BasicTestInfoController.updateChosenArtifactDataToAddToTable();
-      expect(BasicTestInfoController.currentArtifactToAddToTable).toEqual('');
       allArtifactArray[0].isChosen = true;
+      expect(BasicTestInfoController.currentArtifactToAddToTable).toEqual('');
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(allArtifactArray);
     });
-//    it('should not add a chosen artifact if it\'s already chosen', function () {
-//      mockServerFlush();
-//      BasicTestInfoController.currentArtifactId = 'wix-html-editor-webapp';
-//      BasicTestInfoController.updateChosenArtifactData();
-//      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForEditorChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-//      BasicTestInfoController.updateChosenArtifactData();
-//      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForEditorChosen, versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-//    });
+    it('should not add a chosen artifact if it\'s already chosen', function () {
+      mockServerFlush();
+      BasicTestInfoController.currentArtifactToAddToTable = 'wix-html-editor-webapp';
+      BasicTestInfoController.updateChosenArtifactDataToAddToTable();
+      allArtifactArray[0].isChosen = true;
+      BasicTestInfoController.currentArtifactToAddToTable = 'wix-html-editor-webapp';
+      BasicTestInfoController.updateChosenArtifactDataToAddToTable();
+      expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(allArtifactArray);
+    });
 //    it('should not add a chosen artifact if it\'s a failed artifact', function () {
 //      mockServerFlush();
 //      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
