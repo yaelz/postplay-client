@@ -5,7 +5,18 @@ describe('Controller: BasicTestInfoController', function () {
   var allArtifactsTwoServersFailed, artifactVersions, versionSummaryForRenderer, versionSummaryForRendererNewVersion, versionSummaryWrapperForRenderer, versionSummaryWrapperForRendererNewVersion, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditorChosen, versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperBodyForWar, allArtifactsOneServerFailed, allArtifactsDifferentVersionForFailedServer;
   var mockServerFlush, spyFuncForGetAllArtifacts;
   var $q, $httpBackend, deferred;
-  var allArtifactArray, failedArtifactArray;
+  var allArtifactArray, failedArtifactArray, artifactWrapper0;
+  function initallArtifactArrayANDFailedAndChosenArray() {
+    artifactWrapper0 = {artifactData: allArtifactsTwoServersFailed[0], isChosen: false, status: 'PASSED'};
+    var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'FAILED'};
+    var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'WARNING'};
+    var artifactWrapper3 = {artifactData: allArtifactsTwoServersFailed[3], isChosen: false, status: 'WARNING'};
+    var artifactWrapper4 = {artifactData: allArtifactsTwoServersFailed[4], isChosen: false, status: 'FAILED'};
+    var artifactWrapper5 = {artifactData: allArtifactsTwoServersFailed[5], isChosen: false, status: 'WARNING'};
+    var artifactWrapper6 = {artifactData: allArtifactsTwoServersFailed[6], isChosen: false, status: 'WARNING'};
+    allArtifactArray = [artifactWrapper0, artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
+    failedArtifactArray = [artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
+  }
   function clone(obj) {
     if (obj === null || typeof obj !== 'object') {
       return obj;
@@ -99,15 +110,7 @@ describe('Controller: BasicTestInfoController', function () {
 
   describe('initialization and getting artifact data from server', function () {
     beforeEach(function () {
-      var artifactWrapper0 = {artifactData: allArtifactsTwoServersFailed[0], isChosen: false, status: 'PASSED'};
-      var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'FAILED'};
-      var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'WARNING'};
-      var artifactWrapper3 = {artifactData: allArtifactsTwoServersFailed[3], isChosen: false, status: 'WARNING'};
-      var artifactWrapper4 = {artifactData: allArtifactsTwoServersFailed[4], isChosen: false, status: 'FAILED'};
-      var artifactWrapper5 = {artifactData: allArtifactsTwoServersFailed[5], isChosen: false, status: 'WARNING'};
-      var artifactWrapper6 = {artifactData: allArtifactsTwoServersFailed[6], isChosen: false, status: 'WARNING'};
-      allArtifactArray = [artifactWrapper0, artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
-      failedArtifactArray = [artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
+      initallArtifactArrayANDFailedAndChosenArray();
     });
     it('should hold all artifacts\' information on initialization', function () {
       expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
@@ -121,6 +124,9 @@ describe('Controller: BasicTestInfoController', function () {
     });
   });
   describe('choosing an artifact to add', function () {
+    beforeEach(function () {
+      initallArtifactArrayANDFailedAndChosenArray();
+    });
     it('should add it to the failedAndChosenArtifactsSummary table, and change its isChosen field in the allVersionSummary to true', function () {
       mockServerFlush();
       BasicTestInfoController.currentArtifactToAddToTable = 'wix-html-editor-webapp';
@@ -147,6 +153,16 @@ describe('Controller: BasicTestInfoController', function () {
     });
   });
 
+  describe('pressing on an artifact row', function () {
+    it('should send a call to the server to get the version data', function () {
+      var selectedRow = {entity: artifactWrapper0};
+      BasicTestInfoController.onRowClick(selectedRow);
+      expect(BasicTestInfoController.basicTestInfoServerApi.getVersionSummary).toHaveBeenCalled();
+    });
+//    it('should hold the certain artifact version summary', function () {
+//      self.serversFromClickedOnArtifacts
+//    });
+  });
 //  describe('getting different info from server on refresh', function () {
 //    it('should not add an artifact that has failed in the last interval', (inject(function (basicTestInfoServerApi, $interval) {
 //      mockServerFlush();

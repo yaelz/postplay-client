@@ -18,24 +18,25 @@
       { field: 'artifactData.startTime', width: '20%', displayName: 'Start Time', cellFilter: 'date:\'d/M/yy H:mm\'' }
     ];
 
-    function onRowClick(selectedRow) {
+    this.onRowClick = function (selectedRow) {
       var artifactData = selectedRow.entity.artifactData;
       self.serversFromClickedOnArtifacts = artifactData.servers;
       self.artifactIsClickedOn = true;
       self.clickedOnArtifact = {
         artifactId: artifactData.artifactId,
         groupId: artifactData.groupId,
-        version: selectedRow.entity.artifactData.version,
-        event: selectedRow.entity.artifactData.event
+        version: artifactData.version,
+        event: artifactData.event
       };
+      self.basicTestInfoServerApi.getVersionSummary(artifactData.version, artifactData.artifactId, artifactData.groupId, artifactData.event);
       return true;
-    }
+    };
     this.failedAndChosenArtifactsSummaryTableData = {
       data: 'basicTestInfoCtrl.failedAndChosenArtifacts',
 //      init: initGrid,
       columnDefs: 'basicTestInfoCtrl.columnDefsForArtifactsGrid',
       multiSelect: false,
-      beforeSelectionChange: onRowClick
+      beforeSelectionChange: self.onRowClick
     };
     this.serversToShow = {
       data: 'basicTestInfoCtrl.serversFromClickedOnArtifacts',
