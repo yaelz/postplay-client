@@ -101,18 +101,25 @@ describe('Controller: BasicTestInfoController', function () {
       expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
       mockServerFlush();
       // TODO is this supposed to be checked? or only if the function has been called?
-      var artifactWrapper0 = {artifactData: allArtifactsTwoServersFailed[0], isChosen: false, status: 'TEST_PASSED'};
-      var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'TEST_FAILED'};
-      var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'TEST_FAILED'};
-      var allArtifactArray = [artifactWrapper0, artifactWrapper1, artifactWrapper2];
+      var artifactWrapper0 = {artifactData: allArtifactsTwoServersFailed[0], isChosen: false, status: 'PASSED'};
+      var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'FAILED'};
+      var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'WARNING'};
+      var artifactWrapper3 = {artifactData: allArtifactsTwoServersFailed[3], isChosen: false, status: 'WARNING'};
+      var artifactWrapper4 = {artifactData: allArtifactsTwoServersFailed[4], isChosen: false, status: 'FAILED'};
+      var artifactWrapper5 = {artifactData: allArtifactsTwoServersFailed[5], isChosen: false, status: 'WARNING'};
+      var artifactWrapper6 = {artifactData: allArtifactsTwoServersFailed[6], isChosen: false, status: 'WARNING'};
+      var allArtifactArray = [artifactWrapper0, artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
       expect(BasicTestInfoController.allArtifactWrappers).toEqual(allArtifactArray);
     });
-//
-    it('should hold the error artifacts\' data in the failedAndChosenArtifacts table', function () {
+    it('should only hold the error artifacts\' data in the failedAndChosenArtifacts table', function () {
       mockServerFlush();
-      var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'TEST_FAILED'};
-      var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'TEST_FAILED'};
-      var failedArtifactArray = [artifactWrapper1, artifactWrapper2];
+      var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'FAILED'};
+      var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'WARNING'};
+      var artifactWrapper3 = {artifactData: allArtifactsTwoServersFailed[3], isChosen: false, status: 'WARNING'};
+      var artifactWrapper4 = {artifactData: allArtifactsTwoServersFailed[4], isChosen: false, status: 'FAILED'};
+      var artifactWrapper5 = {artifactData: allArtifactsTwoServersFailed[5], isChosen: false, status: 'WARNING'};
+      var artifactWrapper6 = {artifactData: allArtifactsTwoServersFailed[6], isChosen: false, status: 'WARNING'};
+      var failedArtifactArray = [artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactArray);
     });
 //    it('should add a chosen artifact to the failedAndChosenArtifactsSummary table, and change its isChosen field in the allVersionSummary to true', function () {

@@ -1,2 +1,2 @@
 %div(class = "ngCellText"
-     ng-class = "{green: row.getProperty('hasFailedServer') === false || row.getProperty('testStatusEnum') === 'STATUS_COMPLETED_SUCCESSFULLY', red: row.getProperty('hasFailedServer') === true || row.getProperty('testStatusEnum') === 'STATUS_COMPLETED_WITH_ERRORS'}")
+     ng-class = "{green: row.getProperty('status') === 'PASSED' || row.getProperty('testStatusEnum') === 'STATUS_COMPLETED_SUCCESSFULLY', red: row.getProperty('status') === 'FAILED' || row.getProperty('testStatusEnum') === 'STATUS_COMPLETED_WITH_ERRORS'}")

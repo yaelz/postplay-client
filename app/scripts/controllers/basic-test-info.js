@@ -60,12 +60,21 @@
 //      });
 //    };
 
+    function getArtifactStatus(currentArtifact) {
+      if (currentArtifact.testStatusEnum === 'INCOMPLETE' || currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_WARNINGS' || currentArtifact.analysisResultEnum === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED') {
+        return 'WARNING';
+      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_ERRORS' || currentArtifact.analysisResultEnum === 'TEST_FAILED') {
+        return 'FAILED';
+      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_SUCCESFULLY' && currentArtifact.analysisResultEnum === 'TEST_PASSED') {
+        return 'PASSED';
+      }
+    }
     function getArtifactsDataFromService() {
       self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
         self.allArtifactWrappers = [];
         response.data.forEach(function (currentArtifact) {
-          var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: currentArtifact.analysisResultEnum};
-          if (currentArtifactWrapped.status === 'TEST_FAILED') {
+          var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: getArtifactStatus(currentArtifact)};
+          if (currentArtifactWrapped.status === 'FAILED' || currentArtifactWrapped.status === 'WARNING') {
             self.failedAndChosenArtifacts.push(currentArtifactWrapped);
           }
           self.allArtifactWrappers.push(currentArtifactWrapped);
