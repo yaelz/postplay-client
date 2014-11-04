@@ -120,6 +120,9 @@
             // did exist
             if (artifactExistsWithDifferentVersionOrEvent(currentArtifact)) {
               var oldArtifactWrapper = getSameArtifactWrapperWithOldVersionOrEvent(currentArtifact);
+              if (oldArtifactWrapper.status === 'FAILED' || oldArtifactWrapper.status === 'WARNING') {
+                self.failedAndChosenArtifacts = filterObjectFromTable(self.failedAndChosenArtifacts, oldArtifactWrapper);
+              }
               self.allArtifactWrappers = filterObjectFromTable(self.allArtifactWrappers, oldArtifactWrapper);
               addArtifactWrapperToAllArtifactsTable(currentArtifactWrapped);
             }
