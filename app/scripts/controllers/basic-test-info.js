@@ -51,7 +51,7 @@
       function isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentArtifactWrapper) {
         return currentArtifactWrapper.artifactData.artifactId === self.currentArtifactToAddToTable && !currentArtifactWrapper.isChosen && currentArtifactWrapper.status !== 'FAILED' && currentArtifactWrapper.status !== 'WARNING';
       }
-//
+
       this.allArtifactWrappers.forEach(function (currentArtifactWrapper) {
         if (isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentArtifactWrapper)) {
           self.failedAndChosenArtifacts.unshift(currentArtifactWrapper);

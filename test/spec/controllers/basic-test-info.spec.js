@@ -137,13 +137,12 @@ describe('Controller: BasicTestInfoController', function () {
       BasicTestInfoController.updateChosenArtifactDataToAddToTable();
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(allArtifactArray);
     });
-//    it('should not add a chosen artifact if it\'s a failed artifact', function () {
-//      mockServerFlush();
-//      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-//      BasicTestInfoController.currentArtifactId = 'wix-public-html-renderer-webapp';
-//      BasicTestInfoController.updateChosenArtifactData();
-//      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-//    });
+    it('should not add a chosen artifact if it\'s a failed artifact', function () {
+      mockServerFlush();
+      BasicTestInfoController.currentArtifactToAddToTable = 'wix-public-html-renderer-webapp';
+      BasicTestInfoController.updateChosenArtifactDataToAddToTable();
+      expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactArray);
+    });
   });
 
 //  describe('getting different info from server on refresh', function () {
