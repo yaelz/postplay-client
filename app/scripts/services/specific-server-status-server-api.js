@@ -17,10 +17,10 @@
       });
     }
     this.getServerData = function (server, artifactId, groupId) {
-      var API_URL = serverApiUrl.SERVER_STATUS_API_URL_PREFIX + server + '&artifactId=' + artifactId + '&groupId=' + groupId;
+      var API_URL = serverApiUrl.PREFIX + serverApiUrl.SERVER_STATUS_API_URL_PREFIX + server + '&artifactId=' + artifactId + '&groupId=' + groupId;
       $http.get(API_URL)
         .then(function (response) {
-          self.serverResponseBody = response.data.responseBody;
+          self.serverResponseBody = response.data;
           self.completedTestsPercent = self.serverResponseBody.completedTestsPercent;
           self.completedNumberOfRuns = self.serverResponseBody.runs.completedNumberOfRuns;
           self.analysisStatus = self.serverResponseBody.analysisStatus;

@@ -159,9 +159,12 @@ describe('Controller: BasicTestInfoController', function () {
       BasicTestInfoController.onRowClick(selectedRow);
       expect(BasicTestInfoController.basicTestInfoServerApi.getVersionSummary).toHaveBeenCalled();
     });
-//    it('should hold the certain artifact version summary', function () {
-//      self.serversFromClickedOnArtifacts
-//    });
+    it('should hold the certain artifact version summary', function () {
+      var selectedRow = {entity: artifactWrapper0};
+      BasicTestInfoController.onRowClick(selectedRow);
+      mockServerFlush();
+      expect(BasicTestInfoController.serversFromClickedOnArtifacts).toEqual(versionSummaryForEditor);
+    });
   });
 //  describe('getting different info from server on refresh', function () {
 //    it('should not add an artifact that has failed in the last interval', (inject(function (basicTestInfoServerApi, $interval) {

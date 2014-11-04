@@ -1,4 +1,4 @@
 %div(style="height: 100%")
   %div(ng-style="{'cursor': row.cursor }" ng-repeat="col in renderedColumns" ng-class="col.colIndex()" class="ngCell")
-    %a(href="#artifactId/{{basicTestInfoCtrl.clickedOnArtifact.artifactId}}/server/{{row.entity.ip}}/groupId/{{basicTestInfoCtrl.clickedOnArtifact.groupId}}/event/{{basicTestInfoCtrl.clickedOnArtifact.event}}")
+    %a(href="#artifactId/{{basicTestInfoCtrl.clickedOnArtifact.artifactId}}/server/{{row.entity.server}}/groupId/{{basicTestInfoCtrl.clickedOnArtifact.groupId}}/event/{{basicTestInfoCtrl.clickedOnArtifact.event}}")
       %div(ng-cell)

@@ -14,14 +14,14 @@ describe('Service: specificServerStatusServerApi', function () {
   beforeEach(inject(function (_specificServerStatusServerApi_, _serverApiUrl_, _specificServerServerResponse_, _$httpBackend_, _$rootScope_) {
     specificServerStatusServerApi = _specificServerStatusServerApi_;
     specificServerServerResponse = _specificServerServerResponse_;
-    API_URL = _serverApiUrl_.SERVER_STATUS_API_URL_PREFIX + specificServerServerResponse.serverData.responseBody.server + '&artifactId=' + specificServerServerResponse.serverData.responseBody.artifactId + '&groupId=' + specificServerServerResponse.serverData.responseBody.groupId;
+    API_URL = _serverApiUrl_.PREFIX + _serverApiUrl_.SERVER_STATUS_API_URL_PREFIX + specificServerServerResponse.serverData.server + '&artifactId=' + specificServerServerResponse.serverData.artifactId + '&groupId=' + specificServerServerResponse.serverData.groupId;
     $httpBackend = _$httpBackend_;
     $rootScope = _$rootScope_;
   }));
 
   function callGetServerStatusMethodAndFlushHttpBackend() {
     $httpBackend.expectGET(API_URL).respond(200, specificServerServerResponse.serverData);
-    responseBody = specificServerServerResponse.serverData.responseBody;
+    responseBody = specificServerServerResponse.serverData;
     specificServerStatusServerApi.getServerData(responseBody.server, responseBody.artifactId, responseBody.groupId);
     $httpBackend.flush();
   }
@@ -50,7 +50,7 @@ describe('Service: specificServerStatusServerApi', function () {
     it('should hold the tests data for a specific run', function () {
       expect(specificServerStatusServerApi.runIsSelected).not.toBeTruthy();
       //TODO should this be done here or in the e2e? It's testing this service but also the click...
-      var selectedRunRow = {entity: specificServerServerResponse.serverData.responseBody.runs.runs[0]};
+      var selectedRunRow = {entity: specificServerServerResponse.serverData.runs.runs[0]};
       chooseCertainRowInCertainTable(specificServerStatusServerApi.runsTableData, selectedRunRow);
       expect(specificServerStatusServerApi.runIsSelected).toBe(true);
       expect(specificServerStatusServerApi.testsOfSelectedRunData).toEqual(selectedRunRow.entity.tests);
@@ -75,13 +75,13 @@ describe('Service: specificServerStatusServerApi', function () {
       expect(specificServerStatusServerApi.testNames).toEqual([{testName: 'AppInfo Sanity'}, {testName: 'AppInfo Sanity2'}, {testName: 'Another test'}, {testName: 'Yet Another test'}]);
     });
     it('should hold the server status basic data', function () {
-      expect(specificServerStatusServerApi.artifactId).toEqual(specificServerServerResponse.serverData.responseBody.artifactId);
-      expect(specificServerStatusServerApi.artifactName).toEqual(specificServerServerResponse.serverData.responseBody.artifactName);
-      expect(specificServerStatusServerApi.version).toEqual(specificServerServerResponse.serverData.responseBody.version);
-      expect(specificServerStatusServerApi.serverName).toEqual(specificServerServerResponse.serverData.responseBody.server);
-      expect(specificServerStatusServerApi.completedNumberOfRuns).toEqual(specificServerServerResponse.serverData.responseBody.runs.completedNumberOfRuns);
-      expect(specificServerStatusServerApi.completedTestsPercent).toEqual(specificServerServerResponse.serverData.responseBody.completedTestsPercent);
-      expect(specificServerStatusServerApi.analysisStatus).toEqual(specificServerServerResponse.serverData.responseBody.analysisStatus);
+      expect(specificServerStatusServerApi.artifactId).toEqual(specificServerServerResponse.serverData.artifactId);
+      expect(specificServerStatusServerApi.artifactName).toEqual(specificServerServerResponse.serverData.artifactName);
+      expect(specificServerStatusServerApi.version).toEqual(specificServerServerResponse.serverData.version);
+      expect(specificServerStatusServerApi.serverName).toEqual(specificServerServerResponse.serverData.server);
+      expect(specificServerStatusServerApi.completedNumberOfRuns).toEqual(specificServerServerResponse.serverData.runs.completedNumberOfRuns);
+      expect(specificServerStatusServerApi.completedTestsPercent).toEqual(specificServerServerResponse.serverData.completedTestsPercent);
+      expect(specificServerStatusServerApi.analysisStatus).toEqual(specificServerServerResponse.serverData.analysisStatus);
     });
     it('should be able to get all runs\' data of the tested server for a specific test', function () {
       var runsDataOfSelectedTest = [

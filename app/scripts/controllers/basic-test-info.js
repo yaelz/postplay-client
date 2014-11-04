@@ -11,7 +11,7 @@
     this.failedAndChosenArtifacts = [];
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.columnDefsForArtifactsGrid = [
-      { field: 'artifactData.testStatusEnum', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-image-template.html'},
+      { field: 'artifactData.testStatusEnum', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-color-template-servers.html'},
       { field: 'artifactData.artifactId', width: '35%', displayName: 'Artifact Id', cellTemplate: '<div class="ngCellText" popover="{{row.entity.artifactData.artifactId}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true"><span ng-cell-text>{{row.entity.artifactData.artifactId}}</span></div>'},
       { field: 'artifactData.version', width: '20%', displayName: 'Version'},
       { field: 'artifactData.event', width: '20%', displayName: 'Event'},
@@ -28,7 +28,9 @@
         version: artifactData.version,
         event: artifactData.event
       };
-      self.basicTestInfoServerApi.getVersionSummary(artifactData.version, artifactData.artifactId, artifactData.groupId, artifactData.event);
+      self.basicTestInfoServerApi.getVersionSummary(artifactData.version, artifactData.artifactId, artifactData.groupId, artifactData.event).then(function (response) {
+        self.serversFromClickedOnArtifacts = response.data;
+      });
       return true;
     };
     this.failedAndChosenArtifactsSummaryTableData = {
@@ -41,8 +43,8 @@
     this.serversToShow = {
       data: 'basicTestInfoCtrl.serversFromClickedOnArtifacts',
       columnDefs: [
-        { field: 'artifactData.analysisResultStatus', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-image-template.html'},
-        { field: 'ip', displayName: 'IP'}
+        { field: 'analysisResultStatus', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-color-template-servers.html'},
+        { field: 'server', displayName: 'IP'}
       ],
       multiSelect: false,
       rowTemplate: 'views/basic-test-info-row-template.html'
@@ -62,20 +64,20 @@
       self.currentArtifactToAddToTable = '';
     };
 
-    function getArtifactStatus(currentArtifact) {
-      if (currentArtifact.testStatusEnum === 'INCOMPLETE' || currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_WARNINGS' || currentArtifact.analysisResultEnum === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED') {
+    this.getArtifactStatus = function (currentArtifact) {
+      if (currentArtifact.testStatusEnum === 'INCOMPLETE' || currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_WARNINGS' || currentArtifact.analysisResultEnum === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED' || currentArtifact.analysisResultStatus === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED') {
         return 'WARNING';
-      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_ERRORS' || currentArtifact.analysisResultEnum === 'TEST_FAILED') {
+      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_ERRORS' || currentArtifact.analysisResultEnum === 'TEST_FAILED' || currentArtifact.analysisResultStatus === 'TEST_FAILED') {
         return 'FAILED';
-      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_SUCCESSFULLY' && currentArtifact.analysisResultEnum === 'TEST_PASSED') {
+      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_SUCCESSFULLY' && (currentArtifact.analysisResultEnum === 'TEST_PASSED' || currentArtifact.analysisResultStatus === 'TEST_PASSED')) {
         return 'PASSED';
       }
-    }
+    };
     function getArtifactsDataFromService() {
       self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
         self.allArtifactWrappers = [];
         response.data.forEach(function (currentArtifact) {
-          var artifactStatus = getArtifactStatus(currentArtifact);
+          var artifactStatus = self.getArtifactStatus(currentArtifact);
           var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: artifactStatus};
           if (artifactStatus === 'FAILED' || artifactStatus === 'WARNING') {
             self.failedAndChosenArtifacts.push(currentArtifactWrapped);
