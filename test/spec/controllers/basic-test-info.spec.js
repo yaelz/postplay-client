@@ -5,8 +5,9 @@ describe('Controller: BasicTestInfoController', function () {
   var allArtifactsTwoServersFailed, artifactVersions, versionSummaryForRenderer, versionSummaryForRendererNewVersion, versionSummaryWrapperForRenderer, versionSummaryWrapperForRendererNewVersion, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditorChosen, versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperBodyForWar, allArtifactsOneServerFailed, allArtifactsDifferentVersionForFailedServer;
   var mockServerFlush, spyFuncForGetAllArtifacts;
   var $q, $httpBackend, deferred;
+  var BasicTestInfoController, scope;
   var allArtifactArray, failedArtifactArray, artifactWrapper0;
-  function initallArtifactArrayANDFailedAndChosenArray() {
+  function initializeArtifactArrayANDFailedAndChosenArray() {
     artifactWrapper0 = {artifactData: allArtifactsTwoServersFailed[0], isChosen: false, status: 'PASSED'};
     var artifactWrapper1 = {artifactData: allArtifactsTwoServersFailed[1], isChosen: false, status: 'FAILED'};
     var artifactWrapper2 = {artifactData: allArtifactsTwoServersFailed[2], isChosen: false, status: 'WARNING'};
@@ -81,8 +82,6 @@ describe('Controller: BasicTestInfoController', function () {
     });
   });
 
-  var BasicTestInfoController, scope;
-
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, basicTestInfoServerResponse, _$q_, _$httpBackend_) {
     // TODO don't think it should check the server response... :\
@@ -110,7 +109,7 @@ describe('Controller: BasicTestInfoController', function () {
 
   describe('initialization and getting artifact data from server', function () {
     beforeEach(function () {
-      initallArtifactArrayANDFailedAndChosenArray();
+      initializeArtifactArrayANDFailedAndChosenArray();
     });
     it('should hold all artifacts\' information on initialization', function () {
       expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
@@ -125,7 +124,7 @@ describe('Controller: BasicTestInfoController', function () {
   });
   describe('choosing an artifact to add', function () {
     beforeEach(function () {
-      initallArtifactArrayANDFailedAndChosenArray();
+      initializeArtifactArrayANDFailedAndChosenArray();
     });
     it('should add it to the failedAndChosenArtifactsSummary table, and change its isChosen field in the allVersionSummary to true', function () {
       mockServerFlush();
@@ -166,15 +165,30 @@ describe('Controller: BasicTestInfoController', function () {
       expect(BasicTestInfoController.serversFromClickedOnArtifacts).toEqual(versionSummaryForEditor);
     });
   });
-//  describe('getting different info from server on refresh', function () {
-//    it('should not add an artifact that has failed in the last interval', (inject(function (basicTestInfoServerApi, $interval) {
-//      mockServerFlush();
-//      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-//      $interval.flush(BasicTestInfoController.REFRESH_TIME);
-//      mockServerFlush();
-////      // TODO Change this to hold only failed from a list!
-//      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
-//    })));
+  describe('getting different info from server on refresh', function () {
+    beforeEach(function () {
+      initializeArtifactArrayANDFailedAndChosenArray();
+    });
+    it('should not change the table if nothing has changed', (inject(function (basicTestInfoServerApi, $interval) {
+      mockServerFlush();
+      $interval.flush(BasicTestInfoController.REFRESH_TIME);
+      mockServerFlush();
+      expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactArray);
+      expect(BasicTestInfoController.allArtifactWrappers).toEqual(allArtifactArray);
+    })));
+    it('should add an artifact to allArtifactWrapper table if it has a new artifact with a different groupId (thought the artifactId is the same)', (inject(function (basicTestInfoServerApi, $interval) {
+      mockServerFlush();
+
+      var newWrapperWithNewGroupID = clone(artifactWrapper0);
+      newWrapperWithNewGroupID.artifactData.groupId = 'new-wix-group';
+      allArtifactsTwoServersFailed.push(newWrapperWithNewGroupID.artifactData);
+      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsTwoServersFailed);
+      $interval.flush(BasicTestInfoController.REFRESH_TIME);
+      mockServerFlush();
+
+      allArtifactArray.push(newWrapperWithNewGroupID);
+      expect(BasicTestInfoController.allArtifactWrappers).toEqual(allArtifactArray);
+    })));
 //    it('should remove an artifact that has failed and now passed', (inject(function (basicTestInfoServerApi, $interval) {
 //      mockServerFlush();
 //      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);
@@ -212,5 +226,5 @@ describe('Controller: BasicTestInfoController', function () {
 ////      // TODO Change this to hold only failed from a list!
 //      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperBodyForWar, versionSummaryWrapperForRendererNewVersion]);
 //    })));
-//  });
+  });
 });

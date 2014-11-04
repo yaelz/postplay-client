@@ -12,7 +12,7 @@
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
     this.columnDefsForArtifactsGrid = [
       { field: 'artifactData.testStatusEnum', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-color-template-servers.html'},
-      { field: 'artifactData.artifactId', width: '35%', displayName: 'Artifact Id', cellTemplate: '<div class="ngCellText" popover="{{row.entity.artifactData.artifactId}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true"><span ng-cell-text>{{row.entity.artifactData.artifactId}}</span></div>'},
+      { field: 'artifactData.artifactId', width: '35%', displayName: 'Artifact Id', cellTemplate: '<div class="ngCellText" popover="{{row.entity.artifactData.artifactId}}, {{row.entity.artifactData.groupId}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true"><span ng-cell-text>{{row.entity.artifactData.artifactId}}</span></div>'},
       { field: 'artifactData.version', width: '20%', displayName: 'Version'},
       { field: 'artifactData.event', width: '20%', displayName: 'Event'},
       { field: 'artifactData.startTime', width: '20%', displayName: 'Start Time', cellFilter: 'date:\'d/M/yy H:mm\'' }
@@ -64,7 +64,13 @@
       self.currentArtifactToAddToTable = '';
     };
 
+    function artifactDidntExistBefore(artifact) {
+      return self.allArtifactWrappers.every(function (currentArtifactWrapper) {
+        return currentArtifactWrapper.artifactData.artifactId !== artifact.artifactId || currentArtifactWrapper.artifactData.groupId !== artifact.groupId;
+      });
+    }
     this.getArtifactStatus = function (currentArtifact) {
+      var defaultStatus = '';
       if (currentArtifact.testStatusEnum === 'INCOMPLETE' || currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_WARNINGS' || currentArtifact.analysisResultEnum === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED' || currentArtifact.analysisResultStatus === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED') {
         return 'WARNING';
       } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_ERRORS' || currentArtifact.analysisResultEnum === 'TEST_FAILED' || currentArtifact.analysisResultStatus === 'TEST_FAILED') {
@@ -72,23 +78,25 @@
       } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_SUCCESSFULLY' && (currentArtifact.analysisResultEnum === 'TEST_PASSED' || currentArtifact.analysisResultStatus === 'TEST_PASSED')) {
         return 'PASSED';
       }
+      return defaultStatus;
     };
     function getArtifactsDataFromService() {
       self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
-        self.allArtifactWrappers = [];
         response.data.forEach(function (currentArtifact) {
           var artifactStatus = self.getArtifactStatus(currentArtifact);
           var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: artifactStatus};
-          if (artifactStatus === 'FAILED' || artifactStatus === 'WARNING') {
-            self.failedAndChosenArtifacts.push(currentArtifactWrapped);
+          if (artifactDidntExistBefore(currentArtifact)) {
+            self.allArtifactWrappers.push(currentArtifactWrapped);
+            if (artifactStatus === 'FAILED' || artifactStatus === 'WARNING') {
+              self.failedAndChosenArtifacts.push(currentArtifactWrapped);
+            }
           }
-          self.allArtifactWrappers.push(currentArtifactWrapped);
         });
       });
     }
     getArtifactsDataFromService();
-//    this.REFRESH_TIME = 5 * 60 * 1000; // five minutes
-//    this.promise = $interval(getArtifactsDataFromService, this.REFRESH_TIME);
+    this.REFRESH_TIME = 5 * 60 * 1000; // five minutes
+    this.promise = $interval(getArtifactsDataFromService, this.REFRESH_TIME);
 
 // Cancel interval on page changes
     $scope.$on('$destroy', function () {
