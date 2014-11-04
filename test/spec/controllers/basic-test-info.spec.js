@@ -100,6 +100,7 @@ describe('Controller: BasicTestInfoController', function () {
     versionSummaryWrapperBodyForWar = {artifactData: basicTestInfoServerResponse.versionSummaryForWar.responseBody, isChosen: false, hasFailedServer: true};
     $q = _$q_;
     $httpBackend = _$httpBackend_;
+//    $provide.value('$log', console);
 
     scope = $rootScope.$new();
     BasicTestInfoController = $controller('BasicTestInfoController', {
@@ -166,8 +167,10 @@ describe('Controller: BasicTestInfoController', function () {
     });
   });
   describe('getting different info from server on refresh', function () {
+    var clonedAllArtifactsArrayFromServer;
     beforeEach(function () {
       initializeArtifactArrayANDFailedAndChosenArray();
+      clonedAllArtifactsArrayFromServer = clone(allArtifactsTwoServersFailed);
     });
     it('should not change the table if nothing has changed', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
@@ -181,14 +184,36 @@ describe('Controller: BasicTestInfoController', function () {
 
       var newWrapperWithNewGroupID = clone(artifactWrapper0);
       newWrapperWithNewGroupID.artifactData.groupId = 'new-wix-group';
-      allArtifactsTwoServersFailed.push(newWrapperWithNewGroupID.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsTwoServersFailed);
+      clonedAllArtifactsArrayFromServer.push(newWrapperWithNewGroupID.artifactData);
+      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(clonedAllArtifactsArrayFromServer);
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
       mockServerFlush();
 
       allArtifactArray.push(newWrapperWithNewGroupID);
       expect(BasicTestInfoController.allArtifactWrappers).toEqual(allArtifactArray);
     })));
+    it('should replace a non-failed, non-chosen artifact in allArtifacts array if it has a different version', (inject(function (basicTestInfoServerApi, $interval) {
+      mockServerFlush();
+      var wrapperWithNewVersion = clone(artifactWrapper0);
+      wrapperWithNewVersion.artifactData.version = '999';
+//      $provide.value('$log', console);
+      clonedAllArtifactsArrayFromServer = clonedAllArtifactsArrayFromServer.filter(function (currArtifact) {
+        return artifactWrapper0.artifactData !== currArtifact;
+      });
+      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(clonedAllArtifactsArrayFromServer);
+
+      allArtifactArray = allArtifactArray.filter(function (currArtifactWrapper) {
+        return artifactWrapper0 !== currArtifactWrapper;
+      });
+      clonedAllArtifactsArrayFromServer.push(wrapperWithNewVersion.artifactData);
+      $interval.flush(BasicTestInfoController.REFRESH_TIME);
+      mockServerFlush();
+
+      allArtifactArray.push(wrapperWithNewVersion);
+      expect(BasicTestInfoController.allArtifactWrappers).toEqual(allArtifactArray);
+    })));
+//    it('should replace the artifact in both tables if it has a different event (though the artifactId+groupId is the same)', (inject(function (basicTestInfoServerApi, $interval) {
+//    })));
 //    it('should remove an artifact that has failed and now passed', (inject(function (basicTestInfoServerApi, $interval) {
 //      mockServerFlush();
 //      expect(BasicTestInfoController.failedAndChosenArtifactsSummary).toEqual([versionSummaryWrapperForRenderer, versionSummaryWrapperBodyForWar]);

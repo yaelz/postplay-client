@@ -65,9 +65,36 @@
     };
 
     function artifactDidntExistBefore(artifact) {
+      // TODO should I add in the function name that it's only by artifactId and groupId?
       return self.allArtifactWrappers.every(function (currentArtifactWrapper) {
         return currentArtifactWrapper.artifactData.artifactId !== artifact.artifactId || currentArtifactWrapper.artifactData.groupId !== artifact.groupId;
       });
+    }
+
+    function artifactExistsWithDifferentVersion(newArtifact) {
+      return self.allArtifactWrappers.some(function (currentArtifactWrapper) {
+        return currentArtifactWrapper.artifactData.artifactId === newArtifact.artifactId && currentArtifactWrapper.artifactData.groupId === newArtifact.groupId &&
+          currentArtifactWrapper.artifactData.version !== newArtifact.version;
+      });
+    }
+    function getSameArtifactWrapperWithOldVersion(newArtifact) {
+      var oldArtifact;
+      self.allArtifactWrappers.forEach(function (oldArtifactWrapperToCheck) {
+        if (oldArtifactWrapperToCheck.artifactData.artifactId === newArtifact.artifactId && oldArtifactWrapperToCheck.artifactData.groupId === newArtifact.groupId) {
+          oldArtifact = oldArtifactWrapperToCheck;
+        }
+      });
+      return oldArtifact;
+    }
+
+    function filterObjectFromTable(table, oldToRemove) {
+      return table.filter(function (curreObjInTable) {
+        return oldToRemove !== curreObjInTable;
+      });
+    }
+
+    function addArtifactWrapperToAllArtifactsTable(artifactToAddWrapped) {
+      self.allArtifactWrappers.push(artifactToAddWrapped);
     }
     this.getArtifactStatus = function (currentArtifact) {
       var defaultStatus = '';
@@ -89,6 +116,13 @@
             self.allArtifactWrappers.push(currentArtifactWrapped);
             if (artifactStatus === 'FAILED' || artifactStatus === 'WARNING') {
               self.failedAndChosenArtifacts.push(currentArtifactWrapped);
+            }
+          } else {
+            // did exist
+            if (artifactExistsWithDifferentVersion(currentArtifact)) {
+              var oldArtifactWrapper = getSameArtifactWrapperWithOldVersion(currentArtifact);
+              self.allArtifactWrappers = filterObjectFromTable(self.allArtifactWrappers, oldArtifactWrapper);
+              addArtifactWrapperToAllArtifactsTable(currentArtifactWrapped);
             }
           }
         });
