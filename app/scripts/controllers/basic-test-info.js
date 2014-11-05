@@ -141,6 +141,9 @@
                   currentArtifactWrapped.isChosen = true;
                   addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
                   setAllVariablesForRowClick(currentArtifactWrapped.artifactData);
+                } else if (self.clickedOnArtifact && (artifactsHaveSameArtifactIdAndGroupId(self.clickedOnArtifact, currentArtifactWrapped.artifactData))) {
+                  addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
+                  setAllVariablesForRowClick(currentArtifactWrapped.artifactData);
                 }
               }
               self.allArtifactWrappers = filterObjectFromTable(self.allArtifactWrappers, oldArtifactWrapper);

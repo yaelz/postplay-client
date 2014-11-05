@@ -319,6 +319,7 @@ describe('Controller: BasicTestInfoController', function () {
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
     })));
     it('should re-press an artifact that was chosen, and pressed', (inject(function (basicTestInfoServerApi, $interval) {
+      //TODO I'm not testing the event change, because it's the same as version change (can't have a red test)
       mockServerFlush();
       chooseArtifact('wix-html-editor-webapp');
       clickOnRow({entity: artifactWrapper0});
@@ -334,8 +335,26 @@ describe('Controller: BasicTestInfoController', function () {
 
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
       expect(BasicTestInfoController.serversFromClickedOnArtifacts).toEqual(versionSummaryForEditorWithNewVersion);
-      expect(BasicTestInfoController.clickedOnArtifact).toEqual({artifactId: versionSummaryForEditor[0].artifactId, groupId: versionSummaryForEditor[0].groupId, version: newVersion, event: versionSummaryForEditor[0].event});
+      expect(BasicTestInfoController.clickedOnArtifact).toEqual({artifactId: artifactWrapper0.artifactData.artifactId, groupId: artifactWrapper0.artifactData.groupId, version: newVersion, event: artifactWrapper0.artifactData.event});
     })));
-    it('should re-press an artifact that was failed, and pressed');
+    it('should re-press an artifact that was failed, and pressed', (inject(function (basicTestInfoServerApi, $interval) {
+      mockServerFlush();
+      chooseArtifact('wix-html-artifact1');
+      clickOnRow({entity: artifactWrapper1});
+
+      var newVersion = '999';
+      var artifactWrapperWithNewVersion = changeServerResponseToGetAllArtifacts(artifactWrapper1, 'version', newVersion);
+      failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper1);
+      changeObjectField(artifactWrapperWithNewVersion.artifactData, 'analysisResultEnum', 'TEST_PASSED');
+      changeObjectField(artifactWrapperWithNewVersion, 'status', 'PASSED');
+      failedArtifactWrappedArray.unshift(artifactWrapperWithNewVersion);
+
+      var versionSummaryForEditorWithNewVersion = changeServerResponseToANewVersionSummary(versionSummaryForEditor, 'version', newVersion);
+      $interval.flush(BasicTestInfoController.REFRESH_TIME);
+
+      expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
+      expect(BasicTestInfoController.serversFromClickedOnArtifacts).toEqual(versionSummaryForEditorWithNewVersion);
+      expect(BasicTestInfoController.clickedOnArtifact).toEqual({artifactId: artifactWrapper1.artifactData.artifactId, groupId: artifactWrapper1.artifactData.groupId, version: newVersion, event: artifactWrapper1.artifactData.event});
+    })));
   });
 });
