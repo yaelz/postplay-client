@@ -2,10 +2,9 @@
 
 describe('Controller: BasicTestInfoController', function () {
 
-  var allArtifactsTwoServersFailed, artifactVersions, versionSummaryForRendererNewVersion, versionSummaryWrapperForRendererNewVersion, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditorChosen, versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperBodyForWar, allArtifactsDifferentVersionForFailedServer;
-  var mockServerFlush, spyFuncForGetAllArtifacts, spyFuncForGetVersionSummary;
-  var $q, $httpBackend, deferred;
-  var BasicTestInfoController, scope;
+  var allArtifactsTwoServersFailed, versionSummaryForRendererNewVersion, versionSummaryForEditor;
+  var $q, $httpBackend, deferred, BasicTestInfoController, scope;
+  var spyFuncForGetAllArtifacts, spyFuncForGetVersionSummary;
   var allArtifactsWrappedArray, failedArtifactWrappedArray, artifactWrapper0, artifactWrapper1;
   function initializeArtifactArrayANDFailedAndChosenArray() {
     artifactWrapper0 = {artifactData: allArtifactsTwoServersFailed[0], isChosen: false, status: 'PASSED'};
@@ -42,12 +41,13 @@ describe('Controller: BasicTestInfoController', function () {
     BasicTestInfoController.currentArtifactToAddToTable = currentArtifactToAddToTable;
     BasicTestInfoController.updateChosenArtifactDataToAddToTable();
   }
+  function mockServerFlush() {
+    scope.$apply();
+  }
   // load the controller's module
   beforeEach(function () {
     module('postplayTryAppInternal');
-    mockServerFlush = function () {
-      scope.$apply();
-    };
+
     spyFuncForGetAllArtifacts = function (allArtifacts) {
       return jasmine.createSpy('getAllArtifacts').andCallFake(function () {
         deferred = $q.defer();
@@ -85,16 +85,9 @@ describe('Controller: BasicTestInfoController', function () {
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, basicTestInfoServerResponse, _$q_, _$httpBackend_) {
     // TODO don't think it should check the server response... :\
-    artifactVersions = basicTestInfoServerResponse.artifactVersions;
     allArtifactsTwoServersFailed = basicTestInfoServerResponse.allArtifacts;
-    allArtifactsDifferentVersionForFailedServer = basicTestInfoServerResponse.allArtifactsDifferentVersionForFailedServer;
     versionSummaryForEditor = basicTestInfoServerResponse.versionSummaryForEditor;
     versionSummaryForRendererNewVersion = basicTestInfoServerResponse.versionSummaryForRendererNewVersion;
-    versionSummaryForWar = basicTestInfoServerResponse.versionSummaryForWar;
-    versionSummaryWrapperForEditorNotChosen = {artifactData: basicTestInfoServerResponse.versionSummaryForEditor.responseBody, isChosen: false, hasFailedServer: false};
-    versionSummaryWrapperForEditorChosen = {artifactData: basicTestInfoServerResponse.versionSummaryForEditor.responseBody, isChosen: true, hasFailedServer: false};
-    versionSummaryWrapperForRendererNewVersion = {artifactData: basicTestInfoServerResponse.versionSummaryForRendererNewVersion.responseBody, isChosen: false, hasFailedServer: true};
-    versionSummaryWrapperBodyForWar = {artifactData: basicTestInfoServerResponse.versionSummaryForWar.responseBody, isChosen: false, hasFailedServer: true};
     $q = _$q_;
     $httpBackend = _$httpBackend_;
 //    $provide.value('$log', console);
@@ -164,20 +157,36 @@ describe('Controller: BasicTestInfoController', function () {
     });
   });
   describe('getting different info from server on refresh', function () {
-    var allArtifactsArrayFromServer;
+    var allArtifactsArrayFromServer, changeServerResponseToANewVersionSummary, changeServerResponseToGetAllArtifacts;
     function cloneWrappedObjectAndChangeField(originalObject, fieldNameToChange, fieldToChangeTo) {
       var clonedAndChangedObject = clone(originalObject);
       changeObjectField(clonedAndChangedObject.artifactData, fieldNameToChange, fieldToChangeTo);
       return clonedAndChangedObject;
     }
-
     function changeObjectField(originalObject, fieldNameToChange, fieldToChangeTo) {
       originalObject[fieldNameToChange] = fieldToChangeTo;
     }
-    beforeEach(function () {
+
+    beforeEach(inject(function (basicTestInfoServerApi) {
       initializeArtifactArrayANDFailedAndChosenArray();
       allArtifactsArrayFromServer = clone(allArtifactsTwoServersFailed);
-    });
+      changeServerResponseToANewVersionSummary = function (versionSummaryArray, fieldNameToChange, fieldToChangeTo) {
+        var versionSummaryForEditorWithNewVersion = clone(versionSummaryArray[0]);
+        changeObjectField(versionSummaryForEditorWithNewVersion, fieldNameToChange, fieldToChangeTo);
+        versionSummaryArray.push(versionSummaryForEditorWithNewVersion);
+
+        versionSummaryArray = filterObjectFromTable(versionSummaryArray, versionSummaryArray[0]);
+        basicTestInfoServerApi.getVersionSummary = spyFuncForGetVersionSummary(versionSummaryArray);
+        return versionSummaryArray;
+      };
+      changeServerResponseToGetAllArtifacts = function (artifactToChange, fieldNameToChange, fieldToChangeTo) {
+        allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactToChange.artifactData);
+        var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactToChange, fieldNameToChange, fieldToChangeTo);
+        allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
+        basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
+        return artifactWrapperWithNewVersion;
+      };
+    }));
     it('should not change the table if nothing has changed', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
@@ -200,10 +209,7 @@ describe('Controller: BasicTestInfoController', function () {
     it('should replace an artifact in allArtifacts array if it has a different version', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
 
-      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper0.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
-      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper0, 'version', '999');
-      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
+      var artifactWrapperWithNewVersion = changeServerResponseToGetAllArtifacts(artifactWrapper0, 'version', '999');
 
       allArtifactsWrappedArray = filterObjectFromTable(allArtifactsWrappedArray, artifactWrapper0);
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
@@ -215,10 +221,7 @@ describe('Controller: BasicTestInfoController', function () {
     it('should replace an artifact in allArtifacts array if it has a different event', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
 
-      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper0.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
-      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper0, 'event', 'NEW_EVENT');
-      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
+      var artifactWrapperWithNewVersion = changeServerResponseToGetAllArtifacts(artifactWrapper0, 'event', 'NEW_EVENT');
 
       allArtifactsWrappedArray = filterObjectFromTable(allArtifactsWrappedArray, artifactWrapper0);
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
@@ -230,6 +233,7 @@ describe('Controller: BasicTestInfoController', function () {
     it('should remove a non-failed, non-chosen artifact from failedAndChosenArtifacts array if it has a different version, has failed before', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
 
+      // TODO the same as in the next 'it'
       allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper1.artifactData);
       var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper1, 'version', '999');
       changeObjectField(artifactWrapperWithNewVersion.artifactData, 'analysisResultEnum', 'TEST_PASSED');
@@ -245,6 +249,9 @@ describe('Controller: BasicTestInfoController', function () {
     it('should remove a non-failed, non-chosen artifact from failedAndChosenArtifacts array if it has a different event, has failed before', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
 
+      // TODO how can I refactor this to use
+      // var artifactWrapperWithNewVersion = changeServerResponseToGetAllArtifacts(artifactWrapper0, 'version', '999');
+      // (I'm using another field change here)
       allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper1.artifactData);
       var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper1, 'event', 'NEW_EVENT');
       changeObjectField(artifactWrapperWithNewVersion.artifactData, 'analysisResultEnum', 'TEST_PASSED');
@@ -260,10 +267,7 @@ describe('Controller: BasicTestInfoController', function () {
     it('should replace a failed, non-chosen artifact in the failedAndChosenArtifacts array if it has a different event, and has failed before', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
 
-      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper1.artifactData);
-      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper1, 'event', 'NEW_EVENT');
-      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
+      var artifactWrapperWithNewVersion = changeServerResponseToGetAllArtifacts(artifactWrapper1, 'event', 'NEW_EVENT');
 
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
       mockServerFlush();
@@ -275,10 +279,7 @@ describe('Controller: BasicTestInfoController', function () {
     it('should replace a failed, non-chosen artifact in the failedAndChosenArtifacts array if it has a different version, and has failed before', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
 
-      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper1.artifactData);
-      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper1, 'version', '999');
-      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
+      var artifactWrapperWithNewVersion = changeServerResponseToGetAllArtifacts(artifactWrapper1, 'version', '999');
 
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
       mockServerFlush();
@@ -292,10 +293,7 @@ describe('Controller: BasicTestInfoController', function () {
       BasicTestInfoController.currentArtifactToAddToTable = 'wix-html-editor-webapp';
       BasicTestInfoController.updateChosenArtifactDataToAddToTable();
 
-      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper0.artifactData);
-      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper0, 'version', '999');
-      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
+      var artifactWrapperWithNewVersion = changeServerResponseToGetAllArtifacts(artifactWrapper0, 'version', '999');
 
       changeObjectField(artifactWrapperWithNewVersion, 'isChosen', true);
       failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper0);
@@ -310,10 +308,7 @@ describe('Controller: BasicTestInfoController', function () {
       BasicTestInfoController.currentArtifactToAddToTable = 'wix-html-editor-webapp';
       BasicTestInfoController.updateChosenArtifactDataToAddToTable();
 
-      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper0.artifactData);
-      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper0, 'event', 'NEW_EVENT');
-      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
+      var artifactWrapperWithNewVersion = changeServerResponseToGetAllArtifacts(artifactWrapper0, 'event', 'NEW_EVENT');
 
       changeObjectField(artifactWrapperWithNewVersion, 'isChosen', true);
       failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper0);
@@ -328,31 +323,17 @@ describe('Controller: BasicTestInfoController', function () {
       chooseArtifact('wix-html-editor-webapp');
       clickOnRow({entity: artifactWrapper0});
 
-      // Make the server now return the new artifact which holds a new version in getAllArtifacts
-      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper0.artifactData);
       var newVersion = '999';
-      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper0, 'version', newVersion);
-      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
-
-      // The failedArtifact array should not have the old artifactWrapper
+      var artifactWrapperWithNewVersion = changeServerResponseToGetAllArtifacts(artifactWrapper0, 'version', newVersion);
       failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper0);
-
-      // The failed artifact array should hold the new wrapper with the new version and isChosen should be true
       changeObjectField(artifactWrapperWithNewVersion, 'isChosen', true);
       failedArtifactWrappedArray.unshift(artifactWrapperWithNewVersion);
 
-      // Make the server now return a new versionSummary
-      var versionSummaryForEditorWithNewVersion = clone(versionSummaryForEditor[0]);
-      changeObjectField(versionSummaryForEditorWithNewVersion, 'version', newVersion);
-      basicTestInfoServerApi.getVersionSummary = spyFuncForGetVersionSummary([versionSummaryForEditorWithNewVersion]);
-
+      var versionSummaryForEditorWithNewVersion = changeServerResponseToANewVersionSummary(versionSummaryForEditor, 'version', newVersion);
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
 
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
-      // if clicked - get data from server versionSummaryfailedArtifactWrappedArray
-      // make sure the version summary data for the new clicked artifact is shown in the table
-      expect(BasicTestInfoController.serversFromClickedOnArtifacts[0]).toEqual(versionSummaryForEditorWithNewVersion);
+      expect(BasicTestInfoController.serversFromClickedOnArtifacts).toEqual(versionSummaryForEditorWithNewVersion);
       expect(BasicTestInfoController.clickedOnArtifact).toEqual({artifactId: versionSummaryForEditor[0].artifactId, groupId: versionSummaryForEditor[0].groupId, version: newVersion, event: versionSummaryForEditor[0].event});
     })));
     it('should re-press an artifact that was failed, and pressed');
