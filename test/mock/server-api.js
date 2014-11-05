@@ -16,12 +16,7 @@ angular.module('postplayTryAppMocks', ['ngMockE2E'])
 //      $httpBackend.whenGET(API_URL).respond(specificServerServerResponse.serverData);
     }
     var editorArtifactId = basicTestInfoServerResponse.versionSummaryForEditor[0].artifactId;
-//    var rendererArtifactId = basicTestInfoServerResponse.versionSummaryForRenderer.responseBody.artifactId;
-//    var warArtifactId = basicTestInfoServerResponse.versionSummaryForWar.responseBody.artifactId;
     callsWithSpecificServerData(specificServerData, editorArtifactId, basicTestInfoServerResponse.versionSummaryForEditor);
-//    callsWithSpecificServerData(specificServerData2, rendererArtifactId, basicTestInfoServerResponse.versionSummaryForRenderer);
-//    callsWithSpecificServerData(specificServerData2, rendererArtifactId, basicTestInfoServerResponse.versionSummaryForRendererNewVersion);
-//    callsWithSpecificServerData(specificServerData3, warArtifactId, basicTestInfoServerResponse.versionSummaryForWar);
     $httpBackend.whenGET(/.*/).passThrough();
     $httpBackend.whenPOST(/.*/).passThrough();
     $httpBackend.whenPUT(/.*/).passThrough();

@@ -20,7 +20,6 @@
 
     this.onRowClick = function (selectedRow) {
       var artifactData = selectedRow.entity.artifactData;
-      self.serversFromClickedOnArtifacts = artifactData.servers;
       self.artifactIsClickedOn = true;
       self.clickedOnArtifact = {
         artifactId: artifactData.artifactId,
@@ -64,12 +63,12 @@
     };
     this.getArtifactStatus = function (currentArtifact) {
       var defaultStatus = '';
-      if (currentArtifact.testStatusEnum === 'INCOMPLETE' || currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_WARNINGS' || currentArtifact.analysisResultEnum === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED' || currentArtifact.analysisResultStatus === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED') {
-        return 'WARNING';
+      if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_SUCCESSFULLY' && (currentArtifact.analysisResultEnum === 'TEST_PASSED' || currentArtifact.analysisResultStatus === 'TEST_PASSED')) {
+        return 'PASSED';
       } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_ERRORS' || currentArtifact.analysisResultEnum === 'TEST_FAILED' || currentArtifact.analysisResultStatus === 'TEST_FAILED') {
         return 'FAILED';
-      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_SUCCESSFULLY' && (currentArtifact.analysisResultEnum === 'TEST_PASSED' || currentArtifact.analysisResultStatus === 'TEST_PASSED')) {
-        return 'PASSED';
+      } else if (currentArtifact.testStatusEnum === 'INCOMPLETE' || currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_WARNINGS' || currentArtifact.analysisResultEnum === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED' || currentArtifact.analysisResultStatus === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED') {
+        return 'WARNING';
       }
       return defaultStatus;
     };
@@ -105,9 +104,17 @@
     function addArtifactWrapperToAllArtifactsTable(artifactToAddWrapped) {
       self.allArtifactWrappers.push(artifactToAddWrapped);
     }
-    function addArtifactWrapperToFailedOrChosenArtifactsTable(artifactToAddWrapped) {
+    function addArtifactWrapperToTheEndOfFailedOrChosenArtifactsTable(artifactToAddWrapped) {
       self.failedAndChosenArtifacts.push(artifactToAddWrapped);
     }
+    function addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(artifactToAddWrapped) {
+      self.failedAndChosenArtifacts.unshift(artifactToAddWrapped);
+    }
+
+    function statusIsFailedOrWarning(artifactStatus) {
+      return artifactStatus === 'FAILED' || artifactStatus === 'WARNING';
+    }
+
     function getArtifactsDataFromService() {
       self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
         response.data.forEach(function (currentArtifact) {
@@ -115,17 +122,20 @@
           var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: artifactStatus};
           if (artifactDidNotExistBefore(currentArtifact)) {
             self.allArtifactWrappers.push(currentArtifactWrapped);
-            if (artifactStatus === 'FAILED' || artifactStatus === 'WARNING') {
+            if (statusIsFailedOrWarning(artifactStatus)) {
               self.failedAndChosenArtifacts.push(currentArtifactWrapped);
             }
           } else {
             // did exist
             if (artifactExistsWithDifferentVersionOrEvent(currentArtifact)) {
               var oldArtifactWrapper = getSameArtifactWrapperWithOldVersionOrEvent(currentArtifact);
-              if (oldArtifactWrapper.status === 'FAILED' || oldArtifactWrapper.status === 'WARNING') {
+              if (statusIsFailedOrWarning(oldArtifactWrapper.status) || oldArtifactWrapper.isChosen) {
                 self.failedAndChosenArtifacts = filterObjectFromTable(self.failedAndChosenArtifacts, oldArtifactWrapper);
-                if (artifactStatus === 'FAILED' || artifactStatus === 'WARNING') {
-                  addArtifactWrapperToFailedOrChosenArtifactsTable(currentArtifactWrapped);
+                if (statusIsFailedOrWarning(artifactStatus)) {
+                  addArtifactWrapperToTheEndOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
+                } else if (oldArtifactWrapper.isChosen) {
+                  currentArtifactWrapped.isChosen = true;
+                  addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
                 }
               }
               self.allArtifactWrappers = filterObjectFromTable(self.allArtifactWrappers, oldArtifactWrapper);

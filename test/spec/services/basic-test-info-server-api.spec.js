@@ -45,13 +45,7 @@ describe('Service: basicTestInfoServerApi', function () {
   it('should get version summary of an artifact', function () {
     API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + basicTestInfoServerResponse.version + '&artifactId=' + basicTestInfoServerResponse.artifactId + '&groupId=' + basicTestInfoServerResponse.groupId + '&event=' + basicTestInfoServerResponse.event;
     var argsForFunc = [basicTestInfoServerResponse.version, basicTestInfoServerResponse.artifactId, basicTestInfoServerResponse.groupId, basicTestInfoServerResponse.event];
-    checkResponseFromServer(basicTestInfoServerApi.getVersionSummary, {}, basicTestInfoServerResponse.versionSummaryForRenderer, argsForFunc);
-  });
-
-  it('should get all artifact versions', function () {
-    API_URL = serverApiUrl.ARTIFACT_VERS_API_URL_PREFIX + basicTestInfoServerResponse.artifactId + '&groupId=' + basicTestInfoServerResponse.groupId;
-    var argsForFunc = [basicTestInfoServerResponse.artifactId, basicTestInfoServerResponse.groupId];
-    checkResponseFromServer(basicTestInfoServerApi.getArtifactVersions, [], basicTestInfoServerResponse.artifactVersions, argsForFunc);
+    checkResponseFromServer(basicTestInfoServerApi.getVersionSummary, [], basicTestInfoServerResponse.versionSummaryForRendererNewVersion, argsForFunc);
   });
 
   describe('thereWasServerError variable should be true iff there was a server error', function () {

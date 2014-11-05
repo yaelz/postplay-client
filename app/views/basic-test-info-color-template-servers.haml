@@ -1,3 +1,3 @@
 %div(class = "ngCellText"
-     ng-class = "{green: basicTestInfoCtrl.getArtifactStatus(row.entity) || basicTestInfoCtrl.getArtifactStatus(row.entity.artifactData) === 'PASSED', red: basicTestInfoCtrl.getArtifactStatus(row.entity) || basicTestInfoCtrl.getArtifactStatus(row.entity.artifactData) === 'FAILED', orange: basicTestInfoCtrl.getArtifactStatus(row.entity) || basicTestInfoCtrl.getArtifactStatus(row.entity.artifactData) === 'WARNING'}")
+     ng-class = "{green: basicTestInfoCtrl.getArtifactStatus(row.entity) === 'PASSED' || basicTestInfoCtrl.getArtifactStatus(row.entity.artifactData) === 'PASSED', red: basicTestInfoCtrl.getArtifactStatus(row.entity) === 'FAILED' || basicTestInfoCtrl.getArtifactStatus(row.entity.artifactData) === 'FAILED', orange: basicTestInfoCtrl.getArtifactStatus(row.entity) === 'WARNING' || basicTestInfoCtrl.getArtifactStatus(row.entity.artifactData) === 'WARNING'}")
 -#basicTestInfoCtrl.getArtifactStatus(row.entity);
