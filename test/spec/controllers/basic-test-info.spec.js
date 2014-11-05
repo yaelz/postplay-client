@@ -3,7 +3,7 @@
 describe('Controller: BasicTestInfoController', function () {
 
   var allArtifactsTwoServersFailed, artifactVersions, versionSummaryForRendererNewVersion, versionSummaryWrapperForRendererNewVersion, versionSummaryForWar, versionSummaryForEditor, versionSummaryWrapperForEditorChosen, versionSummaryWrapperForEditorNotChosen, versionSummaryWrapperBodyForWar, allArtifactsDifferentVersionForFailedServer;
-  var mockServerFlush, spyFuncForGetAllArtifacts;
+  var mockServerFlush, spyFuncForGetAllArtifacts, spyFuncForGetVersionSummary;
   var $q, $httpBackend, deferred;
   var BasicTestInfoController, scope;
   var allArtifactsWrappedArray, failedArtifactWrappedArray, artifactWrapper0, artifactWrapper1;
@@ -17,6 +17,9 @@ describe('Controller: BasicTestInfoController', function () {
     var artifactWrapper6 = {artifactData: allArtifactsTwoServersFailed[6], isChosen: false, status: 'WARNING'};
     allArtifactsWrappedArray = [artifactWrapper0, artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
     failedArtifactWrappedArray = [artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
+  }
+  function clickOnRow(selectedRow) {
+    BasicTestInfoController.onRowClick(selectedRow);
   }
   function filterObjectFromTable(table, oldToRemove) {
     return table.filter(function (currObjInTable) {
@@ -35,6 +38,10 @@ describe('Controller: BasicTestInfoController', function () {
     }
     return newObj;
   }
+  function chooseArtifact(currentArtifactToAddToTable) {
+    BasicTestInfoController.currentArtifactToAddToTable = currentArtifactToAddToTable;
+    BasicTestInfoController.updateChosenArtifactDataToAddToTable();
+  }
   // load the controller's module
   beforeEach(function () {
     module('postplayTryAppInternal');
@@ -45,6 +52,13 @@ describe('Controller: BasicTestInfoController', function () {
       return jasmine.createSpy('getAllArtifacts').andCallFake(function () {
         deferred = $q.defer();
         deferred.resolve({data: allArtifacts});
+        return deferred.promise;
+      });
+    };
+    spyFuncForGetVersionSummary = function (versionSummary) {
+      return jasmine.createSpy('getVersionSummary').andCallFake(function () {
+        deferred = $q.defer();
+        deferred.resolve({data: versionSummary});
         return deferred.promise;
       });
     };
@@ -138,12 +152,12 @@ describe('Controller: BasicTestInfoController', function () {
   describe('pressing on an artifact row', function () {
     it('should send a call to the server to get the version data', function () {
       var selectedRow = {entity: artifactWrapper0};
-      BasicTestInfoController.onRowClick(selectedRow);
+      clickOnRow(selectedRow);
       expect(BasicTestInfoController.basicTestInfoServerApi.getVersionSummary).toHaveBeenCalled();
     });
     it('should hold the certain artifact version summary', function () {
       var selectedRow = {entity: artifactWrapper0};
-      BasicTestInfoController.onRowClick(selectedRow);
+      clickOnRow(selectedRow);
       mockServerFlush();
       expect(BasicTestInfoController.serversFromClickedOnArtifacts).toEqual(versionSummaryForEditor);
       expect(BasicTestInfoController.clickedOnArtifact).toEqual({artifactId: versionSummaryForEditor[0].artifactId, groupId: versionSummaryForEditor[0].groupId, version: versionSummaryForEditor[0].version, event: versionSummaryForEditor[0].event});
@@ -309,5 +323,38 @@ describe('Controller: BasicTestInfoController', function () {
       failedArtifactWrappedArray.unshift(artifactWrapperWithNewVersion);
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
     })));
+    it('should re-press an artifact that was chosen, and pressed', (inject(function (basicTestInfoServerApi, $interval) {
+      mockServerFlush();
+      chooseArtifact('wix-html-editor-webapp');
+      clickOnRow({entity: artifactWrapper0});
+
+      // Make the server now return the new artifact which holds a new version in getAllArtifacts
+      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper0.artifactData);
+      var newVersion = '999';
+      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper0, 'version', newVersion);
+      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
+      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
+
+      // The failedArtifact array should not have the old artifactWrapper
+      failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper0);
+
+      // The failed artifact array should hold the new wrapper with the new version and isChosen should be true
+      changeObjectField(artifactWrapperWithNewVersion, 'isChosen', true);
+      failedArtifactWrappedArray.unshift(artifactWrapperWithNewVersion);
+
+      // Make the server now return a new versionSummary
+      var versionSummaryForEditorWithNewVersion = clone(versionSummaryForEditor[0]);
+      changeObjectField(versionSummaryForEditorWithNewVersion, 'version', newVersion);
+      basicTestInfoServerApi.getVersionSummary = spyFuncForGetVersionSummary([versionSummaryForEditorWithNewVersion]);
+
+      $interval.flush(BasicTestInfoController.REFRESH_TIME);
+
+      expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
+      // if clicked - get data from server versionSummaryfailedArtifactWrappedArray
+      // make sure the version summary data for the new clicked artifact is shown in the table
+      expect(BasicTestInfoController.serversFromClickedOnArtifacts[0]).toEqual(versionSummaryForEditorWithNewVersion);
+      expect(BasicTestInfoController.clickedOnArtifact).toEqual({artifactId: versionSummaryForEditor[0].artifactId, groupId: versionSummaryForEditor[0].groupId, version: newVersion, event: versionSummaryForEditor[0].event});
+    })));
+    it('should re-press an artifact that was failed, and pressed');
   });
 });

@@ -18,8 +18,7 @@
       { field: 'artifactData.startTime', width: '20%', displayName: 'Start Time', cellFilter: 'date:\'d/M/yy H:mm\'' }
     ];
 
-    this.onRowClick = function (selectedRow) {
-      var artifactData = selectedRow.entity.artifactData;
+    function setAllVariablesForRowClick(artifactData) {
       self.artifactIsClickedOn = true;
       self.clickedOnArtifact = {
         artifactId: artifactData.artifactId,
@@ -30,6 +29,11 @@
       self.basicTestInfoServerApi.getVersionSummary(artifactData.version, artifactData.artifactId, artifactData.groupId, artifactData.event).then(function (response) {
         self.serversFromClickedOnArtifacts = response.data;
       });
+    }
+
+    this.onRowClick = function (selectedRow) {
+      var artifactData = selectedRow.entity.artifactData;
+      setAllVariablesForRowClick(artifactData);
       return true;
     };
     this.failedAndChosenArtifactsSummaryTableData = {
@@ -136,6 +140,7 @@
                 } else if (oldArtifactWrapper.isChosen) {
                   currentArtifactWrapped.isChosen = true;
                   addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
+                  setAllVariablesForRowClick(currentArtifactWrapped.artifactData);
                 }
               }
               self.allArtifactWrappers = filterObjectFromTable(self.allArtifactWrappers, oldArtifactWrapper);
