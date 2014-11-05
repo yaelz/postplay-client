@@ -19,8 +19,8 @@ describe('Controller: BasicTestInfoController', function () {
     failedArtifactWrappedArray = [artifactWrapper1, artifactWrapper2, artifactWrapper3, artifactWrapper4, artifactWrapper5, artifactWrapper6];
   }
   function filterObjectFromTable(table, oldToRemove) {
-    return table.filter(function (curreObjInTable) {
-      return oldToRemove !== curreObjInTable;
+    return table.filter(function (currObjInTable) {
+      return !_.isEqual(oldToRemove, currObjInTable);
     });
   }
   function clone(obj) {
@@ -172,7 +172,7 @@ describe('Controller: BasicTestInfoController', function () {
   });
   describe('getting different info from server on refresh', function () {
     var allArtifactsArrayFromServer;
-    function cloneObjectAndChangeField(originalObject, fieldNameToChange, fieldToChangeTo) {
+    function cloneWrappedObjectAndChangeField(originalObject, fieldNameToChange, fieldToChangeTo) {
       var clonedAndChangedObject = clone(originalObject);
       clonedAndChangedObject.artifactData[fieldNameToChange] = fieldToChangeTo;
       return clonedAndChangedObject;
@@ -191,7 +191,7 @@ describe('Controller: BasicTestInfoController', function () {
     it('should add an artifact to allArtifactWrapper table if it has a new artifact with a different groupId (though the artifactId is the same)', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
 
-      var newWrapperWithNewGroupID = cloneObjectAndChangeField(artifactWrapper0, 'groupId', 'new-wix-group');
+      var newWrapperWithNewGroupID = cloneWrappedObjectAndChangeField(artifactWrapper0, 'groupId', 'new-wix-group');
       allArtifactsArrayFromServer.push(newWrapperWithNewGroupID.artifactData);
       basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
@@ -205,7 +205,7 @@ describe('Controller: BasicTestInfoController', function () {
 
       allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper0.artifactData);
       basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
-      var artifactWrapperWithNewVersion = cloneObjectAndChangeField(artifactWrapper0, 'version', '999');
+      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper0, 'version', '999');
       allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
 
       allArtifactsWrappedArray = filterObjectFromTable(allArtifactsWrappedArray, artifactWrapper0);
@@ -220,7 +220,7 @@ describe('Controller: BasicTestInfoController', function () {
 
       allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper0.artifactData);
       basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
-      var artifactWrapperWithNewVersion = cloneObjectAndChangeField(artifactWrapper0, 'event', 'NEW_EVENT');
+      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper0, 'event', 'NEW_EVENT');
       allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
 
       allArtifactsWrappedArray = filterObjectFromTable(allArtifactsWrappedArray, artifactWrapper0);
@@ -230,13 +230,15 @@ describe('Controller: BasicTestInfoController', function () {
       allArtifactsWrappedArray.push(artifactWrapperWithNewVersion);
       expect(BasicTestInfoController.allArtifactWrappers).toEqual(allArtifactsWrappedArray);
     })));
-    it('should remove a non-failed, non-chosen artifact from failedAndChosenArtifacts array if it has a different version, and has failed before', (inject(function (basicTestInfoServerApi, $interval) {
+    it('should remove a non-failed, non-chosen artifact from failedAndChosenArtifacts array if it has a different version, has failed before and has not failed now', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
 
       allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper1.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
-      var artifactWrapperWithNewVersion = cloneObjectAndChangeField(artifactWrapper1, 'version', '999');
+      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper1, 'version', '999');
+      artifactWrapperWithNewVersion.status = 'PASSED';
+      artifactWrapperWithNewVersion.artifactData.analysisResultEnum = 'TEST_PASSED';
       allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
+      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
 
       failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper1);
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
@@ -244,13 +246,15 @@ describe('Controller: BasicTestInfoController', function () {
 
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
     })));
-    it('should remove a non-failed, non-chosen artifact from failedAndChosenArtifacts array if it has a different event, and has failed before', (inject(function (basicTestInfoServerApi, $interval) {
+    it('should remove a non-failed, non-chosen artifact from failedAndChosenArtifacts array if it has a different event, has failed before and has not failed now', (inject(function (basicTestInfoServerApi, $interval) {
       mockServerFlush();
 
       allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper1.artifactData);
-      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
-      var artifactWrapperWithNewVersion = cloneObjectAndChangeField(artifactWrapper1, 'event', 'NEW_EVENT');
+      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper1, 'event', 'NEW_EVENT');
+      artifactWrapperWithNewVersion.status = 'PASSED';
+      artifactWrapperWithNewVersion.artifactData.analysisResultEnum = 'TEST_PASSED';
       allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
+      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
 
       failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper1);
       $interval.flush(BasicTestInfoController.REFRESH_TIME);
@@ -258,20 +262,35 @@ describe('Controller: BasicTestInfoController', function () {
 
       expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
     })));
-//    it('should replace a failed, non-chosen artifact from failedAndChosenArtifacts array if it has a different event, and has failed before', (inject(function (basicTestInfoServerApi, $interval) {
-//      mockServerFlush();
-//
-//      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper1.artifactData);
-//      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
-//      var artifactWrapperWithNewVersion = cloneObjectAndChangeField(artifactWrapper1, 'event', 'NEW_EVENT');
-//      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
-//
-//      failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper1);
-//      $interval.flush(BasicTestInfoController.REFRESH_TIME);
-//      mockServerFlush();
-//
-//      failedArtifactWrappedArray.push(artifactWrapperWithNewVersion);
-//      expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
-//    })));
+    it('should add a failed, non-chosen artifact to failedAndChosenArtifacts array if it has a different event, and has failed before', (inject(function (basicTestInfoServerApi, $interval) {
+      mockServerFlush();
+
+      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper1.artifactData);
+      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper1, 'event', 'NEW_EVENT');
+      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
+      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
+
+      $interval.flush(BasicTestInfoController.REFRESH_TIME);
+      mockServerFlush();
+
+      failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper1);
+      failedArtifactWrappedArray.push(artifactWrapperWithNewVersion);
+      expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
+    })));
+    it('should add a failed, non-chosen artifact to failedAndChosenArtifacts array if it has a different version, and has failed before', (inject(function (basicTestInfoServerApi, $interval) {
+      mockServerFlush();
+
+      allArtifactsArrayFromServer = filterObjectFromTable(allArtifactsArrayFromServer, artifactWrapper1.artifactData);
+      var artifactWrapperWithNewVersion = cloneWrappedObjectAndChangeField(artifactWrapper1, 'version', '999');
+      allArtifactsArrayFromServer.push(artifactWrapperWithNewVersion.artifactData);
+      basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(allArtifactsArrayFromServer);
+
+      $interval.flush(BasicTestInfoController.REFRESH_TIME);
+      mockServerFlush();
+
+      failedArtifactWrappedArray = filterObjectFromTable(failedArtifactWrappedArray, artifactWrapper1);
+      failedArtifactWrappedArray.push(artifactWrapperWithNewVersion);
+      expect(BasicTestInfoController.failedAndChosenArtifacts).toEqual(failedArtifactWrappedArray);
+    })));
   });
 });

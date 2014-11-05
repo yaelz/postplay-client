@@ -30,6 +30,7 @@ module.exports = function (config) {
       'app/bower_components/angular-translate/angular-translate.js',
       'app/bower_components/wix-angular/dist/wix-angular.js',
       'app/bower_components/es5-shim/es5-shim.js',
+      'app/bower_components/underscore/underscore.js',
       'app/bower_components/ng-grid/ng-grid-2.0.13.debug.js',
       'app/bower_components/angular-animate/angular-animate.js',
       'app/bower_components/angular-route/angular-route.js',

@@ -99,13 +99,15 @@
     }
     function filterObjectFromTable(table, oldToRemove) {
       return table.filter(function (currObjInTable) {
-        return oldToRemove !== currObjInTable;
+        return !_.isEqual(oldToRemove, currObjInTable);
       });
     }
     function addArtifactWrapperToAllArtifactsTable(artifactToAddWrapped) {
       self.allArtifactWrappers.push(artifactToAddWrapped);
     }
-
+    function addArtifactWrapperToFailedOrChosenArtifactsTable(artifactToAddWrapped) {
+      self.failedAndChosenArtifacts.push(artifactToAddWrapped);
+    }
     function getArtifactsDataFromService() {
       self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
         response.data.forEach(function (currentArtifact) {
@@ -122,6 +124,9 @@
               var oldArtifactWrapper = getSameArtifactWrapperWithOldVersionOrEvent(currentArtifact);
               if (oldArtifactWrapper.status === 'FAILED' || oldArtifactWrapper.status === 'WARNING') {
                 self.failedAndChosenArtifacts = filterObjectFromTable(self.failedAndChosenArtifacts, oldArtifactWrapper);
+                if (artifactStatus === 'FAILED' || artifactStatus === 'WARNING') {
+                  addArtifactWrapperToFailedOrChosenArtifactsTable(currentArtifactWrapped);
+                }
               }
               self.allArtifactWrappers = filterObjectFromTable(self.allArtifactWrappers, oldArtifactWrapper);
               addArtifactWrapperToAllArtifactsTable(currentArtifactWrapped);
