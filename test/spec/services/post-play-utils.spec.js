@@ -20,5 +20,64 @@ describe('Service: postPlayUtils', function () {
     var filteredArray = postPlayUtils.filter(array, {whiz: 'kid'});
     expect(filteredArray).toEqual([{a: 1, b: 2, c: []}]);
   });
-
+  describe('getArtifactStatus', function () {
+    it('should return \'PASSED\' iff the testStatusEnum and the analysisResultEnum have both passed', function () {
+      expect(postPlayUtils.getArtifactStatus).toBeDefined();
+      var artifact = {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED'};
+      // TODO is the implementation ok? I'm not referring to these cases because they're default - I get it for free from my other definitions
+      expect(postPlayUtils.getArtifactStatus(artifact)).toEqual('PASSED');
+//      var artifact = {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_INCONCLUSIVE'};
+//      expect(postPlayUtils.getArtifactStatus(artifact)).not.toEqual('PASSED');
+    });
+    it('should return \'FAILED\' if the testStatusEnum or analysisResultEnum have failed', function () {
+      var artifact = {testStatusEnum: 'STATUS_COMPLETED_WITH_ERRORS', analysisResultEnum: '*'};
+      expect(postPlayUtils.getArtifactStatus(artifact)).toEqual('FAILED');
+      artifact = {testStatusEnum: '*', analysisResultEnum: 'TEST_FAILED'};
+      expect(postPlayUtils.getArtifactStatus(artifact)).toEqual('FAILED');
+    });
+    it('should return \'WARNING\' if the testStatusEnum or analysisResultEnum have not completed or have completed with warnings', function () {
+      var artifact = {testStatusEnum: 'INCOMPLETE', analysisResultEnum: '*'};
+      expect(postPlayUtils.getArtifactStatus(artifact)).toEqual('WARNING');
+      artifact = {testStatusEnum: 'STATUS_COMPLETED_WITH_WARNINGS', analysisResultEnum: '*'};
+      expect(postPlayUtils.getArtifactStatus(artifact)).toEqual('WARNING');
+      artifact = {testStatusEnum: '*', analysisResultEnum: 'TEST_INCONCLUSIVE'};
+      expect(postPlayUtils.getArtifactStatus(artifact)).toEqual('WARNING');
+      artifact = {testStatusEnum: '*', analysisResultEnum: 'TEST_NOT_ANALYSED'};
+      expect(postPlayUtils.getArtifactStatus(artifact)).toEqual('WARNING');
+    });
+  });
+  describe('statusIsFailedOrWarning', function () {
+    var status;
+    it('should return true if the status is \'FAILED\'', function () {
+      status = 'FAILED';
+      expect(postPlayUtils.statusIsFailedOrWarning(status)).toBe(true);
+    });
+    it('should return true if the status is \'WARNING\'', function () {
+      status = 'WARNING';
+      expect(postPlayUtils.statusIsFailedOrWarning(status)).toBe(true);
+    });
+    it('should return false if the status is \'PASSED\'', function () {
+      status = 'PASSED';
+      expect(postPlayUtils.statusIsFailedOrWarning(status)).toBe(false);
+    });
+  });
+  describe('artifactsHaveSameArtifactIdAndGroupId', function () {
+    var artifact1;
+    var artifact2;
+    it('should return true if both artifacts have same groupId and artifactId', function () {
+      artifact1 = {artifactId: 'id', groupId: 'groupId'};
+      artifact2 = {artifactId: 'id', groupId: 'groupId'};
+      expect(postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(artifact1, artifact2)).toBe(true);
+    });
+    it('should return false if artifacts don\'t have the same artifactId', function () {
+      artifact1 = {artifactId: 'id1', groupId: 'groupId'};
+      artifact2 = {artifactId: 'id2', groupId: 'groupId'};
+      expect(postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(artifact1, artifact2)).toBe(false);
+    });
+    it('should return false if artifacts don\'t have the same groupId', function () {
+      artifact1 = {artifactId: 'id', groupId: 'groupId'};
+      artifact2 = {artifactId: 'id', groupId: 'anotherGroupId'};
+      expect(postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(artifact1, artifact2)).toBe(false);
+    });
+  });
 });

@@ -12,7 +12,7 @@
       self.failedAndChosenWrappedArtifacts.push(obj);
     };
     this.removeFromFailedAndChosenTable = function (objToRemove) {
-      self.failedAndChosenWrappedArtifacts = postPlayUtils.filter(self.failedAndChosenWrappedArtifacts, objToRemove)
+      self.failedAndChosenWrappedArtifacts = postPlayUtils.filter(self.failedAndChosenWrappedArtifacts, objToRemove);
     };
     this.addToAllArtifactsTable = function (obj) {
       self.allWrappedArtifacts.push(obj);

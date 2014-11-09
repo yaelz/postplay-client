@@ -3,10 +3,10 @@
 (function () {
 
   /* @ngInject */
-  function BasicTestInfoController(_basicTestInfoServerApi_, $timeout, $scope, $interval) {
+  function BasicTestInfoController(_basicTestInfoServerApi_, $timeout, $scope, $interval, _postPlayUtils_) {
     var self = this;
     this.basicTestInfoServerApi = _basicTestInfoServerApi_;
-
+    this.postPlayUtils = _postPlayUtils_;
     this.allArtifactWrappers = [];
     this.failedAndChosenArtifacts = [];
     this.serverTableTitles = ['Server', 'Execution', 'Execution status', 'Build event'];
@@ -65,45 +65,26 @@
       });
       self.currentArtifactToAddToTable = '';
     };
-    this.getArtifactStatus = function (currentArtifact) {
-      var defaultStatus = '';
-      if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_SUCCESSFULLY' && (currentArtifact.analysisResultEnum === 'TEST_PASSED' || currentArtifact.analysisResultStatus === 'TEST_PASSED')) {
-        return 'PASSED';
-      } else if (currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_ERRORS' || currentArtifact.analysisResultEnum === 'TEST_FAILED' || currentArtifact.analysisResultStatus === 'TEST_FAILED') {
-        return 'FAILED';
-      } else if (currentArtifact.testStatusEnum === 'INCOMPLETE' || currentArtifact.testStatusEnum === 'STATUS_COMPLETED_WITH_WARNINGS' || currentArtifact.analysisResultEnum === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED' || currentArtifact.analysisResultStatus === 'TEST_INCONCLUSIVE' || currentArtifact.analysisResultEnum === 'TEST_NOT_ANALYSED') {
-        return 'WARNING';
-      }
-      return defaultStatus;
-    };
     function artifactDidNotExistBefore(newArtifact) {
       // TODO should I add in the function name that it's only by artifactId and groupId?
       return self.allArtifactWrappers.every(function (currentArtifactWrapper) {
-        return !artifactsHaveSameArtifactIdAndGroupId(currentArtifactWrapper.artifactData, newArtifact);
+        return !self.postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(currentArtifactWrapper.artifactData, newArtifact);
       });
-    }
-    function artifactsHaveSameArtifactIdAndGroupId(firstArtifactData, secondArtifactData) {
-      return firstArtifactData.artifactId === secondArtifactData.artifactId && firstArtifactData.groupId === secondArtifactData.groupId;
     }
     function artifactExistsWithDifferentVersionOrEvent(newArtifact) {
       return self.allArtifactWrappers.some(function (currentArtifactWrapper) {
-        return artifactsHaveSameArtifactIdAndGroupId(currentArtifactWrapper.artifactData, newArtifact) &&
+        return self.postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(currentArtifactWrapper.artifactData, newArtifact) &&
           currentArtifactWrapper.artifactData.version !== newArtifact.version || currentArtifactWrapper.artifactData.event !== newArtifact.event;
       });
     }
     function getSameArtifactWrapperWithOldVersionOrEvent(newArtifact) {
       var oldArtifact;
       self.allArtifactWrappers.forEach(function (oldArtifactWrapperToCheck) {
-        if (artifactsHaveSameArtifactIdAndGroupId(oldArtifactWrapperToCheck.artifactData, newArtifact)) {
+        if (self.postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(oldArtifactWrapperToCheck.artifactData, newArtifact)) {
           oldArtifact = oldArtifactWrapperToCheck;
         }
       });
       return oldArtifact;
-    }
-    function filterObjectFromTable(table, oldToRemove) {
-      return table.filter(function (currObjInTable) {
-        return !_.isEqual(oldToRemove, currObjInTable);
-      });
     }
     function addArtifactWrapperToAllArtifactsTable(artifactToAddWrapped) {
       self.allArtifactWrappers.push(artifactToAddWrapped);
@@ -115,38 +96,34 @@
       self.failedAndChosenArtifacts.unshift(artifactToAddWrapped);
     }
 
-    function statusIsFailedOrWarning(artifactStatus) {
-      return artifactStatus === 'FAILED' || artifactStatus === 'WARNING';
-    }
-
     function getArtifactsDataFromService() {
       self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
         response.data.forEach(function (currentArtifact) {
-          var artifactStatus = self.getArtifactStatus(currentArtifact);
+          var artifactStatus = self.postPlayUtils.getArtifactStatus(currentArtifact);
           var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: artifactStatus};
           if (artifactDidNotExistBefore(currentArtifact)) {
             self.allArtifactWrappers.push(currentArtifactWrapped);
-            if (statusIsFailedOrWarning(artifactStatus)) {
+            if (self.postPlayUtils.statusIsFailedOrWarning(artifactStatus)) {
               self.failedAndChosenArtifacts.push(currentArtifactWrapped);
             }
           } else {
             // did exist
             if (artifactExistsWithDifferentVersionOrEvent(currentArtifact)) {
               var oldArtifactWrapper = getSameArtifactWrapperWithOldVersionOrEvent(currentArtifact);
-              if (statusIsFailedOrWarning(oldArtifactWrapper.status) || oldArtifactWrapper.isChosen) {
-                self.failedAndChosenArtifacts = filterObjectFromTable(self.failedAndChosenArtifacts, oldArtifactWrapper);
-                if (statusIsFailedOrWarning(artifactStatus)) {
+              if (self.postPlayUtils.statusIsFailedOrWarning(oldArtifactWrapper.status) || oldArtifactWrapper.isChosen) {
+                self.failedAndChosenArtifacts = self.postPlayUtils.filter(self.failedAndChosenArtifacts, oldArtifactWrapper);
+                if (self.postPlayUtils.statusIsFailedOrWarning(artifactStatus)) {
                   addArtifactWrapperToTheEndOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
                 } else if (oldArtifactWrapper.isChosen) {
                   currentArtifactWrapped.isChosen = true;
                   addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
                   setAllVariablesForRowClick(currentArtifactWrapped.artifactData);
-                } else if (self.clickedOnArtifact && (artifactsHaveSameArtifactIdAndGroupId(self.clickedOnArtifact, currentArtifactWrapped.artifactData))) {
+                } else if (self.clickedOnArtifact && (self.postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(self.clickedOnArtifact, currentArtifactWrapped.artifactData))) {
                   addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
                   setAllVariablesForRowClick(currentArtifactWrapped.artifactData);
                 }
               }
-              self.allArtifactWrappers = filterObjectFromTable(self.allArtifactWrappers, oldArtifactWrapper);
+              self.allArtifactWrappers = self.postPlayUtils.filter(self.allArtifactWrappers, oldArtifactWrapper);
               addArtifactWrapperToAllArtifactsTable(currentArtifactWrapped);
             }
           }

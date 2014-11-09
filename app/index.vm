@@ -94,6 +94,7 @@
     <script src="scripts/services/artifacts-table-entity.js"></script>
     <script src="scripts/services/post-play-utils.js"></script>
     <script src="scripts/services/all-artifacts-freshener.js"></script>
+    <script src="scripts/services/all-artifacts-tables-ruler.js"></script>
     <!-- endbuild --><!-- scripts -->
     <!-- end-process-tags -->
 

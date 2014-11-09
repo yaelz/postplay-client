@@ -63,8 +63,10 @@ describe('Controller: BasicTestInfoController', function () {
       });
     };
     //add your mocks here
+//    console.log(2);
     var basicTestInfoServerApiMock = {
       getAllArtifacts: jasmine.createSpy('getAllArtifacts').andCallFake(function () {
+//        console.log(3);
         deferred = $q.defer();
         deferred.resolve({data: allArtifactsTwoServersFailed});
         return deferred.promise;
@@ -84,6 +86,7 @@ describe('Controller: BasicTestInfoController', function () {
 
   // Initialize the controller and a mock scope
   beforeEach(inject(function ($controller, $rootScope, basicTestInfoServerResponse, _$q_, _$httpBackend_) {
+//    console.log(1);
     // TODO don't think it should check the server response... :\
     allArtifactsTwoServersFailed = basicTestInfoServerResponse.allArtifacts;
     versionSummaryForEditor = basicTestInfoServerResponse.versionSummaryForEditor;
@@ -101,6 +104,9 @@ describe('Controller: BasicTestInfoController', function () {
   describe('initialization and getting artifact data from server', function () {
     beforeEach(function () {
       initializeArtifactArrayANDFailedAndChosenArray();
+    });
+    it('should hold postPlayUtils', function () {
+      expect(BasicTestInfoController.postPlayUtils).toBeDefined();
     });
     it('should hold all artifacts\' information on initialization', function () {
       expect(BasicTestInfoController.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
