@@ -33,7 +33,9 @@ describe('Service: allArtifactsFreshener', function () {
     };
     var artifactsTablesEntityMock = {
       addToPassedArtifactsTable: jasmine.createSpy('addToPassedArtifactsTable'),
-      addToFailedAndChosenTable: jasmine.createSpy('addToFailedAndChosenTable')
+      addToFailedAndChosenTable: jasmine.createSpy('addToFailedAndChosenTable'),
+      removeFromPassedArtifactsTableByArtifactId: jasmine.createSpy('removeFromPassedArtifactsTableByArtifactId'),
+      addToBeginningOfFailedAndChosenArtifactsTable: jasmine.createSpy('addToBeginningOfFailedAndChosenArtifactsTable')
     };
     var postPlayUtilsMock = {
       statusIsFailedOrWarning: jasmine.createSpy('statusIsFailedOrWarning'),
@@ -66,11 +68,17 @@ describe('Service: allArtifactsFreshener', function () {
   }));
 
   describe('on initialization', function () {
-    it('should call getAllArtifacts on initialization', function () {
-      expect(allArtifactsFreshener.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
-    });
     it('should hold postPlayUtils', function () {
       expect(allArtifactsFreshener.postPlayUtils).toBeDefined();
+    });
+    it('should hold basicTestInfoServerApi', function () {
+      expect(allArtifactsFreshener.basicTestInfoServerApi).toBeDefined();
+    });
+    it('should hold artifactsTablesEntity', function () {
+      expect(allArtifactsFreshener.artifactsTablesEntity).toBeDefined();
+    });
+    it('should call getAllArtifacts on initialization', function () {
+      expect(allArtifactsFreshener.basicTestInfoServerApi.getAllArtifacts).toHaveBeenCalled();
     });
     it('should call addToFailedAndChosenTable only with failed artifacts', function () {
       mockServerFlush();
@@ -79,23 +87,27 @@ describe('Service: allArtifactsFreshener', function () {
         expect(allArtifactsFreshener.artifactsTablesEntity.addToFailedAndChosenTable).toHaveBeenCalledWith(failedArtifact);
       });
     });
-    it('should call addToPassedArtifactsTable only with failed artifacts', function () {
+    it('should call addToPassedArtifactsTable only with non-failed artifacts', function () {
       mockServerFlush();
       expect(allArtifactsFreshener.artifactsTablesEntity.addToPassedArtifactsTable.calls.length).toBe(unFailedArtifactsFromServerArray.length);
       unfailedArtifactsWrappedArray.forEach(function (passedArtifact) {
         expect(allArtifactsFreshener.artifactsTablesEntity.addToPassedArtifactsTable).toHaveBeenCalledWith(passedArtifact);
       });
     });
-//    it('should insert wrapped artifacts from server to the passedWrappedArtifacts table ', function () {
-//      mockServerFlush();
-//      expect(allArtifactsFreshener.artifactsTablesEntity.addToPassedArtifactsTable.calls.length).toBe(allArtifactsFromServer.length);
-//      var oneWrappedArtifact = {artifactData: allArtifactsFromServer[0], isChosen: false, status: 'PASSED'};
-//      expect(allArtifactsFreshener.artifactsTablesEntity.addToPassedArtifactsTable).toHaveBeenCalledWith(oneWrappedArtifact);
-//    });
-//    it('should insert wrapped artifacts that are failed to the failedAndChosenWrappedArtifacts table', function () {
-//      mockServerFlush();
-//      expect(allArtifactsFreshener.postPlayUtils.statusIsFailedOrWarning.calls.length).toBe(allArtifactsFromServer.length);
-//      expect(allArtifactsFreshener.artifactsTablesEntity.addToFailedAndChosenTable.calls.length).toBe(failedArtifactsWrappedArray.length);
-//    });
+  });
+  describe('updateChosenArtifactDataToAddToTable', function () {
+    it('should remove the artifact from passedArtifacts table and add to failedAndChosenArtifacts table', function () {
+      mockServerFlush();
+      allArtifactsFreshener.updateChosenArtifactDataToAddToTable(unFailedArtifactsFromServerArray[0].artifactId);
+      expect(allArtifactsFreshener.artifactsTablesEntity.removeFromPassedArtifactsTableByArtifactId).toHaveBeenCalledWith(unFailedArtifactsFromServerArray[0].artifactId);
+      expect(allArtifactsFreshener.artifactsTablesEntity.addToBeginningOfFailedAndChosenArtifactsTable).toHaveBeenCalled();
+      // TODO next line won't work because the remove function above is a mock...
+//        expect(allArtifactsFreshener.artifactsTablesEntity.addToBeginningOfFailedAndChosenArtifactsTable).toHaveBeenCalledWith(unFailedArtifactsFromServerArray[0]);
+    });
+  });
+  describe('when getting data from the server on refresh', function () {
+    it('', function () {
+      
+    });
   });
 });

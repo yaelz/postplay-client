@@ -14,11 +14,26 @@
     this.removeFromFailedAndChosenTable = function (objToRemove) {
       self.failedAndChosenWrappedArtifacts = postPlayUtils.filter(self.failedAndChosenWrappedArtifacts, objToRemove);
     };
+    this.addToBeginningOfFailedAndChosenArtifactsTable = function (obj) {
+      self.failedAndChosenWrappedArtifacts.unshift(obj);
+    };
     this.addToPassedArtifactsTable = function (obj) {
       self.passedWrappedArtifacts.push(obj);
     };
     this.removeFromPassedArtifactsTable = function (objToRemove) {
       self.passedWrappedArtifacts = postPlayUtils.filter(self.passedWrappedArtifacts, objToRemove);
+    };
+    this.removeFromPassedArtifactsTableByArtifactId = function (artifactIdOfObjToRemove) {
+      var removedObj;
+      self.passedWrappedArtifacts = self.passedWrappedArtifacts.filter(function (passedArtifactWrapper) {
+        if (passedArtifactWrapper.artifactData.artifactId === artifactIdOfObjToRemove) {
+          removedObj = passedArtifactWrapper;
+          return false;
+        } else {
+          return true;
+        }
+      });
+      return removedObj;
     };
   }
 

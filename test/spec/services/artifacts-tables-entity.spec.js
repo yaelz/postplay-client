@@ -32,6 +32,14 @@ describe('Service: artifactsTablesEntity', function () {
       artifactsTablesEntity.removeFromFailedAndChosenTable(artifactWrapperToRemove);
       expect(artifactsTablesEntity.failedAndChosenWrappedArtifacts).toEqual([artifactWrapperToStay]);
     });
+    it('should be able to have an artifact wrapper object added to the beginning of the array', function () {
+      artifactsTablesEntity.addToFailedAndChosenTable({});
+      artifactsTablesEntity.addToBeginningOfFailedAndChosenArtifactsTable(artifactWrapper);
+
+      tableToBe.push({});
+      tableToBe.unshift(artifactWrapper);
+      expect(artifactsTablesEntity.failedAndChosenWrappedArtifacts).toEqual(tableToBe);
+    });
   });
   describe('passedWrappedArtifacts table', function () {
     it('should be able to have an artifact wrapper object added to', function () {
@@ -45,6 +53,14 @@ describe('Service: artifactsTablesEntity', function () {
       var artifactWrapperToRemove = _.clone(artifactWrapper);
       artifactsTablesEntity.removeFromPassedArtifactsTable(artifactWrapperToRemove);
       expect(artifactsTablesEntity.passedWrappedArtifacts).toEqual([artifactWrapperToStay]);
+    });
+    it('should be able to have an artifact wrapper object removed from by its artifactId', function () {
+      artifactsTablesEntity.passedWrappedArtifacts = [artifactWrapper, artifactWrapperToStay];
+
+      var artifactWrapperToRemove = _.clone(artifactWrapper);
+      var removedArtifactWrapper = artifactsTablesEntity.removeFromPassedArtifactsTableByArtifactId(artifactWrapperToRemove.artifactData.artifactId);
+      expect(artifactsTablesEntity.passedWrappedArtifacts).toEqual([artifactWrapperToStay]);
+      expect(removedArtifactWrapper).toEqual(artifactWrapperToRemove);
     });
   });
 

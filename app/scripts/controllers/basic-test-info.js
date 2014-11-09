@@ -55,18 +55,12 @@
       rowTemplate: 'views/basic-test-info-row-template.html'
     };
     this.updateChosenArtifactDataToAddToTable = function () {
-      function isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentArtifactWrapper) {
-        return currentArtifactWrapper.artifactData.artifactId === self.currentArtifactToAddToTable && !currentArtifactWrapper.isChosen && currentArtifactWrapper.status !== 'FAILED' && currentArtifactWrapper.status !== 'WARNING';
-      }
-
-      this.allArtifactWrappers.forEach(function (currentArtifactWrapper) {
-        if (isCurrentlyChosenArtifactANDIsntFailedANDHasNotBeenChosenBefore(currentArtifactWrapper)) {
-          self.failedAndChosenArtifacts.unshift(currentArtifactWrapper);
-          currentArtifactWrapper.isChosen = true;
-        }
-      });
+      self.allArtifactsFreshener.updateChosenArtifactDataToAddToTable(self.currentArtifactToAddToTable);
       self.currentArtifactToAddToTable = '';
     };
+//    getArtifactsDataFromService();
+//    this.REFRESH_TIME = 5 * 60 * 1000; // five minutes
+//    this.promise = $interval(getArtifactsDataFromService, this.REFRESH_TIME);
 
 // Cancel interval on page changes
     $scope.$on('$destroy', function () {
