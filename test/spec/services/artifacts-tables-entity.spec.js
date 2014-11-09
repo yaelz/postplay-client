@@ -33,18 +33,18 @@ describe('Service: artifactsTablesEntity', function () {
       expect(artifactsTablesEntity.failedAndChosenWrappedArtifacts).toEqual([artifactWrapperToStay]);
     });
   });
-  describe('allWrappedArtifacts table', function () {
+  describe('passedWrappedArtifacts table', function () {
     it('should be able to have an artifact wrapper object added to', function () {
-      artifactsTablesEntity.addToAllArtifactsTable(artifactWrapper);
+      artifactsTablesEntity.addToPassedArtifactsTable(artifactWrapper);
       tableToBe.push(artifactWrapper);
-      expect(artifactsTablesEntity.allWrappedArtifacts).toEqual(tableToBe);
+      expect(artifactsTablesEntity.passedWrappedArtifacts).toEqual(tableToBe);
     });
     it('should be able to have an artifact wrapper object removed from', function () {
-      artifactsTablesEntity.allWrappedArtifacts = [artifactWrapper, artifactWrapperToStay];
+      artifactsTablesEntity.passedWrappedArtifacts = [artifactWrapper, artifactWrapperToStay];
 
       var artifactWrapperToRemove = _.clone(artifactWrapper);
-      artifactsTablesEntity.removeFromAllArtifactsTable(artifactWrapperToRemove);
-      expect(artifactsTablesEntity.allWrappedArtifacts).toEqual([artifactWrapperToStay]);
+      artifactsTablesEntity.removeFromPassedArtifactsTable(artifactWrapperToRemove);
+      expect(artifactsTablesEntity.passedWrappedArtifacts).toEqual([artifactWrapperToStay]);
     });
   });
 

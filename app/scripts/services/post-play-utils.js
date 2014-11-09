@@ -7,6 +7,7 @@
     // AngularJS will instantiate a singleton by calling "new" on this function
 
     // Public API here
+    var self = this;
     this.filter = function (array, objectToRemove) {
       return array.filter(function (currObjInTable) {
         return !_.isEqual(objectToRemove, currObjInTable);
@@ -23,14 +24,24 @@
       return status;
     };
     this.statusIsFailedOrWarning = function (status) {
-      if (status === 'PASSED') {
-        return false;
-      }
-      return true;
+      return status !== 'PASSED';
     };
     this.artifactsHaveSameArtifactIdAndGroupId = function (artifact1, artifact2) {
       return artifact1.artifactId === artifact2.artifactId && artifact1.groupId === artifact2.groupId;
     };
+    this.getFailedAndNotFailedArtifactsObject = function (arrayOfArtifactsDataObjects) {
+      var passedArtifacts = [];
+      var failedArtifacts = [];
+      arrayOfArtifactsDataObjects.forEach(function (artifactDataObject) {
+        var status = self.getArtifactStatus(artifactDataObject);
+        if (!self.statusIsFailedOrWarning(status)) {
+          passedArtifacts.push(artifactDataObject);
+        } else {
+          failedArtifacts.push(artifactDataObject);
+        }
+      });
+      return {passedArtifacts: passedArtifacts, failedArtifacts: failedArtifacts};
+    }
   }
 
   angular

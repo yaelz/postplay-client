@@ -3,6 +3,7 @@
 describe('Service: postPlayUtils', function () {
 
   // load the service's module
+  var allArtifactsFromServer;
   beforeEach(function () {
     module('postplayTryAppInternal');
 
@@ -11,8 +12,9 @@ describe('Service: postPlayUtils', function () {
 
   // instantiate service
   var postPlayUtils;
-  beforeEach(inject(function (_postPlayUtils_) {
+  beforeEach(inject(function (_postPlayUtils_, basicTestInfoServerResponse) {
     postPlayUtils = _postPlayUtils_;
+    allArtifactsFromServer  = basicTestInfoServerResponse.allArtifacts;
   }));
 
   it('should be able to filter an object from an array (with deep equality check)', function () {
@@ -78,6 +80,20 @@ describe('Service: postPlayUtils', function () {
       artifact1 = {artifactId: 'id', groupId: 'groupId'};
       artifact2 = {artifactId: 'id', groupId: 'anotherGroupId'};
       expect(postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(artifact1, artifact2)).toBe(false);
+    });
+  });
+  describe('getFailedAndNotFailedArtifactsObject', function () {
+    it('should return an object with empty arrays for failed and for all artifacts', function () {
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([])).toEqual({passedArtifacts: [], failedArtifacts: []});
+    });
+    it('should recognize when there\'s a non failed artifact', function () {
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([allArtifactsFromServer[0]])).toEqual({passedArtifacts: [allArtifactsFromServer[0]], failedArtifacts: []});
+    });
+    it('should recognize when there\'s a failed artifact', function () {
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([allArtifactsFromServer[1]])).toEqual({passedArtifacts: [], failedArtifacts: [allArtifactsFromServer[1]]});
+    });
+    it('should recognize all failed and non failed artifacts', function () {
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject(allArtifactsFromServer)).toEqual({passedArtifacts: [allArtifactsFromServer[0]], failedArtifacts: allArtifactsFromServer.slice(1)});
     });
   });
 });

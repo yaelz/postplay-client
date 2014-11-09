@@ -3,8 +3,10 @@
 (function () {
 
   /* @ngInject */
-  function BasicTestInfoController(_basicTestInfoServerApi_, $timeout, $scope, $interval, _postPlayUtils_) {
+  function BasicTestInfoController(_basicTestInfoServerApi_, $scope, $interval, _postPlayUtils_, _artifactsTablesEntity_, _allArtifactsFreshener_) {
     var self = this;
+    this.artifactsTablesEntity = _artifactsTablesEntity_;
+    this.allArtifactsFreshener = _allArtifactsFreshener_;
     this.basicTestInfoServerApi = _basicTestInfoServerApi_;
     this.postPlayUtils = _postPlayUtils_;
     this.allArtifactWrappers = [];
@@ -37,7 +39,7 @@
       return true;
     };
     this.failedAndChosenArtifactsSummaryTableData = {
-      data: 'basicTestInfoCtrl.failedAndChosenArtifacts',
+      data: 'basicTestInfoCtrl.artifactsTablesEntity.failedAndChosenWrappedArtifacts',
 //      init: initGrid,
       columnDefs: 'basicTestInfoCtrl.columnDefsForArtifactsGrid',
       multiSelect: false,
@@ -65,74 +67,6 @@
       });
       self.currentArtifactToAddToTable = '';
     };
-    function artifactDidNotExistBefore(newArtifact) {
-      // TODO should I add in the function name that it's only by artifactId and groupId?
-      return self.allArtifactWrappers.every(function (currentArtifactWrapper) {
-        return !self.postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(currentArtifactWrapper.artifactData, newArtifact);
-      });
-    }
-    function artifactExistsWithDifferentVersionOrEvent(newArtifact) {
-      return self.allArtifactWrappers.some(function (currentArtifactWrapper) {
-        return self.postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(currentArtifactWrapper.artifactData, newArtifact) &&
-          currentArtifactWrapper.artifactData.version !== newArtifact.version || currentArtifactWrapper.artifactData.event !== newArtifact.event;
-      });
-    }
-    function getSameArtifactWrapperWithOldVersionOrEvent(newArtifact) {
-      var oldArtifact;
-      self.allArtifactWrappers.forEach(function (oldArtifactWrapperToCheck) {
-        if (self.postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(oldArtifactWrapperToCheck.artifactData, newArtifact)) {
-          oldArtifact = oldArtifactWrapperToCheck;
-        }
-      });
-      return oldArtifact;
-    }
-    function addArtifactWrapperToAllArtifactsTable(artifactToAddWrapped) {
-      self.allArtifactWrappers.push(artifactToAddWrapped);
-    }
-    function addArtifactWrapperToTheEndOfFailedOrChosenArtifactsTable(artifactToAddWrapped) {
-      self.failedAndChosenArtifacts.push(artifactToAddWrapped);
-    }
-    function addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(artifactToAddWrapped) {
-      self.failedAndChosenArtifacts.unshift(artifactToAddWrapped);
-    }
-
-    function getArtifactsDataFromService() {
-      self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
-        response.data.forEach(function (currentArtifact) {
-          var artifactStatus = self.postPlayUtils.getArtifactStatus(currentArtifact);
-          var currentArtifactWrapped = {artifactData: currentArtifact, isChosen: false, status: artifactStatus};
-          if (artifactDidNotExistBefore(currentArtifact)) {
-            self.allArtifactWrappers.push(currentArtifactWrapped);
-            if (self.postPlayUtils.statusIsFailedOrWarning(artifactStatus)) {
-              self.failedAndChosenArtifacts.push(currentArtifactWrapped);
-            }
-          } else {
-            // did exist
-            if (artifactExistsWithDifferentVersionOrEvent(currentArtifact)) {
-              var oldArtifactWrapper = getSameArtifactWrapperWithOldVersionOrEvent(currentArtifact);
-              if (self.postPlayUtils.statusIsFailedOrWarning(oldArtifactWrapper.status) || oldArtifactWrapper.isChosen) {
-                self.failedAndChosenArtifacts = self.postPlayUtils.filter(self.failedAndChosenArtifacts, oldArtifactWrapper);
-                if (self.postPlayUtils.statusIsFailedOrWarning(artifactStatus)) {
-                  addArtifactWrapperToTheEndOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
-                } else if (oldArtifactWrapper.isChosen) {
-                  currentArtifactWrapped.isChosen = true;
-                  addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
-                  setAllVariablesForRowClick(currentArtifactWrapped.artifactData);
-                } else if (self.clickedOnArtifact && (self.postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(self.clickedOnArtifact, currentArtifactWrapped.artifactData))) {
-                  addArtifactWrapperToTheBeginningOfFailedOrChosenArtifactsTable(currentArtifactWrapped);
-                  setAllVariablesForRowClick(currentArtifactWrapped.artifactData);
-                }
-              }
-              self.allArtifactWrappers = self.postPlayUtils.filter(self.allArtifactWrappers, oldArtifactWrapper);
-              addArtifactWrapperToAllArtifactsTable(currentArtifactWrapped);
-            }
-          }
-        });
-      });
-    }
-    getArtifactsDataFromService();
-    this.REFRESH_TIME = 5 * 60 * 1000; // five minutes
-    this.promise = $interval(getArtifactsDataFromService, this.REFRESH_TIME);
 
 // Cancel interval on page changes
     $scope.$on('$destroy', function () {

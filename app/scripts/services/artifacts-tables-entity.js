@@ -7,18 +7,18 @@
     // AngularJS will instantiate a singleton by calling "new" on this function
     var self = this;
     this.failedAndChosenWrappedArtifacts = [];
-    this.allWrappedArtifacts = [];
+    this.passedWrappedArtifacts = [];
     this.addToFailedAndChosenTable = function (obj) {
       self.failedAndChosenWrappedArtifacts.push(obj);
     };
     this.removeFromFailedAndChosenTable = function (objToRemove) {
       self.failedAndChosenWrappedArtifacts = postPlayUtils.filter(self.failedAndChosenWrappedArtifacts, objToRemove);
     };
-    this.addToAllArtifactsTable = function (obj) {
-      self.allWrappedArtifacts.push(obj);
+    this.addToPassedArtifactsTable = function (obj) {
+      self.passedWrappedArtifacts.push(obj);
     };
-    this.removeFromAllArtifactsTable = function (objToRemove) {
-      self.allWrappedArtifacts = postPlayUtils.filter(self.allWrappedArtifacts, objToRemove);
+    this.removeFromPassedArtifactsTable = function (objToRemove) {
+      self.passedWrappedArtifacts = postPlayUtils.filter(self.passedWrappedArtifacts, objToRemove);
     };
   }
 
