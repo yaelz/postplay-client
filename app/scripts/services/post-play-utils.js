@@ -41,7 +41,7 @@
         }
       });
       return {passedArtifacts: passedArtifacts, failedArtifacts: failedArtifacts};
-    }
+    };
   }
 
   angular

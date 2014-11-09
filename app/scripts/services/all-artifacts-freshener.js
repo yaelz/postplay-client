@@ -19,19 +19,20 @@
       return {artifactData: newArtifactData, isChosen: false, status: self.postPlayUtils.getArtifactStatus(newArtifactData)};
     }
 
+    function createArtifactForUIAndAddItToRelevantTable(artifactsArray, addingFunction) {
+      artifactsArray.forEach(function (newArtifactData) {
+        var currentArtifactWrapped = createNewWrappedObject(newArtifactData);
+        addingFunction(currentArtifactWrapped);
+      });
+    }
+
     function refreshAllArtifacts() {
       self.basicTestInfoServerApi.getAllArtifacts().then(function (response) {
         var failedAndNotFailedArtifactsObject = self.postPlayUtils.getFailedAndNotFailedArtifactsObject(response.data);
         var failedArtifacts = failedAndNotFailedArtifactsObject.failedArtifacts;
         var passedArtifacts = failedAndNotFailedArtifactsObject.passedArtifacts;
-        failedArtifacts.forEach(function (newArtifactData) {
-          var currentArtifactWrapped = createNewWrappedObject(newArtifactData);
-          self.artifactsTablesEntity.addToFailedAndChosenTable(currentArtifactWrapped);
-        });
-        passedArtifacts.forEach(function (newArtifactData) {
-          var currentArtifactWrapped = createNewWrappedObject(newArtifactData);
-          self.artifactsTablesEntity.addToPassedArtifactsTable(currentArtifactWrapped);
-        });
+        createArtifactForUIAndAddItToRelevantTable(failedArtifacts, self.artifactsTablesEntity.addToFailedAndChosenTable);
+        createArtifactForUIAndAddItToRelevantTable(passedArtifacts, self.artifactsTablesEntity.addToPassedArtifactsTable);
       });
     }
     refreshAllArtifacts();
