@@ -91,7 +91,7 @@
     <script src="scripts/controllers/currently-running-artifacts.js"></script>
     <script src="scripts/services/specific-server-status-server-api.js"></script>
     <script src="scripts/controllers/specific-server-status.js"></script>
-    <script src="scripts/services/artifacts-table-entity.js"></script>
+    <script src="scripts/services/artifacts-tables-entity.js"></script>
     <script src="scripts/services/post-play-utils.js"></script>
     <script src="scripts/services/all-artifacts-freshener.js"></script>
     <script src="scripts/services/all-artifacts-tables-ruler.js"></script>
