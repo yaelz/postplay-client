@@ -8,22 +8,25 @@
     $http.defaults.headers.common = {Accept: 'application/json', 'Content-Type': 'application/json'};
     this.thereWasServerError = false;
     this.serverErrors = {errorGettingRunningArtifacts: false};
-    var self = this;
+//    var self = this;
     var API_URL;
 
     function runHttpGetSuccessAndError(API_URL) {
       API_URL = serverApiUrl.PREFIX + API_URL;
-      return $http.get(API_URL)
-        .then(function (response) {
-          self.thereWasServerError = false;
-          return response;
-        }, function () {
-          self.thereWasServerError = true;
-        });
+      return $http.get(API_URL).then(function (response) {
+        return response;
+      });
     }
     // Public API here
+//    this.getAllArtifacts = function (callback) {
+//
+//      API_URL = serverApiUrl.ALL_ARTIFACTS_API_URL;
+//      runHttpGetSuccessAndError(API_URL).then(function (response) {
+//        callback(response);
+//      });
+//    };
+
     this.getAllArtifacts = function () {
-//      allArtifacts = [];
       API_URL = serverApiUrl.ALL_ARTIFACTS_API_URL;
       return runHttpGetSuccessAndError(API_URL);
     };

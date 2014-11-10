@@ -84,16 +84,16 @@ describe('Service: postPlayUtils', function () {
   });
   describe('getFailedAndNotFailedArtifactsObject', function () {
     it('should return an object with empty arrays for failed and for all artifacts', function () {
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([])).toEqual({passedArtifacts: [], failedArtifacts: []});
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([])).toEqual({passing: [], failing: []});
     });
     it('should recognize when there\'s a non failed artifact', function () {
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([allArtifactsFromServer[0]])).toEqual({passedArtifacts: [allArtifactsFromServer[0]], failedArtifacts: []});
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([allArtifactsFromServer[0]])).toEqual({passing: [allArtifactsFromServer[0]], failing: []});
     });
     it('should recognize when there\'s a failed artifact', function () {
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([allArtifactsFromServer[1]])).toEqual({passedArtifacts: [], failedArtifacts: [allArtifactsFromServer[1]]});
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([allArtifactsFromServer[1]])).toEqual({passing: [], failing: [allArtifactsFromServer[1]]});
     });
     it('should recognize all failed and non failed artifacts', function () {
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject(allArtifactsFromServer)).toEqual({passedArtifacts: [allArtifactsFromServer[0]], failedArtifacts: allArtifactsFromServer.slice(1)});
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject(allArtifactsFromServer)).toEqual({passing: [allArtifactsFromServer[0]], failing: allArtifactsFromServer.slice(1)});
     });
   });
 });

@@ -63,5 +63,11 @@ describe('Service: artifactsTablesEntity', function () {
       expect(removedArtifactWrapper).toEqual(artifactWrapperToRemove);
     });
   });
+  describe('artifactExistsInPassedArray', function () {
+    it('should return true if artifact exists in passedWrappedArtifacts', function () {
+      artifactsTablesEntity.passedWrappedArtifacts = [artifactWrapper, artifactWrapperToStay];
+      expect(artifactsTablesEntity.artifactExistsInPassedArray(artifactWrapper.artifactData)).toBe(true);
+    });
+  });
 
 });

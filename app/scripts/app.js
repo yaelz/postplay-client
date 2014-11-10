@@ -265,8 +265,8 @@ angular
     groupId: 'com.wixpress'
   })
   .constant('serverApiUrl', {
-//    PREFIX: 'http://localhost:8080/api/v2/',
-    PREFIX: '',
+    PREFIX: 'http://localhost:8080/api/v2/',
+//    PREFIX: '',
     ALL_ARTIFACTS_API_URL: 'getLatestMonitoredArtifactsEventSummary',
     VER_SUM_API_URL_PREFIX: 'versionSummary?version=',
     CURRENTLY_RUNNING_ARTIFACTS_API_URL: 'getCurrentlyRunningArtifacts/json',

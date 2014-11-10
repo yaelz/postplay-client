@@ -40,7 +40,7 @@
           failedArtifacts.push(artifactDataObject);
         }
       });
-      return {passedArtifacts: passedArtifacts, failedArtifacts: failedArtifacts};
+      return {passing: passedArtifacts, failing: failedArtifacts};
     };
   }
 

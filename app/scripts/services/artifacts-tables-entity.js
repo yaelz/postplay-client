@@ -35,6 +35,15 @@
       });
       return removedObj;
     };
+    this.artifactExistsInPassedArray = function (artifactData) {
+      var found = false;
+      self.passedWrappedArtifacts.forEach(function (oldArtifactForUI) {
+        if (oldArtifactForUI.artifactData.artifactId === artifactData.artifactId) {
+          found = true;
+        }
+      });
+      return found;
+    };
   }
 
   angular

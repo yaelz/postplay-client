@@ -58,11 +58,8 @@ describe('Service: basicTestInfoServerApi', function () {
     }
 
     function checkForHttpSuccessAndError(functionToCheck) {
-      expect(basicTestInfoServerApi.thereWasServerError).toBe(false);
       mockHttpBackendResponseAndCallServiceFunction(functionToCheck, httpError);
-      expect(basicTestInfoServerApi.thereWasServerError).toBe(true);
       mockHttpBackendResponseAndCallServiceFunction(functionToCheck, httpSuccess);
-      expect(basicTestInfoServerApi.thereWasServerError).toBe(false);
     }
 
     it('in the getArtifactVersions function', function () {

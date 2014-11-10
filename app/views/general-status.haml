@@ -14,8 +14,7 @@
         .pp-gs-artifacts-tables-container#pp-gs-artifact-info-tables-container
             .pp-gs-table-container
                 .pp-table-title#failed-table-title(title="What am I doing wrong with the tooltip?") {{'ARTIFACTS_TABLE' | translate}}
-                -#<a tooltip="What am I doing wrong with the tooltip?" tooltip-placement="right" ng-cell-text>
-                .pp-grid-container(ng-grid="basicTestInfoCtrl.failedAndChosenArtifactsSummaryTableData")
+                .pp-grid-container(ng-grid="basicTestInfoCtrl.getAllArtifacts")
         .pp-gs-artifacts-tables-container#pp-gs-servers-info-table-container
             .pp-gs-table-container(ng-if="basicTestInfoCtrl.artifactIsClickedOn")
                 .pp-table-title Servers of {{basicTestInfoCtrl.clickedOnArtifact.artifactId}}
@@ -24,5 +23,5 @@
 
 %datalist(ng-controller = "BasicTestInfoController as basicTestInfoCtrl"
           id = "artifactList")
-    %option(ng-repeat = "artifactWrapper in basicTestInfoCtrl.artifactsTablesEntity.passedWrappedArtifacts"
-            value = "{{ artifactWrapper.artifactData.artifactId }}")
+    %option(ng-repeat = "artifact in basicTestInfoCtrl.passingArtifacts"
+            value = "{{ artifact.artifactId }}")
