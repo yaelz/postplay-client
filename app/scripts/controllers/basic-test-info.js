@@ -17,11 +17,6 @@
       ],
       multiSelect: false
     };
-//    { field: 'artifactData.testStatusEnum', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-color-template-servers.html'},
-//    { field: 'artifactData.artifactId', width: '35%', displayName: 'Artifact Id', cellTemplate: '<div class="ngCellText" popover="{{row.entity.artifactData.artifactId}}, {{row.entity.artifactData.groupId}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true"><span ng-cell-text>{{row.entity.artifactData.artifactId}}</span></div>'},
-//    { field: 'artifactData.version', width: '20%', displayName: 'Version'},
-//    { field: 'artifactData.event', width: '20%', displayName: 'Event'},
-//    { field: 'artifactData.startTime', width: '20%', displayName: 'Start Time', cellFilter: 'date:\'d/M/yy H:mm\'' }
 
     self.failingArtifacts = [];
     self.passingArtifacts = [];
