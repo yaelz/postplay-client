@@ -6,7 +6,6 @@
 
   function PayloadExtractor(postPlayUtils) {
     this.extract = function (payload) {
-      //return {failing: payload, passing: []};
       return postPlayUtils.getFailedAndNotFailedArtifactsObject(payload);
     };
   }

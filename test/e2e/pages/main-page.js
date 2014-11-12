@@ -9,30 +9,20 @@ function MainPage() {
     return $('.' + className);
   };
 
-  this.getElementTextByClass = function (className) {
-    return this.getElementByClass(className).getText();
+  this.getElement  = function (attribute) {
+    return $(attribute);
   };
 
-  this.getElementById = function (id) {
-    return $('#' + id);
+  this.getAllElements = function (attribute) {
+    return $$(attribute);
   };
 
-  this.getElementTextById = function (id) {
-    return this.getElementById(id).getText();
+  this.artifactIdOfFailedAndChosenGridAtRow = function (row) {
+    return this.getAllElements('#failed-and-chosen-grid .ngCellText.artifact-id').get(row - 1).getText();
   };
 
-  this.setArtifactInputText = function (inputText) {
-    this.getElementByClass('pp-artifact-input').sendKeys(inputText);
-  };
-
-//  this.clickOnGoButton = function () {
-//    $('#go-button').click();
-//  };
   this.getElement = function (elem) {
     return $(elem);
-  };
-  this.clickOnCellInTable = function () {
-    this.getElement('.ngCell a').click();
   };
 }
 

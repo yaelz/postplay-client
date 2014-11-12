@@ -7,50 +7,103 @@ var MainPage = require('../pages/main-page.js');
 describe('postplayTryApp', function () {
   var mainPage;
 
+  function makeServerReturn(payload) {
+    browser.addMockModule('experimentsMock', function (myPayload) {
+      angular.module('experimentsMock', []).run(function (serverLogic) {
+        serverLogic.getAllArtifacts = function () {
+          return myPayload;
+        };
+      });
+    }, payload);
+  }
+  function assumingServerHasArtifacts(artifacts) {
+    makeServerReturn(artifacts);
+    mainPage.navigate();
+  }
+
   beforeEach(function () {
     mainPage = new MainPage();
   });
 
+  function aFailedArtifact() {
+    return {analysisResultEnum: 'TEST_FAILED'};
+  }
+
+//  function getPassedArtifact() {
+//    return {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED'};
+//  }
+
   describe('Basic test info', function () {
-    beforeEach(function () {
-      browser.addMockModule('initialGetMock', function () {
-        angular.module('initialGetMock', ['ngMockE2E']).run(function ($httpBackend, basicTestInfoServerResponse, serverApiUrl, specificServerData, specificServerData2, specificServerData3,  specificServerServerResponse) {
-          $httpBackend.whenGET(serverApiUrl.ALL_ARTIFACTS_API_URL).respond(basicTestInfoServerResponse.allArtifacts);
-          function callsWithSpecificServerData(serverData) {
-            var VER_SUM_API_URL = serverApiUrl.VER_SUM_API_URL_PREFIX + serverData.version + '&artifactId=' + serverData.artifactId + '&groupId=' + serverData.groupId;
-            $httpBackend.whenGET(VER_SUM_API_URL).respond(basicTestInfoServerResponse.versionSummary);
-            var ARTIFACT_VERS_API_URL = serverApiUrl.ARTIFACT_VERS_API_URL_PREFIX + serverData.artifactId + '&groupId=' + serverData.groupId;
-            $httpBackend.whenGET(ARTIFACT_VERS_API_URL).respond(basicTestInfoServerResponse.artifactVersions);
-//    $httpBackend.whenGET(serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL).respond(500);
-            $httpBackend.whenGET(serverApiUrl.CURRENTLY_RUNNING_ARTIFACTS_API_URL).respond(basicTestInfoServerResponse.currentlyRunningArtifacts);
-            var API_URL = serverApiUrl.SERVER_STATUS_API_URL_PREFIX + serverData.server + '&artifactId=' + serverData.artifactId + '&groupId=' + serverData.groupId;
-            $httpBackend.whenGET(API_URL).respond(specificServerServerResponse.serverData);
-          }
-          callsWithSpecificServerData(specificServerData);
-          callsWithSpecificServerData(specificServerData2);
-          callsWithSpecificServerData(specificServerData3);
-
-          $httpBackend.whenGET(/.*/).passThrough();
-          $httpBackend.whenPOST(/.*/).passThrough();
-          $httpBackend.whenPUT(/.*/).passThrough();
-          $httpBackend.whenDELETE(/.*/).passThrough();
-        });
-      });
-    });
-
     afterEach(function () {
       browser.removeMockModule('initialGetMock');
     });
 
-    it('should load successfully', function () {
-      mainPage.navigate();
-//      browser.pause();
-      expect(mainPage.getElementById('pp-gs-table-container').isDisplayed()).toBe(true);
-    });
-    it('should move to another page when clicking on a cell', function () {
-      mainPage.navigate();
-      mainPage.clickOnCellInTable();
-      expect(browser.getCurrentUrl()).toMatch(/artifactId/);
+    describe('All artifacts data page', function () {
+
+      it('should load successfully', function () {
+        assumingServerHasArtifacts([]);
+        expect(mainPage.getElement('#failed-table-title').isDisplayed()).toBe(true);
+      });
+
+      it('should hold a single failed artifact in the artifacts\' grid', function () {
+        var failedArtifact = aFailedArtifact();
+        failedArtifact.artifactId = 'wix-html-artifact-YAAAAA';
+        assumingServerHasArtifacts([failedArtifact]);
+        expect(mainPage.getElement('#failed-and-chosen-grid .ngCellText.col1').getText()).toEqual('wix-html-artifact-YAAAAA');
+      });
+
+      it('should hold all failed artifacts in the artifacts\' grid', function () {
+        var failedArtifact1 = aFailedArtifact();
+        failedArtifact1.artifactId = 'failed_1';
+
+        var failedArtifact2 = aFailedArtifact();
+        failedArtifact2.artifactId = 'failed_2';
+
+        assumingServerHasArtifacts([failedArtifact1, failedArtifact2]);
+        expect(mainPage.artifactIdOfFailedAndChosenGridAtRow(1)).toEqual('failed_1');
+        expect(mainPage.artifactIdOfFailedAndChosenGridAtRow(2)).toEqual('failed_2');
+      });
+      
+      it('should hold all passing artifacts in the drop-down menu', function () {
+
+      });
+
+//      it('should hold all passing artifacts in the artifacts grid', function () {
+//        var passedArtifact = getPassedArtifact();
+//        passedArtifact.artifactId = 'wix-html-editor-webapp';
+//        passedArtifact.groupId = 'com.wixpress';
+//
+//        assumingServerHasArtifacts([passedArtifact]);
+//        var ptor = protractor.getInstance();
+//        ptor.get('#/');
+//        var passingArtifacts = ptor.findElement(protractor.By.model('passingArtifacts'));
+////        var passingArtifacts = element.all(by.binding('basicTestInfoCtrl.passingArtifacts'));
+//        expect(passingArtifacts).toEqual([passedArtifact]);
+//      });
+
+//      it('should update the artifacts\' grid when selecting an artifact from the drop-down menu', function () {
+//        var failedArtifact = aFailedArtifact();
+//        failedArtifact.artifactId = 'wix-html-artifact-YAAAAA';
+//        failedArtifact.groupId = 'com.wixpress';
+//        var passedArtifactId = 'wix-html-editor-webapp';
+//        var passedArtifact = getPassedArtifact();
+//        passedArtifact.artifactId = passedArtifactId;
+//        passedArtifact.groupId = 'com.wixpress';
+//        assumingServerHasArtifacts([
+//          failedArtifact,
+//          passedArtifact
+//        ]);
+//        var ptor = protractor.getInstance();
+//        ptor.get('#/');
+//        var artifactToAddToTable = ptor.findElement(protractor.By.model('basicTestInfoCtrl.currentArtifactToAddToTable'));
+//        var form = ptor.findElement(protractor.By.name('choose-artifact-form'));
+//        var artifactIdGroupId = passedArtifactId + ', ' + 'com.wixpress';
+//        artifactToAddToTable.sendKeys(artifactIdGroupId);
+//        form.submit();
+//        expect(mainPage.getElementByAttribute('.ngCellText.col1').getText()).toEqual(passedArtifactId);
+////        artifactToAddToTable = ptor.findElement(protractor.By.model('basicTestInfoCtrl.currentArtifactToAddToTable'));
+////        expect(artifactToAddToTable.getText()).toEqual('wix-html-editor-webapp');
+//      });
     });
   });
 

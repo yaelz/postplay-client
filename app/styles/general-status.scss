@@ -63,17 +63,17 @@ input::-webkit-calendar-picker-indicator {
   display: none;
 }
 
-.green {
+.passed {
   background-color: green;
   height: 30px;
 }
 
-.red {
+.failed {
   background-color: red;
   height: 30px;
 }
 
-.orange {
+.warning {
   background-color: orange;
   height: 30px;
 }
