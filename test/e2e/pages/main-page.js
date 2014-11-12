@@ -21,6 +21,10 @@ function MainPage() {
     return this.getAllElements('#failed-and-chosen-grid .ngCellText.artifact-id').get(row - 1).getText();
   };
 
+  this.artifactIdOfPassed = function (idx) {
+    return this.getAllElements('datalist option').get(idx).getAttribute('value');
+  };
+
   this.getElement = function (elem) {
     return $(elem);
   };

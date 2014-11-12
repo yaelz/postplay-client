@@ -29,9 +29,9 @@ describe('postplayTryApp', function () {
     return {analysisResultEnum: 'TEST_FAILED'};
   }
 
-//  function getPassedArtifact() {
-//    return {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED'};
-//  }
+  function aPassedArtifact() {
+    return {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED'};
+  }
 
   describe('Basic test info', function () {
     afterEach(function () {
@@ -52,7 +52,7 @@ describe('postplayTryApp', function () {
         expect(mainPage.getElement('#failed-and-chosen-grid .ngCellText.col1').getText()).toEqual('wix-html-artifact-YAAAAA');
       });
 
-      it('should hold all failed artifacts in the artifacts\' grid', function () {
+      it('should display all failed artifacts in the artifacts\' grid', function () {
         var failedArtifact1 = aFailedArtifact();
         failedArtifact1.artifactId = 'failed_1';
 
@@ -63,9 +63,17 @@ describe('postplayTryApp', function () {
         expect(mainPage.artifactIdOfFailedAndChosenGridAtRow(1)).toEqual('failed_1');
         expect(mainPage.artifactIdOfFailedAndChosenGridAtRow(2)).toEqual('failed_2');
       });
-      
-      it('should hold all passing artifacts in the drop-down menu', function () {
 
+      it('should hold all passing artifacts in the drop-down menu', function () {
+        var passedArtifact1 = aPassedArtifact();
+        passedArtifact1.artifactId = 'passed_1';
+
+        var passedArtifact2 = aPassedArtifact();
+        passedArtifact2.artifactId = 'passed_2';
+
+        assumingServerHasArtifacts([passedArtifact1, passedArtifact2]);
+        expect(mainPage.artifactIdOfPassed(0)).toEqual('passed_1');
+        expect(mainPage.artifactIdOfPassed(1)).toEqual('passed_2');
       });
 
 //      it('should hold all passing artifacts in the artifacts grid', function () {

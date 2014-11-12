@@ -20,7 +20,7 @@
     };
 
 //    this.updateChosenArtifactDataToAdd = function () {
-//      this.allArtifactsFreshener.updateChosenArtifact(self.currentArtifactToAddToTable.split(','));
+//      this.allArtifactsFreshener.updateChosenArtifact($scope.currentArtifactToAddToTable.split(','));
 //    };
 
     self.failingArtifacts = [];
