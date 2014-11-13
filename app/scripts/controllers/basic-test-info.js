@@ -6,9 +6,11 @@
   function BasicTestInfoController(_allArtifactsFreshener_, $scope) {
     this.allArtifactsFreshener = _allArtifactsFreshener_;
     var self = this;
-    this.currentArtifactToAddToTable = '';
+    this.currentArtifactToAdd = '';
+    $scope.failingArtifacts = [];
+    $scope.passingArtifacts = [];
     $scope.getAllArtifacts = {
-      data: 'basicTestInfoCtrl.failingArtifacts',
+      data: 'failingArtifacts',
       columnDefs: [
         { field: 'testStatusEnum', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-color-template-servers.html'},
         { field: 'artifactId', width: '35%', displayName: 'Artifact Id', cellTemplate: '<div class="ngCellText col1 colt1 artifact-id" ng-class="col.colIndex()"><span ng-cell-text>{{row.entity.artifactId}}</span></div>'},
@@ -19,17 +21,17 @@
       multiSelect: false
     };
 
-//    this.updateChosenArtifactDataToAdd = function () {
-//      this.allArtifactsFreshener.updateChosenArtifact($scope.currentArtifactToAddToTable.split(','));
-//    };
-
-    self.failingArtifacts = [];
-    $scope.passingArtifacts = [];
-
-    this.allArtifactsFreshener.getAllArtifacts(function (artifacts) {
-      self.failingArtifacts = artifacts.failing;
+    function callback(artifacts) {
+      $scope.failingArtifacts = artifacts.failing;
       $scope.passingArtifacts = artifacts.passing;
-    });
+    }
+
+    $scope.addArtifactById = function () {
+      self.allArtifactsFreshener.getAllArtifacts(callback, $scope.currentArtifactToAdd);
+      $scope.currentArtifactToAdd = '';
+    };
+
+    this.allArtifactsFreshener.getAllArtifacts(callback);
   }
 
   angular
