@@ -9,6 +9,7 @@
                                      list = "artifactList"
                                      ng-model = "currentArtifactToAdd"
                                      ng-change="addArtifactById()"
+                                     ng-blur="clearInput()"
                                      placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
                                      autocomplete="on"
                                      autofocus)
@@ -19,8 +20,8 @@
         .pp-gs-artifacts-tables-container#pp-gs-artifact-info-tables-container
             .pp-gs-table-container
                 .pp-table-title#failed-table-title {{'ARTIFACTS_TABLE' | translate}}
-                .pp-grid-container#failed-and-chosen-grid(ng-grid="getAllArtifacts")
-        -#.pp-gs-artifacts-tables-container#pp-gs-servers-info-table-container
-        -#    .pp-gs-table-container(ng-if="basicTestInfoCtrl.artifactIsClickedOn")
-        -#        .pp-table-title Servers of {{basicTestInfoCtrl.clickedOnArtifact.artifactId}}
-        -#        .pp-grid-container(ng-grid="basicTestInfoCtrl.serversToShow")
+                .pp-grid-container#failed-and-chosen-grid(ng-grid="artifactsOptions")
+        .pp-gs-artifacts-tables-container#pp-gs-servers-info-table-container
+            .pp-gs-table-container(ng-show="artifactIsClickedOn")
+                .pp-table-title Servers of {{clickedOnArtifact.artifactId}}
+                .pp-grid-container#servers-info-grid(ng-grid="serversOptions")

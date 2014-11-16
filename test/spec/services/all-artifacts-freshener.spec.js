@@ -4,7 +4,7 @@ describe('Service: allArtifactsFreshener', function () {
 
   var allArtifactsFreshener, scope, $q, deferred;
 //  var failingArtifactsFromServer, passingArtifactsFromServer, allArtifactsFromServer, onePassingArtifact;
-  var allArtifactsFromServer, spyFuncForGetAllArtifacts, basicTestInfoServerApi;
+  var allArtifactsFromServer, spyFuncForGetAllArtifacts, spyFuncForVersionSummary, basicTestInfoServerApi;
   beforeEach(function () {
     module('postplayTryAppInternal');
     //add your mocks here
@@ -12,6 +12,13 @@ describe('Service: allArtifactsFreshener', function () {
       return jasmine.createSpy('getAllArtifacts').andCallFake(function () {
         deferred = $q.defer();
         deferred.resolve({data: artifacts});
+        return deferred.promise;
+      });
+    };
+    spyFuncForVersionSummary = function (summary) {
+      return jasmine.createSpy('getVersionSummary').andCallFake(function () {
+        deferred = $q.defer();
+        deferred.resolve({data: summary});
         return deferred.promise;
       });
     };
@@ -29,6 +36,15 @@ describe('Service: allArtifactsFreshener', function () {
 
   function aPassedArtifact() {
     return {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED'};
+  }
+
+  function aVersionSummary() {
+    return [
+      {
+        artifactId: 'wix-html-editor-webapp',
+        server: 'app18.aus.wixpress.com'
+      }
+    ];
   }
 
   function mockServerFlush() {
@@ -49,14 +65,19 @@ describe('Service: allArtifactsFreshener', function () {
     allArtifactsFreshener.getAllArtifacts(function () {});
     mockServerFlush();
   }
-  describe('getting data from server', function () {
+
+  function assumingServerReturnedVersionSummary(versionSum) {
+    basicTestInfoServerApi.getVersionSummary = spyFuncForVersionSummary(versionSum);
+    mockServerFlush();
+  }
+  describe('getting all artifacts\' data from server', function () {
     it('should hold the failedAndChosen and passed arrays', function () {
       var passed = aPassedArtifact();
       var failed = aFailedArtifact();
       assumingServerHasArtifacts([failed, passed]);
       expect(allArtifactsFreshener.failedAndPassing).toEqual({passing: [passed], failing: [failed]});
     });
-    // TODO another test to add the status
+    // TODO another test when adding the status
   });
   describe('updateChosenArtifactDataToAddToTable', function () {
     it('should do nothing when getting an empty string', function () {
@@ -77,6 +98,22 @@ describe('Service: allArtifactsFreshener', function () {
       assumingServerHasArtifacts([failed, passed]);
       allArtifactsFreshener.getAllArtifacts(function () {}, passedArtifactId);
       expect(allArtifactsFreshener.failedAndPassing).toEqual({passing: [], failing: [passed, failed]});
+    });
+  });
+
+  describe('getVersionSummary', function () {
+    it('should get version summary', function () {
+      var versionSum = aVersionSummary();
+      var failedArtifact = aFailedArtifact();
+
+      assumingServerReturnedVersionSummary(versionSum);
+
+      var myCallback = jasmine.createSpy('myCallback').andCallFake(function () {});
+      allArtifactsFreshener.getVersionSummary(failedArtifact, myCallback);
+      mockServerFlush();
+
+      expect(allArtifactsFreshener.versionSummary).toEqual(versionSum);
+      expect(myCallback).toHaveBeenCalled();
     });
   });
 });

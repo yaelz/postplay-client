@@ -8,20 +8,35 @@
     this.server = _basicTestInfoServerApi_;
     this.extractor = _payloadExtractor_;
     this.failedAndPassing = {};
+    this.versionSummary = [];
     this.getAllArtifacts = function (callback, chosenArtifactId) {
-      if (_.isEqual(self.failedAndPassing, {})) {
-        this.server.getAllArtifacts().then(function (response) {
+      // TODO how should I best do this?
+      function callingServer() {
+        self.server.getAllArtifacts().then(function (response) {
           var payload = response.data;
           self.failedAndPassing = self.extractor.extract(payload);
           callback(self.failedAndPassing);
         });
-      } else {
-        var chosenArtifact = removeArtifactFromPassingArray(chosenArtifactId);
-        if (chosenArtifact) {
-          self.failedAndPassing.failing.unshift(chosenArtifact);
+      }
+      function updatingChosenArtifact() {
+        var artifactRemovedFromPassing = removeArtifactFromPassingArray(chosenArtifactId);
+        if (artifactRemovedFromPassing) {
+          self.failedAndPassing.failing.unshift(artifactRemovedFromPassing);
           callback(self.failedAndPassing);
         }
       }
+      if (_.isEqual(self.failedAndPassing, {})) {
+        callingServer();
+      } else {
+        updatingChosenArtifact();
+      }
+    };
+
+    this.getVersionSummary = function (artifactData, versionSummaryCallback) {
+      this.server.getVersionSummary(artifactData.version, artifactData.artifactId, artifactData.groupId, artifactData.event).then(function (response) {
+        self.versionSummary = response.data;
+        versionSummaryCallback(self.versionSummary);
+      });
     };
 
     function removeArtifactFromPassingArray(artifactIdToRemove) {

@@ -3,13 +3,27 @@
 (function () {
 
   /* @ngInject */
-  function BasicTestInfoController(_allArtifactsFreshener_, $scope) {
+  function BasicTestInfoController(_allArtifactsFreshener_, $scope, $timeout) {
     this.allArtifactsFreshener = _allArtifactsFreshener_;
     var self = this;
     this.currentArtifactToAdd = '';
-    $scope.failingArtifacts = [];
-    $scope.passingArtifacts = [];
-    $scope.getAllArtifacts = {
+    $scope.artifactIsClickedOn = false;
+    function initGrid(gridCtrl, gridScope) {
+      gridScope.$on('ngGridEventData', function () {
+        $timeout(function () {
+          angular.forEach(gridScope.columns, function (col) {
+            gridCtrl.resizeOnData(col);
+          });
+        });
+      });
+    }
+    var onRowClick = function (selectedRow) {
+      $scope.artifactIsClickedOn = true;
+      $scope.clickedOnArtifact = selectedRow.entity;
+      self.allArtifactsFreshener.getVersionSummary($scope.clickedOnArtifact, versionSummaryCallback);
+      return true;
+    };
+    $scope.artifactsOptions = {
       data: 'failingArtifacts',
       columnDefs: [
         { field: 'testStatusEnum', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-color-template-servers.html'},
@@ -19,26 +33,35 @@
         { field: 'event', width: '20%', displayName: 'Event'},
         { field: 'startTime', width: '20%', displayName: 'Start Time', cellFilter: 'date:\'d/M/yy H:mm\'' }
       ],
-      multiSelect: false
+      multiSelect: false,
+      beforeSelectionChange: onRowClick
+    };
+    $scope.serversOptions = {
+      data: 'versionSummary',
+      columnDefs: [
+        { field: 'server', width: '60%', displayName: 'IP'},
+        { field: 'analysisResultStatus', width: '40%', displayName: 'Status'}
+      ],
+      init: initGrid,
+      multiSelect: false,
+      rowTemplate: 'views/basic-test-info-row-template.html'
     };
 
-    function callback(artifacts) {
+    function artifactsCallback(artifacts) {
       $scope.failingArtifacts = artifacts.failing;
       $scope.passingArtifacts = artifacts.passing;
     }
 
+    function versionSummaryCallback(versionSummary) {
+      $scope.versionSummary = versionSummary;
+    }
     $scope.addArtifactById = function () {
-      self.allArtifactsFreshener.getAllArtifacts(callback, $scope.currentArtifactToAdd);
-//      var inputChangedPromise;
-//      if(inputChangedPromise){
-//        $timeout.cancel(inputChangedPromise);
-//      }
-//      inputChangedPromise = $timeout(self.allArtifactsFreshener.getAllArtifacts(callback, $scope.currentArtifactToAdd), 1000);
+      self.allArtifactsFreshener.getAllArtifacts(artifactsCallback, $scope.currentArtifactToAdd);
     };
     $scope.clearInput = function () {
       $scope.currentArtifactToAdd = '';
     };
-    this.allArtifactsFreshener.getAllArtifacts(callback);
+    this.allArtifactsFreshener.getAllArtifacts(artifactsCallback);
   }
 
   angular
