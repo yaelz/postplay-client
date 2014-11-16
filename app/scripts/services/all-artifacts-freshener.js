@@ -3,9 +3,9 @@
 (function () {
 
   /* @ngInject */
-  function AllArtifactsFreshener(_basicTestInfoServerApi_, _payloadExtractor_) {
+  function AllArtifactsFreshener(_allArtifactsApi_, _payloadExtractor_) {
     var self = this;
-    this.server = _basicTestInfoServerApi_;
+    this.server = _allArtifactsApi_;
     this.extractor = _payloadExtractor_;
     this.failedAndPassing = {};
     this.versionSummary = [];
@@ -25,7 +25,11 @@
           callback(self.failedAndPassing);
         }
       }
-      if (_.isEqual(self.failedAndPassing, {})) {
+      function failedAndPassingIsEmpty() {
+        return _.isEqual(self.failedAndPassing, {});
+      }
+
+      if (failedAndPassingIsEmpty()) {
         callingServer();
       } else {
         updatingChosenArtifact();

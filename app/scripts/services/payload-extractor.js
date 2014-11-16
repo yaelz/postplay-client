@@ -1,7 +1,4 @@
 'use strict';
-/**
- * Created by Yael_Zaritsky on 11/10/14.
- */
 (function () {
 
   function PayloadExtractor(postPlayUtils) {

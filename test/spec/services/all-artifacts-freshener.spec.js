@@ -3,8 +3,7 @@
 describe('Service: allArtifactsFreshener', function () {
 
   var allArtifactsFreshener, scope, $q, deferred;
-//  var failingArtifactsFromServer, passingArtifactsFromServer, allArtifactsFromServer, onePassingArtifact;
-  var allArtifactsFromServer, spyFuncForGetAllArtifacts, spyFuncForVersionSummary, basicTestInfoServerApi;
+  var spyFuncForGetAllArtifacts, spyFuncForVersionSummary, allArtifactsApi;
   beforeEach(function () {
     module('postplayTryAppInternal');
     //add your mocks here
@@ -22,11 +21,11 @@ describe('Service: allArtifactsFreshener', function () {
         return deferred.promise;
       });
     };
-    var basicTestInfoServerApiMock = {
+    var allArtifactsApiMock = {
       getAllArtifacts: {}
     };
     module({
-      basicTestInfoServerApi: basicTestInfoServerApiMock
+      allArtifactsApi: allArtifactsApiMock
     });
   });
 
@@ -52,22 +51,21 @@ describe('Service: allArtifactsFreshener', function () {
   }
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function (_allArtifactsFreshener_, _basicTestInfoServerResponse_, $rootScope, _$q_, _basicTestInfoServerApi_) {
-    allArtifactsFromServer = _basicTestInfoServerResponse_.allArtifacts;
+  beforeEach(inject(function (_allArtifactsFreshener_, _basicTestInfoServerResponse_, $rootScope, _$q_, _allArtifactsApi_) {
     allArtifactsFreshener = _allArtifactsFreshener_;
-    basicTestInfoServerApi = _basicTestInfoServerApi_;
+    allArtifactsApi = _allArtifactsApi_;
     scope = $rootScope;
     $q = _$q_;
   }));
 
   function assumingServerHasArtifacts(artifacts) {
-    basicTestInfoServerApi.getAllArtifacts = spyFuncForGetAllArtifacts(artifacts);
+    allArtifactsApi.getAllArtifacts = spyFuncForGetAllArtifacts(artifacts);
     allArtifactsFreshener.getAllArtifacts(function () {});
     mockServerFlush();
   }
 
   function assumingServerReturnedVersionSummary(versionSum) {
-    basicTestInfoServerApi.getVersionSummary = spyFuncForVersionSummary(versionSum);
+    allArtifactsApi.getVersionSummary = spyFuncForVersionSummary(versionSum);
     mockServerFlush();
   }
   describe('getting all artifacts\' data from server', function () {

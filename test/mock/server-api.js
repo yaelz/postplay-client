@@ -137,7 +137,7 @@ angular.module('postplayTryAppMocks', ['ngMockE2E'])
     };
   })
   .run(function ($httpBackend, serverApiUrl, serverLogic) {
-    $httpBackend.whenGET(serverApiUrl.PREFIX + serverApiUrl.ALL_ARTIFACTS_API_URL).respond(function () {
+    $httpBackend.whenGET(serverApiUrl.PREFIX + serverApiUrl.LATEST_ARTIFACTS_API_URI).respond(function () {
       return [200, serverLogic.getAllArtifacts()];
     });
     //TODO How can I make this work with changed arguments?

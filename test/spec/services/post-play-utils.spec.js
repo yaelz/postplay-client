@@ -3,24 +3,30 @@
 describe('Service: postPlayUtils', function () {
 
   // load the service's module
-  var allArtifactsFromServer;
   beforeEach(function () {
     module('postplayTryAppInternal');
 
     //add your mocks here
   });
 
+  function aFailedArtifact() {
+    return {analysisResultEnum: 'TEST_FAILED'};
+  }
+
+  function aPassedArtifact() {
+    return {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED'};
+  }
   // instantiate service
   var postPlayUtils;
-  beforeEach(inject(function (_postPlayUtils_, basicTestInfoServerResponse) {
+  beforeEach(inject(function (_postPlayUtils_) {
     postPlayUtils = _postPlayUtils_;
-    allArtifactsFromServer  = basicTestInfoServerResponse.allArtifacts;
   }));
-
-  it('should be able to filter an object from an array (with deep equality check)', function () {
-    var array = [{a: 1, b: 2, c: []}, {whiz: 'kid'}];
-    var filteredArray = postPlayUtils.filter(array, {whiz: 'kid'});
-    expect(filteredArray).toEqual([{a: 1, b: 2, c: []}]);
+  describe('filter', function () {
+    it('should be able to filter an object from an array (with deep equality check)', function () {
+      var array = [{a: 1, b: 2, c: []}, {whiz: 'kid'}];
+      var filteredArray = postPlayUtils.filter(array, {whiz: 'kid'});
+      expect(filteredArray).toEqual([{a: 1, b: 2, c: []}]);
+    });
   });
   describe('getArtifactStatus', function () {
     it('should return \'PASSED\' iff the testStatusEnum and the analysisResultEnum have both passed', function () {
@@ -87,13 +93,22 @@ describe('Service: postPlayUtils', function () {
       expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([])).toEqual({passing: [], failing: []});
     });
     it('should recognize when there\'s a non failed artifact', function () {
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([allArtifactsFromServer[0]])).toEqual({passing: [allArtifactsFromServer[0]], failing: []});
+      var passedArtifact = aPassedArtifact();
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([passedArtifact])).toEqual({passing: [passedArtifact], failing: []});
     });
     it('should recognize when there\'s a failed artifact', function () {
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([allArtifactsFromServer[1]])).toEqual({passing: [], failing: [allArtifactsFromServer[1]]});
+      var failedArtifact = aFailedArtifact();
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([failedArtifact])).toEqual({passing: [], failing: [failedArtifact]});
     });
     it('should recognize all failed and non failed artifacts', function () {
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject(allArtifactsFromServer)).toEqual({passing: [allArtifactsFromServer[0]], failing: allArtifactsFromServer.slice(1)});
+      var failedArtifact1 = aFailedArtifact();
+      var failedArtifact2 = aFailedArtifact();
+      var failedArtifact3 = aFailedArtifact();
+
+      var passedArtifact1 = aPassedArtifact();
+      var passedArtifact2 = aPassedArtifact();
+      var artifactsOfAllKinds = [failedArtifact1, passedArtifact1, failedArtifact2, failedArtifact3, passedArtifact2];
+      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject(artifactsOfAllKinds)).toEqual({passing: [passedArtifact1, passedArtifact2], failing: [failedArtifact1, failedArtifact2, failedArtifact3]});
     });
   });
 });

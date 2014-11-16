@@ -1,135 +1,12 @@
 'use strict';
 
-//add services, directives, controllers, filters, etc. in this module
-//avoid adding module dependencies for this module
 angular
   .module('postplayTryAppInternal', ['ngGrid', 'ngAnimate', 'googlechart', 'ui.bootstrap'])
   .constant('basicTestInfoServerResponse', {
     allArtifacts: [
       {artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.490.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED', startTime: 1414663552086},
       {artifactId: 'wix-html-artifact1', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_FAILED', startTime: 1414663552086},
-      {artifactId: 'wix-html-artifact2', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_FAILED', startTime: 1414663552086}
-    ],
-    versionSummaryForRendererNewVersion: [
-      {
-        artifactId: 'wix-html-editor-webapp',
-        groupId: 'com.wixpress',
-        server: 'app18.aus.wixpress.com',
-        version: '2.490.0',
-        analysisResultEnum: 'TEST_FAILED',
-        testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
-        errorFields: null,
-        runStatus: 'FINISHED',
-        comments: 'Failed on errorRate. Failed on systemError',
-        event: 'TESTBED'
-      }
-    ],
-    versionSummaryForRenderer: {
-      code: 0,
-      message: 'OK',
-      comments: null,
-      responseBody: {
-        artifactId: 'wix-public-html-renderer-webapp',
-        groupId: 'com.wixpress',
-        version: '2.487.0',
-        startTime: '1410959618239',
-        event: 'TESTBED',
-        servers: [
-          {
-            ip: 'app30.aus.wixpress.com',
-            analysisResultStatus: 'TEST_FAILED',
-            testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
-            errorFields: null,
-            runStatus: 'FINISHED',
-            comments: 'Failed on errorRate'
-          },
-          {
-            ip: 'app77.aus.wixpress.com',
-            analysisResultStatus: 'TEST_FAILED',
-            testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
-            errorFields: null,
-            runStatus: 'FINISHED',
-            comments: 'Failed on errorRate'
-          },
-          {
-            ip: 'app12.aus.wixpress.com',
-            analysisResultStatus: 'TEST_PASSED',
-            testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
-            errorFields: null,
-            runStatus: 'FINISHED',
-            comments: 'Failed on errorRate'
-          }
-        ]
-      }
-    },
-    versionSummaryForEditor: [
-      {
-        artifactId: 'wix-html-editor-webapp',
-        groupId: 'com.wixpress',
-        server: 'app18.aus.wixpress.com',
-        version: '2.490.0',
-        analysisResultEnum: 'TEST_FAILED',
-        testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
-        errorFields: null,
-        runStatus: 'FINISHED',
-        comments: 'Failed on errorRate. Failed on systemError',
-        event: 'TESTBED'
-      }
-    ],
-    versionSummaryForWar: {
-      code: 0,
-      message: 'OK',
-      comments: null,
-      responseBody: {
-        artifactId: 'wix-public-war',
-        groupId: 'com.wixpress',
-        version: '2.487.0',
-        startTime: '1410959618239',
-        event: 'TESTBED',
-        servers: [{
-          ip: 'app30.aus.wixpress.com',
-          analysisResultStatus: 'TEST_FAILED',
-          testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY',
-          errorFields: null,
-          runStatus: 'FINISHED',
-          comments: 'Failed on errorRate'
-        }]
-      }
-    },
-    lifecycleBuilds: {
-      '2. Wix Html Editor': {'wix-html-editor-webapp': {artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress'}}
-    },
-    currentlyRunningArtifacts: [
-      {artifactId: 'wix-public-html-renderer-webapp',
-        groupId: 'com.wixpress',
-        version: '2.489.0',
-        server: null,
-        artifactName: null,
-        totalTests: 0,
-        completedTests: 0,
-        completedTestsPercent: 0,
-        runningTests: 0,
-        analysisStatus: null,
-        runs: null,
-        runStatus: null,
-        buildEvent: null,
-        analysisComments: []
-      },
-      {artifactId: 'wix-public-my-app-keiloo',
-        groupId: 'com.wixpress',
-        version: '200.489.0',
-        server: null,
-        artifactName: null,
-        totalTests: 0,
-        completedTests: 0,
-        completedTestsPercent: 0,
-        runningTests: 0,
-        analysisStatus: null,
-        runs: null,
-        runStatus: null,
-        buildEvent: null,
-        analysisComments: []
-      }
+      {artifactId: 'wix-html-artifact1', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_FAILED', startTime: 1414663552086}
     ]
   })
   .constant('specificServerServerResponse', {
@@ -239,158 +116,16 @@ angular
       ]
     }
   })
-  .constant('specificServerData', {
-    server: 'app30.aus.wixpress.com',
-    version: '2.487.0',
-    artifactId: 'wix-public-html-renderer-webapp',
-    event: 'TESTBED',
-    groupId: 'com.wixpress'
-  })
-  .constant('specificServerData2', {
-    server: 'app30.aus.wixpress.com',
-    version: '2.487.0',
-    artifactId: 'wix-html-editor-webapp',
-    event: 'TESTBED',
-    groupId: 'com.wixpress'
-  })
-  .constant('specificServerData3', {
-    server: 'app30.aus.wixpress.com',
-    version: '2.487.0',
-    artifactId: 'wix-public-war',
-    event: 'TESTBED',
-    groupId: 'com.wixpress'
-  })
   .constant('serverApiUrl', {
 //    PREFIX: 'http://localhost:8080/api/v2/',
     PREFIX: '',
-    ALL_ARTIFACTS_API_URL: 'getLatestMonitoredArtifactsEventSummary',
+    LATEST_ARTIFACTS_API_URI: 'getLatestMonitoredArtifactsEventSummary',
     VER_SUM_API_URL_PREFIX: 'versionSummary?version=',
     CURRENTLY_RUNNING_ARTIFACTS_API_URL: 'getCurrentlyRunningArtifacts/json',
-    BUILDS_API_URL: 'getLifecycleBuilds',
-    ARTIFACT_VERS_API_URL_PREFIX: 'getArtifactVersions/json?artifactId=',
     CURRENTLY_RUNNING_TESTS_API_URL: 'getCurrentlyRunningTests/json',
-    FIELD_MAP_API_URL: 'fieldMap',
-    TEST_DATA_BY_ID_API_URL_PREFIX: 'getTest',
-    ARTIFACT_DATA_API_URL_PREFIX: 'getArtifact',
-    TEMPLATES_API_URL: 'getAllTemplates',
-    EXPRESSION_SYNTAX_API_URL: 'getExpressionSyntax',
+//    FIELD_MAP_API_URL: 'fieldMap',
     SERVER_STATUS_API_URL_PREFIX: 'latestServerData?server='
   });
-
-//.constant('systemConfigurationServerResponse', {
-//  testDataByTestId21: {
-//    monitorTestId: 21,
-//    monitoredArtifactId: 31,
-//    name: 'AppInfo Sanity',
-//    implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-//    runEveryMinute: 1,
-//    times: 10,
-//    delayInMinutes: 2,
-//    inputParams: [],
-//    validationExpressions: [{
-//      name: 'Error rate',
-//      monitorTestId: 21,
-//      expression: 'errorRate > HIGHEST ^ -5%',
-//      validationExpressionId: 71,
-//      deleted: false
-//    }],
-//    monitorTestQueueId: 0,
-//    active: true,
-//    defaultTest: false,
-//    deleted: false,
-//    reference: true,
-//    useBaseline: false
-//  },
-//  testDataByTestId31: {
-//    monitorTestId: 31,
-//    monitoredArtifactId: 31,
-//    name: 'AppInfo Sanity2',
-//    implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-//    runEveryMinute: 1,
-//    times: 3,
-//    delayInMinutes: 8,
-//    inputParams: [],
-//    validationExpressions: [{
-//      name: 'Throughput',
-//      monitorTestId: 31,
-//      expression: 'throughputTotalCalls < LOWEST',
-//      validationExpressionId: 81,
-//      deleted: false
-//    }],
-//    monitorTestQueueId: 0,
-//    active: true,
-//    defaultTest: false,
-//    deleted: false,
-//    reference: true,
-//    useBaseline: false
-//  },
-//  artifactData: {
-//    monitoredArtifactId: 31,
-//    artifactId: 'wix-public-html-renderer-webapp',
-//    groupId: 'com.wixpress',
-//    version: null,
-//    name: '2. Wix Public Html Renderer',
-//    dynamic: false,
-//    tests: [{
-//      monitorTestId: 21,
-//      monitoredArtifactId: 31,
-//      name: 'AppInfo Sanity',
-//      implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-//      runEveryMinute: 1,
-//      times: 10,
-//      delayInMinutes: 2,
-//      inputParams: [],
-//      validationExpressions: [],
-//      monitorTestQueueId: 0,
-//      active: true,
-//      defaultTest: false,
-//      deleted: false,
-//      reference: true,
-//      useBaseline: false
-//    },
-//      {
-//        monitorTestId: 31,
-//        monitoredArtifactId: 31,
-//        name: 'AppInfo Sanity2',
-//        implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-//        runEveryMinute: 1,
-//        times: 3,
-//        delayInMinutes: 8,
-//        inputParams: [],
-//        validationExpressions: [],
-//        monitorTestQueueId: 0,
-//        active: true,
-//        defaultTest: false,
-//        deleted: false,
-//        reference: true,
-//        useBaseline: false
-//      }],
-//    testRuns: []
-//  },
-//  templates: [{
-//    monitorTestTemplateId: 1,
-//    name: 'AppInfo Sanity',
-//    implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest',
-//    runEveryMinute: 1,
-//    times: 5,
-//    delayInMinutes: 0,
-//    inputParams: [],
-//    validationExpressions: [],
-//    defaultTest: false
-//  }],
-//  expressionSyntax: [{
-//    operators: ['=', '>', '<', '<=', '>=', '!='],
-//    refServersOprands: ['HIGHEST', 'LOWEST', 'AVG'],
-//    fields: [{
-//      name: 'totalIncomingCalls',
-//      dataType: 'LONG'
-//    }, {
-//      name: 'totalIncomingSuccessfulCalls',
-//      dataType: 'LONG'
-//    }],
-//    implementationClass: 'com.wixpress.postplay.monitoredtest.tests.AppInfoCustomTest'
-//  }]
-//})
 
 //add module dependencies & config and run blocks in this module
 //load only the internal module in tests and mock any module dependency
