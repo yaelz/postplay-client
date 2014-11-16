@@ -79,20 +79,20 @@ describe('postplayTryApp', function () {
       it('should update the artifacts\' grid when selecting an artifact from the drop-down menu', function () {
         var passedArtifact1 = aPassedArtifact();
         passedArtifact1.artifactId = 'passed_1';
+        var passedArtifact2 = aPassedArtifact();
+        passedArtifact2.artifactId = 'passed_2';
 
         var failedArtifact1 = aFailedArtifact();
         failedArtifact1.artifactId = 'failed_1';
 
-        assumingServerHasArtifacts([passedArtifact1, failedArtifact1]);
+        assumingServerHasArtifacts([passedArtifact1, passedArtifact2, failedArtifact1]);
 
         mainPage.dropDownRowShowing(0).then(function (chosenArtifactFromDropDown) {
+//          expect(chosenArtifactFromDropDown).toEqual('chosen artifact from drop down');
           $('.pp-artifact-input').sendKeys(chosenArtifactFromDropDown)
             .then(function () {
-              $('#choose-artifact-form').submit()
-                .then(function () {
-                  expect(mainPage.artifactIdOfFailedAndChosenGridAtRow(1)).toEqual(passedArtifact1.artifactId);
-//                  expect(mainPage.dropDownRowShowing(0)).toEqual('');
-                });
+              expect(mainPage.artifactIdOfFailedAndChosenGridAtRow(1)).toEqual(passedArtifact1.artifactId);
+              expect(mainPage.dropDownRowShowing(0)).toEqual('passed_2');
             });
         });
       });

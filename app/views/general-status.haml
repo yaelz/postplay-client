@@ -2,18 +2,19 @@
     .pp-header-container
         .pp-header-image-container
             -#%img(src = 'http://lifecycle.dev.wix/app/images/lifecycle_icon2.png')
-        %form#choose-artifact-form(name = "choose-artifact-form")
-            %input.pp-artifact-input(type = "text"
+        %form#choose-artifact-form(name = "choose-artifact-form"
+                                   ng-submit="clearInput()")
+            %input.pp-artifact-input(type = "search"
                                      name = "sheet-input"
                                      list = "artifactList"
                                      ng-model = "currentArtifactToAdd"
                                      ng-change="addArtifactById()"
                                      placeholder = "{{'CHOOSE_ARTIFACT' | translate}}"
+                                     autocomplete="on"
                                      autofocus)
         %datalist#artifactList
             %option(ng-repeat = "artifact in passingArtifacts"
-                    value = "{{ artifact.artifactId }}"
-                    ng-click="addArtifactById()")
+                    value = "{{ artifact.artifactId }}")
     .pp-gs-page-container
         .pp-gs-artifacts-tables-container#pp-gs-artifact-info-tables-container
             .pp-gs-table-container
