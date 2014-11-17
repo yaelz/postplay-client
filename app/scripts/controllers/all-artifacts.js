@@ -18,7 +18,10 @@
     var onRowClick = function (selectedRow) {
       $scope.artifactIsClickedOn = true;
       $scope.clickedOnArtifact = selectedRow.entity;
-      allArtifactsFreshener.getVersionSummary($scope.clickedOnArtifact, versionSummaryCallback);
+      allArtifactsFreshener.getVersionSummary($scope.clickedOnArtifact)
+        .then(function (response) {
+          $scope.versionSummary = response;
+        });
       return true;
     };
     $scope.artifactsOptions = {
@@ -40,9 +43,6 @@
       $scope.passingArtifacts = artifacts.passing;
     }
 
-    function versionSummaryCallback(versionSummary) {
-      $scope.versionSummary = versionSummary;
-    }
     $scope.addArtifactById = function () {
       allArtifactsFreshener.getAllArtifacts(artifactsCallback, $scope.currentArtifactToAdd);
     };

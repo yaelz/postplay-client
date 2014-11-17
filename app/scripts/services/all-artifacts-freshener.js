@@ -10,7 +10,6 @@
     this.failedAndPassing = {};
     this.versionSummary = [];
     this.getAllArtifacts = function (callback, chosenArtifactId) {
-      // TODO how should I best do this?
       function callingServer() {
         self.server.getAllArtifacts().then(function (response) {
           var payload = response.data;
@@ -36,11 +35,11 @@
       }
     };
 
-    this.getVersionSummary = function (artifactData, versionSummaryCallback) {
-      this.server.getVersionSummary(artifactData.version, artifactData.artifactId, artifactData.groupId, artifactData.event).then(function (response) {
-        self.versionSummary = response.data;
-        versionSummaryCallback(self.versionSummary);
-      });
+    this.getVersionSummary = function (artifactData) {
+      return this.server.getVersionSummary(artifactData.version, artifactData.artifactId, artifactData.groupId, artifactData.event)
+        .then(function (response) {
+          return response.data;
+        });
     };
 
     function removeArtifactFromPassingArray(artifactIdToRemove) {

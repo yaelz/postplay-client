@@ -1,7 +1,6 @@
 'use strict';
 
 require('../lib/matchers.protractor.js');
-//require('../lib/experiments-mock.js');
 var MainPage = require('../pages/main-page.js');
 
 describe('postplayTryApp', function () {

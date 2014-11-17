@@ -75,7 +75,6 @@ describe('Service: allArtifactsFreshener', function () {
       assumingServerHasArtifacts([failed, passed]);
       expect(allArtifactsFreshener.failedAndPassing).toEqual({passing: [passed], failing: [failed]});
     });
-    // TODO another test when adding the status
   });
   describe('updateChosenArtifactDataToAddToTable', function () {
     it('should do nothing when getting an empty string', function () {
@@ -106,12 +105,10 @@ describe('Service: allArtifactsFreshener', function () {
 
       assumingServerReturnedVersionSummary(versionSum);
 
-      var myCallback = jasmine.createSpy('myCallback').andCallFake(function () {});
-      allArtifactsFreshener.getVersionSummary(failedArtifact, myCallback);
-      mockServerFlush();
+      allArtifactsFreshener.getVersionSummary(failedArtifact).then(function (response) {
+        expect(response).toEqual(versionSum);
+      });
 
-      expect(allArtifactsFreshener.versionSummary).toEqual(versionSum);
-      expect(myCallback).toHaveBeenCalled();
     });
   });
 });
