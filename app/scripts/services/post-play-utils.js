@@ -34,6 +34,7 @@
       var failedArtifacts = [];
       arrayOfArtifactsDataObjects.forEach(function (artifactDataObject) {
         var status = self.getArtifactStatus(artifactDataObject);
+        artifactDataObject.status = status;
         if (!self.statusIsFailedOrWarning(status)) {
           passedArtifacts.push(artifactDataObject);
         } else {

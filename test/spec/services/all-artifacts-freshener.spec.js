@@ -2,7 +2,7 @@
 
 describe('Service: allArtifactsFreshener', function () {
 
-  var allArtifactsFreshener, scope, $q, deferred;
+  var allArtifactsFreshener, postPlayUtils, scope, $q, deferred;
   var spyFuncForGetAllArtifacts, spyFuncForVersionSummary, allArtifactsApi;
   beforeEach(function () {
     module('postplayTryAppInternal');
@@ -46,40 +46,54 @@ describe('Service: allArtifactsFreshener', function () {
     ];
   }
 
-  function mockServerFlush() {
+  function resolvePromise() {
     scope.$apply();
   }
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function (_allArtifactsFreshener_, _basicTestInfoServerResponse_, $rootScope, _$q_, _allArtifactsApi_) {
+  beforeEach(inject(function (_allArtifactsFreshener_, _basicTestInfoServerResponse_, _postPlayUtils_, $rootScope, _$q_, _allArtifactsApi_) {
     allArtifactsFreshener = _allArtifactsFreshener_;
     allArtifactsApi = _allArtifactsApi_;
+    postPlayUtils = _postPlayUtils_;
     scope = $rootScope;
     $q = _$q_;
   }));
 
   function assumingServerHasArtifacts(artifacts) {
     allArtifactsApi.getAllArtifacts = spyFuncForGetAllArtifacts(artifacts);
-    mockServerFlush();
+    resolvePromise();
   }
 
   function assumingServerReturnedVersionSummary(versionSum) {
     allArtifactsApi.getVersionSummary = spyFuncForVersionSummary(versionSum);
-    mockServerFlush();
+    resolvePromise();
   }
   function assumingArtifactsHaveBeenInitializedWith(artifacts) {
     assumingServerHasArtifacts(artifacts);
     allArtifactsFreshener.getAllArtifacts();
-    mockServerFlush();
+    resolvePromise();
+  }
+
+  function addStatusToArtifact(artifact) {
+    var newArtifact = _.clone(artifact);
+    var status = postPlayUtils.getArtifactStatus(newArtifact);
+    newArtifact.status = status;
+    return newArtifact;
   }
   describe('getting all artifacts\' data from server', function () {
     it('should hold the failedAndChosen and passed arrays', function () {
       var passed = aPassedArtifact();
       var failed = aFailedArtifact();
+
       assumingServerHasArtifacts([failed, passed]);
+      var failedWithStatus = addStatusToArtifact(failed);
+      var passedWithStatus = addStatusToArtifact(passed);
+      var artifactsAfterProcessing;
       allArtifactsFreshener.getAllArtifacts().then(function (failedAndPassing) {
-        expect(failedAndPassing).toEqual({passing: [passed], failing: [failed]});
+        artifactsAfterProcessing = failedAndPassing;
       });
+      resolvePromise();
+      expect(artifactsAfterProcessing).toEqual({passing: [passedWithStatus], failing: [failedWithStatus]});
     });
   });
   describe('updateChosenArtifactDataToAddToTable', function () {
@@ -88,6 +102,8 @@ describe('Service: allArtifactsFreshener', function () {
       var failed = aFailedArtifact();
 
       assumingArtifactsHaveBeenInitializedWith([failed, passed]);
+      //TODO is it ok that the original object gets the status property straight on it? and it's
+      // not seen in this test (it is seen in the failed and chosen array test)
       expect(allArtifactsFreshener.updateChosenArtifact('')).toEqual({passing: [passed], failing: [failed]});
     });
     it('should take an artifact from the passing and move it to the failedAndChosen array', function () {
@@ -110,9 +126,12 @@ describe('Service: allArtifactsFreshener', function () {
 
       assumingServerReturnedVersionSummary(versionSum);
 
+      var versionSumFromServer;
       allArtifactsFreshener.getVersionSummary(failedArtifact).then(function (response) {
-        expect(response).toEqual(versionSum);
+        versionSumFromServer = response;
       });
+      resolvePromise();
+      expect(versionSumFromServer).toEqual(versionSum);
 
     });
   });

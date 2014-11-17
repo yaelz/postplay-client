@@ -46,10 +46,11 @@
     $scope.clearInput = function () {
       $scope.currentArtifactToAdd = '';
     };
-    allArtifactsFreshener.getAllArtifacts().then(function (artifacts) {
-      $scope.failingArtifacts = artifacts.failing;
-      $scope.passingArtifacts = artifacts.passing;
-    });
+    allArtifactsFreshener.getAllArtifacts()
+      .then(function (artifacts) {
+        $scope.failingArtifacts = artifacts.failing;
+        $scope.passingArtifacts = artifacts.passing;
+      });
   }
 
   angular
@@ -59,8 +60,8 @@
       { field: 'analysisResultStatus', width: '40%', displayName: 'Status'}
     ])
     .constant('artifactsOptionsColumnDefs', [
-      { field: 'testStatusEnum', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-color-template-servers.html'},
-      { field: 'pinned', width: '5px', displayName: '', cellTemplate: 'views/basic-test-info-color-template-servers.html'},
+      { field: 'testStatusEnum', width: '5px', displayName: '', cellTemplate: 'views/all-artifacts-color-template.html'},
+//      { field: 'pinned', width: '5px', displayName: '', cellTemplate: 'views/all-artifacts-color-template-servers.html'},
       { field: 'artifactId', width: '35%', displayName: 'Artifact Id', cellTemplate: '<div class="ngCellText col1 colt1 artifact-id" ng-class="col.colIndex()" popover="{{row.entity.artifactId}}, {{row.entity.groupId}}" popover-trigger="mouseenter" popover-placement="right" popover-append-to-body="true"><span ng-cell-text>{{row.entity.artifactId}}</span></div>'},
       { field: 'version', width: '20%', displayName: 'Version'},
       { field: 'event', width: '20%', displayName: 'Event'},

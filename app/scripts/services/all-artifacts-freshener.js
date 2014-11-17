@@ -12,8 +12,8 @@
     this.getAllArtifacts = function () {
       return self.server.getAllArtifacts()
         .then(function (response) {
-          var payload = response.data;
-          self.failedAndPassing = self.extractor.extract(payload);
+          var allArtifacts = response.data;
+          self.failedAndPassing = self.extractor.extract(allArtifacts);
           return self.failedAndPassing;
         });
     };
