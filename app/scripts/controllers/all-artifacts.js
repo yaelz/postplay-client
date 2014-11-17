@@ -6,6 +6,7 @@
   function AllArtifactsController(allArtifactsFreshener, serverOptionsColumnDefs, artifactsOptionsColumnDefs, $scope, $timeout) {
     this.currentArtifactToAdd = '';
     $scope.artifactIsClickedOn = false;
+    $scope.statusColorMap = {FAILED: 'failed', PASSED: 'passed', WARNING: 'warning'};
     function initGrid(gridCtrl, gridScope) {
       gridScope.$on('ngGridEventData', function () {
         $timeout(function () {
