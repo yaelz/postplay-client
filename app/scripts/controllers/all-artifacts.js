@@ -38,18 +38,18 @@
       rowTemplate: 'views/basic-test-info-row-template.html'
     };
 
-    function artifactsCallback(artifacts) {
+    $scope.addArtifactById = function () {
+      var artifacts = allArtifactsFreshener.updateChosenArtifact($scope.currentArtifactToAdd);
       $scope.failingArtifacts = artifacts.failing;
       $scope.passingArtifacts = artifacts.passing;
-    }
-
-    $scope.addArtifactById = function () {
-      allArtifactsFreshener.getAllArtifacts(artifactsCallback, $scope.currentArtifactToAdd);
     };
     $scope.clearInput = function () {
       $scope.currentArtifactToAdd = '';
     };
-    allArtifactsFreshener.getAllArtifacts(artifactsCallback);
+    allArtifactsFreshener.getAllArtifacts().then(function (artifacts) {
+      $scope.failingArtifacts = artifacts.failing;
+      $scope.passingArtifacts = artifacts.passing;
+    });
   }
 
   angular

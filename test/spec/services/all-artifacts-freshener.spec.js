@@ -60,7 +60,6 @@ describe('Service: allArtifactsFreshener', function () {
 
   function assumingServerHasArtifacts(artifacts) {
     allArtifactsApi.getAllArtifacts = spyFuncForGetAllArtifacts(artifacts);
-    allArtifactsFreshener.getAllArtifacts(function () {});
     mockServerFlush();
   }
 
@@ -68,22 +67,28 @@ describe('Service: allArtifactsFreshener', function () {
     allArtifactsApi.getVersionSummary = spyFuncForVersionSummary(versionSum);
     mockServerFlush();
   }
+  function assumingArtifactsHaveBeenInitializedWith(artifacts) {
+    assumingServerHasArtifacts(artifacts);
+    allArtifactsFreshener.getAllArtifacts();
+    mockServerFlush();
+  }
   describe('getting all artifacts\' data from server', function () {
     it('should hold the failedAndChosen and passed arrays', function () {
       var passed = aPassedArtifact();
       var failed = aFailedArtifact();
       assumingServerHasArtifacts([failed, passed]);
-      expect(allArtifactsFreshener.failedAndPassing).toEqual({passing: [passed], failing: [failed]});
+      allArtifactsFreshener.getAllArtifacts().then(function (failedAndPassing) {
+        expect(failedAndPassing).toEqual({passing: [passed], failing: [failed]});
+      });
     });
   });
   describe('updateChosenArtifactDataToAddToTable', function () {
     it('should do nothing when getting an empty string', function () {
       var passed = aPassedArtifact();
       var failed = aFailedArtifact();
-      assumingServerHasArtifacts([failed, passed]);
 
-      allArtifactsFreshener.getAllArtifacts(function () {});
-      expect(allArtifactsFreshener.failedAndPassing).toEqual({passing: [passed], failing: [failed]});
+      assumingArtifactsHaveBeenInitializedWith([failed, passed]);
+      expect(allArtifactsFreshener.updateChosenArtifact('')).toEqual({passing: [passed], failing: [failed]});
     });
     it('should take an artifact from the passing and move it to the failedAndChosen array', function () {
       var passedArtifactId = 'passed_1';
@@ -92,8 +97,8 @@ describe('Service: allArtifactsFreshener', function () {
       passed.artifactId = passedArtifactId;
       var failed = aFailedArtifact();
 
-      assumingServerHasArtifacts([failed, passed]);
-      allArtifactsFreshener.getAllArtifacts(function () {}, passedArtifactId);
+      assumingArtifactsHaveBeenInitializedWith([failed, passed]);
+      allArtifactsFreshener.updateChosenArtifact(passedArtifactId);
       expect(allArtifactsFreshener.failedAndPassing).toEqual({passing: [], failing: [passed, failed]});
     });
   });

@@ -9,30 +9,21 @@
     this.extractor = _payloadExtractor_;
     this.failedAndPassing = {};
     this.versionSummary = [];
-    this.getAllArtifacts = function (callback, chosenArtifactId) {
-      function callingServer() {
-        self.server.getAllArtifacts().then(function (response) {
+    this.getAllArtifacts = function () {
+      return self.server.getAllArtifacts()
+        .then(function (response) {
           var payload = response.data;
           self.failedAndPassing = self.extractor.extract(payload);
-          callback(self.failedAndPassing);
+          return self.failedAndPassing;
         });
-      }
-      function updatingChosenArtifact() {
-        var artifactRemovedFromPassing = removeArtifactFromPassingArray(chosenArtifactId);
-        if (artifactRemovedFromPassing) {
-          self.failedAndPassing.failing.unshift(artifactRemovedFromPassing);
-          callback(self.failedAndPassing);
-        }
-      }
-      function failedAndPassingIsEmpty() {
-        return _.isEqual(self.failedAndPassing, {});
-      }
+    };
 
-      if (failedAndPassingIsEmpty()) {
-        callingServer();
-      } else {
-        updatingChosenArtifact();
+    this.updateChosenArtifact = function (chosenArtifactId) {
+      var artifactRemovedFromPassing = removeArtifactFromPassingArray(chosenArtifactId);
+      if (artifactRemovedFromPassing) {
+        self.failedAndPassing.failing.unshift(artifactRemovedFromPassing);
       }
+      return self.failedAndPassing;
     };
 
     this.getVersionSummary = function (artifactData) {
