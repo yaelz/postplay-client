@@ -150,9 +150,9 @@ angular
         }
       })
       .when('/', {
-        templateUrl: 'views/general-status.html',
-        controller: 'BasicTestInfoController',
-        controllerAs: 'basicTestInfoCtrl'
+        templateUrl: 'views/all-artifacts.html',
+        controller: 'AllArtifactsController',
+        controllerAs: 'allArtifactsCtrl'
       })
       .otherwise({
         redirectTo: '/'

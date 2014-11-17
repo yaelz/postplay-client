@@ -86,7 +86,7 @@
     <!-- endbuild -->
     <!-- build:js({.tmp,app}) scripts/scripts.js -->
     <script src="scripts/app.js"></script>
-    <script src="scripts/controllers/basic-test-info.js"></script>
+    <script src="scripts/controllers/all-artifacts.js"></script>
     <script src="scripts/services/all-artifacts-api.js"></script>
     <script src="scripts/services/specific-server-status-server-api.js"></script>
     <script src="scripts/controllers/specific-server-status.js"></script>
