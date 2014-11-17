@@ -13,7 +13,7 @@
       return self.server.getAllArtifacts()
         .then(function (response) {
           var allArtifacts = response.data;
-          self.failedAndPassing = self.extractor.extract(allArtifacts);
+          angular.copy(self.extractor.extract(allArtifacts), self.failedAndPassing);
           return self.failedAndPassing;
         });
     };

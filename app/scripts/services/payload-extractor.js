@@ -3,7 +3,7 @@
 
   function PayloadExtractor(postPlayUtils) {
     this.extract = function (payload) {
-      return postPlayUtils.getFailedAndNotFailedArtifactsObject(payload);
+      return postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject(payload);
     };
   }
   angular

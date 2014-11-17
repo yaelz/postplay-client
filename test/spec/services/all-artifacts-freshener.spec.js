@@ -51,7 +51,7 @@ describe('Service: allArtifactsFreshener', function () {
   }
 
   // Initialize the controller and a mock scope
-  beforeEach(inject(function (_allArtifactsFreshener_, _basicTestInfoServerResponse_, _postPlayUtils_, $rootScope, _$q_, _allArtifactsApi_) {
+  beforeEach(inject(function (_allArtifactsFreshener_, _postPlayUtils_, $rootScope, _$q_, _allArtifactsApi_) {
     allArtifactsFreshener = _allArtifactsFreshener_;
     allArtifactsApi = _allArtifactsApi_;
     postPlayUtils = _postPlayUtils_;
@@ -63,21 +63,19 @@ describe('Service: allArtifactsFreshener', function () {
     allArtifactsApi.getAllArtifacts = spyFuncForGetAllArtifacts(artifacts);
     resolvePromise();
   }
-
-  function assumingServerReturnedVersionSummary(versionSum) {
+  function assumingServerHasVersionSummary(versionSum) {
     allArtifactsApi.getVersionSummary = spyFuncForVersionSummary(versionSum);
-    resolvePromise();
   }
   function assumingArtifactsHaveBeenInitializedWith(artifacts) {
     assumingServerHasArtifacts(artifacts);
     allArtifactsFreshener.getAllArtifacts();
     resolvePromise();
   }
-
-  function addStatusToArtifact(artifact) {
+  function addStatusAndIsFavoriteToArtifact(artifact) {
     var newArtifact = _.clone(artifact);
     var status = postPlayUtils.getArtifactStatus(newArtifact);
     newArtifact.status = status;
+    newArtifact.favorite = false;
     return newArtifact;
   }
   describe('getting all artifacts\' data from server', function () {
@@ -86,12 +84,13 @@ describe('Service: allArtifactsFreshener', function () {
       var failed = aFailedArtifact();
 
       assumingServerHasArtifacts([failed, passed]);
-      var failedWithStatus = addStatusToArtifact(failed);
-      var passedWithStatus = addStatusToArtifact(passed);
+      var failedWithStatus = addStatusAndIsFavoriteToArtifact(failed);
+      var passedWithStatus = addStatusAndIsFavoriteToArtifact(passed);
       var artifactsAfterProcessing;
-      allArtifactsFreshener.getAllArtifacts().then(function (failedAndPassing) {
-        artifactsAfterProcessing = failedAndPassing;
-      });
+      allArtifactsFreshener.getAllArtifacts()
+        .then(function (failedAndPassing) {
+          artifactsAfterProcessing = failedAndPassing;
+        });
       resolvePromise();
       expect(artifactsAfterProcessing).toEqual({passing: [passedWithStatus], failing: [failedWithStatus]});
     });
@@ -120,16 +119,17 @@ describe('Service: allArtifactsFreshener', function () {
   });
 
   describe('getVersionSummary', function () {
-    it('should get version summary', function () {
+    it('should return the version summary from the server', function () {
       var versionSum = aVersionSummary();
       var failedArtifact = aFailedArtifact();
 
-      assumingServerReturnedVersionSummary(versionSum);
+      assumingServerHasVersionSummary(versionSum);
 
       var versionSumFromServer;
-      allArtifactsFreshener.getVersionSummary(failedArtifact).then(function (response) {
-        versionSumFromServer = response;
-      });
+      allArtifactsFreshener.getVersionSummary(failedArtifact)
+        .then(function (response) {
+          versionSumFromServer = response;
+        });
       resolvePromise();
       expect(versionSumFromServer).toEqual(versionSum);
 

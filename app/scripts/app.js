@@ -2,13 +2,6 @@
 
 angular
   .module('postplayTryAppInternal', ['ngGrid', 'ngAnimate', 'googlechart', 'ui.bootstrap'])
-  .constant('basicTestInfoServerResponse', {
-    allArtifacts: [
-      {artifactId: 'wix-html-editor-webapp', groupId: 'com.wixpress', version: '2.490.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED', startTime: 1414663552086},
-      {artifactId: 'wix-html-artifact1', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_FAILED', startTime: 1414663552086},
-      {artifactId: 'wix-html-artifact1', groupId: 'com.wixpress', version: '2.487.0', event: 'TESTBED', artifactName: '2. Wix Html Editor', runStatusEnum: 'FINISHED', testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_FAILED', startTime: 1414663552086}
-    ]
-  })
   .constant('specificServerServerResponse', {
     serverData: {
       artifactId: 'wix-public-html-renderer-webapp',

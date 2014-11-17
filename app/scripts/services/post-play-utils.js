@@ -29,12 +29,13 @@
     this.artifactsHaveSameArtifactIdAndGroupId = function (artifact1, artifact2) {
       return artifact1.artifactId === artifact2.artifactId && artifact1.groupId === artifact2.groupId;
     };
-    this.getFailedAndNotFailedArtifactsObject = function (arrayOfArtifactsDataObjects) {
+    this.getFailedAndFavouriteAndPassedArtifactsObject = function (arrayOfArtifactsDataObjects) {
       var passedArtifacts = [];
       var failedArtifacts = [];
       arrayOfArtifactsDataObjects.forEach(function (artifactDataObject) {
         var status = self.getArtifactStatus(artifactDataObject);
         artifactDataObject.status = status;
+        artifactDataObject.favorite = false;
         if (!self.statusIsFailedOrWarning(status)) {
           passedArtifacts.push(artifactDataObject);
         } else {

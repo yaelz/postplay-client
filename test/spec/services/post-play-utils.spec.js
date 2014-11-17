@@ -16,6 +16,14 @@ describe('Service: postPlayUtils', function () {
   function aPassedArtifact() {
     return {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED'};
   }
+
+  function addStatusAndIsFavoriteToArtifact(artifact) {
+    var newArtifact = _.clone(artifact);
+    var status = postPlayUtils.getArtifactStatus(newArtifact);
+    newArtifact.status = status;
+    newArtifact.favorite = false;
+    return newArtifact;
+  }
   // instantiate service
   var postPlayUtils;
   beforeEach(inject(function (_postPlayUtils_) {
@@ -88,44 +96,39 @@ describe('Service: postPlayUtils', function () {
       expect(postPlayUtils.artifactsHaveSameArtifactIdAndGroupId(artifact1, artifact2)).toBe(false);
     });
   });
-  describe('getFailedAndNotFailedArtifactsObject', function () {
+  describe('getFailedAndFavouriteArtifactsObject', function () {
     it('should return an object with empty arrays for failed and for all artifacts', function () {
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([])).toEqual({passing: [], failing: []});
+      expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject([])).toEqual({passing: [], failing: []});
     });
     it('should recognize when there\'s a non failed artifact', function () {
       var passedArtifact = aPassedArtifact();
 
-      var passedArtifactWithStatus = _.clone(passedArtifact);
-      passedArtifactWithStatus.status = 'PASSED';
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([passedArtifact])).toEqual({passing: [passedArtifactWithStatus], failing: []});
+      var passedArtifactWithStatus = addStatusAndIsFavoriteToArtifact(passedArtifact);
+      expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject([passedArtifact])).toEqual({passing: [passedArtifactWithStatus], failing: []});
     });
     it('should recognize when there\'s a failed artifact and add the status', function () {
       var failedArtifact = aFailedArtifact();
 
       var failedArtifactWithStatus = _.clone(failedArtifact);
       failedArtifactWithStatus.status = 'FAILED';
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject([failedArtifact])).toEqual({passing: [], failing: [failedArtifactWithStatus]});
+      failedArtifactWithStatus.favorite = false;
+      expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject([failedArtifact])).toEqual({passing: [], failing: [failedArtifactWithStatus]});
     });
     it('should recognize all failed and non failed artifacts', function () {
       var failedArtifact1 = aFailedArtifact();
-      var failedArtifact1WithStatus = _.clone(failedArtifact1);
-      failedArtifact1WithStatus.status = 'FAILED';
+      var failedArtifact1WithStatus = addStatusAndIsFavoriteToArtifact(failedArtifact1);
       var failedArtifact2 = aFailedArtifact();
-      var failedArtifact2WithStatus = _.clone(failedArtifact2);
-      failedArtifact2WithStatus.status = 'FAILED';
+      var failedArtifact2WithStatus = addStatusAndIsFavoriteToArtifact(failedArtifact2);
       var failedArtifact3 = aFailedArtifact();
-      var failedArtifact3WithStatus = _.clone(failedArtifact3);
-      failedArtifact3WithStatus.status = 'FAILED';
+      var failedArtifact3WithStatus = addStatusAndIsFavoriteToArtifact(failedArtifact3);
 
       var passedArtifact1 = aPassedArtifact();
-      var passedArtifact1WithStatus = _.clone(passedArtifact1);
-      passedArtifact1WithStatus.status = 'PASSED';
+      var passedArtifact1WithStatus = addStatusAndIsFavoriteToArtifact(passedArtifact1);
       var passedArtifact2 = aPassedArtifact();
-      var passedArtifact2WithStatus = _.clone(passedArtifact2);
-      passedArtifact2WithStatus.status = 'PASSED';
+      var passedArtifact2WithStatus = addStatusAndIsFavoriteToArtifact(passedArtifact2);
       var artifactsOfAllKinds = [failedArtifact1, passedArtifact1, failedArtifact2, failedArtifact3, passedArtifact2];
 
-      expect(postPlayUtils.getFailedAndNotFailedArtifactsObject(artifactsOfAllKinds)).toEqual({
+      expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject(artifactsOfAllKinds)).toEqual({
         passing: [passedArtifact1WithStatus, passedArtifact2WithStatus],
         failing: [failedArtifact1WithStatus, failedArtifact2WithStatus, failedArtifact3WithStatus]
       });

@@ -35,7 +35,7 @@
       columnDefs: serverOptionsColumnDefs,
       init: initGrid,
       multiSelect: false,
-      rowTemplate: 'views/basic-test-info-row-template.html'
+      rowTemplate: 'views/all-artifacts-row-template.html'
     };
 
     $scope.addArtifactById = function () {

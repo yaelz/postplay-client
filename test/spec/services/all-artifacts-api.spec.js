@@ -12,9 +12,8 @@ describe('Service: allArtifactsApi', function () {
   });
 
   // instantiate service
-  var $httpBackend, API_URL, allArtifactsApi, basicTestInfoServerResponse, serverApiUrl;
-  beforeEach(inject(function (_allArtifactsApi_, _$httpBackend_, _basicTestInfoServerResponse_, _serverApiUrl_) {
-    basicTestInfoServerResponse = _basicTestInfoServerResponse_;
+  var $httpBackend, API_URL, allArtifactsApi,  serverApiUrl;
+  beforeEach(inject(function (_allArtifactsApi_, _$httpBackend_, _serverApiUrl_) {
     serverApiUrl = _serverApiUrl_;
     allArtifactsApi = _allArtifactsApi_;
     $httpBackend = _$httpBackend_;
