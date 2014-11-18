@@ -71,11 +71,10 @@ describe('Service: allArtifactsFreshener', function () {
     allArtifactsFreshener.getAllArtifacts();
     resolvePromise();
   }
-  function addStatusAndIsFavoriteToArtifact(artifact) {
+  function addStatusToArtifact(artifact) {
     var newArtifact = _.clone(artifact);
     var status = postPlayUtils.getArtifactStatus(newArtifact);
     newArtifact.status = status;
-    newArtifact.favorite = false;
     return newArtifact;
   }
   describe('getting all artifacts\' data from server', function () {
@@ -84,8 +83,8 @@ describe('Service: allArtifactsFreshener', function () {
       var failed = aFailedArtifact();
 
       assumingServerHasArtifacts([failed, passed]);
-      var failedWithStatus = addStatusAndIsFavoriteToArtifact(failed);
-      var passedWithStatus = addStatusAndIsFavoriteToArtifact(passed);
+      var failedWithStatus = addStatusToArtifact(failed);
+      var passedWithStatus = addStatusToArtifact(passed);
       var artifactsAfterProcessing;
       allArtifactsFreshener.getAllArtifacts()
         .then(function (failedAndPassing) {

@@ -3,6 +3,7 @@
 (function () {
 
   /* @ngInject */
+  /*global localStorage: false */
   function PostPlayUtils() {
     // AngularJS will instantiate a singleton by calling "new" on this function
 
@@ -29,17 +30,18 @@
     this.artifactsHaveSameArtifactIdAndGroupId = function (artifact1, artifact2) {
       return artifact1.artifactId === artifact2.artifactId && artifact1.groupId === artifact2.groupId;
     };
-    this.getFailedAndFavouriteAndPassedArtifactsObject = function (arrayOfArtifactsDataObjects) {
+    this.getFailedAndFavouriteAndPassedArtifactsObject = function (artifacts) {
       var passedArtifacts = [];
       var failedArtifacts = [];
-      arrayOfArtifactsDataObjects.forEach(function (artifactDataObject) {
+      artifacts.forEach(function (artifactDataObject) {
         var status = self.getArtifactStatus(artifactDataObject);
         artifactDataObject.status = status;
-        artifactDataObject.favorite = false;
-        if (!self.statusIsFailedOrWarning(status)) {
-          passedArtifacts.push(artifactDataObject);
-        } else {
+        if (self.statusIsFailedOrWarning(status)) {
           failedArtifacts.push(artifactDataObject);
+        } else if (localStorage[artifactDataObject.artifactId]) {
+          failedArtifacts.unshift(artifactDataObject);
+        } else {
+          passedArtifacts.push(artifactDataObject);
         }
       });
       return {passing: passedArtifacts, failing: failedArtifacts};

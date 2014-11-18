@@ -17,11 +17,10 @@ describe('Service: postPlayUtils', function () {
     return {testStatusEnum: 'STATUS_COMPLETED_SUCCESSFULLY', analysisResultEnum: 'TEST_PASSED'};
   }
 
-  function addStatusAndIsFavoriteToArtifact(artifact) {
+  function addStatusToArtifact(artifact) {
     var newArtifact = _.clone(artifact);
     var status = postPlayUtils.getArtifactStatus(newArtifact);
     newArtifact.status = status;
-    newArtifact.favorite = false;
     return newArtifact;
   }
   // instantiate service
@@ -103,29 +102,28 @@ describe('Service: postPlayUtils', function () {
     it('should recognize when there\'s a non failed artifact', function () {
       var passedArtifact = aPassedArtifact();
 
-      var passedArtifactWithStatus = addStatusAndIsFavoriteToArtifact(passedArtifact);
+      var passedArtifactWithStatus = addStatusToArtifact(passedArtifact);
       expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject([passedArtifact])).toEqual({passing: [passedArtifactWithStatus], failing: []});
     });
-    it('should recognize when there\'s a failed artifact and add the status', function () {
+    it('should failed artifact and add the status', function () {
       var failedArtifact = aFailedArtifact();
 
       var failedArtifactWithStatus = _.clone(failedArtifact);
       failedArtifactWithStatus.status = 'FAILED';
-      failedArtifactWithStatus.favorite = false;
       expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject([failedArtifact])).toEqual({passing: [], failing: [failedArtifactWithStatus]});
     });
     it('should recognize all failed and non failed artifacts', function () {
       var failedArtifact1 = aFailedArtifact();
-      var failedArtifact1WithStatus = addStatusAndIsFavoriteToArtifact(failedArtifact1);
+      var failedArtifact1WithStatus = addStatusToArtifact(failedArtifact1);
       var failedArtifact2 = aFailedArtifact();
-      var failedArtifact2WithStatus = addStatusAndIsFavoriteToArtifact(failedArtifact2);
+      var failedArtifact2WithStatus = addStatusToArtifact(failedArtifact2);
       var failedArtifact3 = aFailedArtifact();
-      var failedArtifact3WithStatus = addStatusAndIsFavoriteToArtifact(failedArtifact3);
+      var failedArtifact3WithStatus = addStatusToArtifact(failedArtifact3);
 
       var passedArtifact1 = aPassedArtifact();
-      var passedArtifact1WithStatus = addStatusAndIsFavoriteToArtifact(passedArtifact1);
+      var passedArtifact1WithStatus = addStatusToArtifact(passedArtifact1);
       var passedArtifact2 = aPassedArtifact();
-      var passedArtifact2WithStatus = addStatusAndIsFavoriteToArtifact(passedArtifact2);
+      var passedArtifact2WithStatus = addStatusToArtifact(passedArtifact2);
       var artifactsOfAllKinds = [failedArtifact1, passedArtifact1, failedArtifact2, failedArtifact3, passedArtifact2];
 
       expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject(artifactsOfAllKinds)).toEqual({

@@ -3,6 +3,7 @@
 (function () {
 
   /* @ngInject */
+  /*global localStorage: false */
   function AllArtifactsFreshener(_allArtifactsApi_, _payloadExtractor_) {
     var self = this;
     this.server = _allArtifactsApi_;
@@ -12,17 +13,15 @@
     this.getAllArtifacts = function () {
       return self.server.getAllArtifacts()
         .then(function (response) {
-          var allArtifacts = response.data;
-          angular.copy(self.extractor.extract(allArtifacts), self.failedAndPassing);
+          self.allArtifacts = response.data;
+          self.failedAndPassing = self.extractor.extract(self.allArtifacts);
           return self.failedAndPassing;
         });
     };
 
     this.updateChosenArtifact = function (chosenArtifactId) {
-      var artifactRemovedFromPassing = removeArtifactFromPassingArray(chosenArtifactId);
-      if (artifactRemovedFromPassing) {
-        self.failedAndPassing.failing.unshift(artifactRemovedFromPassing);
-      }
+      localStorage.setItem(chosenArtifactId, true);
+      angular.copy(self.extractor.extract(self.allArtifacts), self.failedAndPassing);
       return self.failedAndPassing;
     };
 
@@ -32,22 +31,6 @@
           return response.data;
         });
     };
-
-    function removeArtifactFromPassingArray(artifactIdToRemove) {
-      if (!artifactIdToRemove) {
-        return false;
-      }
-      var removedObj;
-      self.failedAndPassing.passing = self.failedAndPassing.passing.filter(function (passedArtifact) {
-        if (passedArtifact.artifactId === artifactIdToRemove) {
-          removedObj = passedArtifact;
-          return false;
-        } else {
-          return true;
-        }
-      });
-      return removedObj;
-    }
   }
 
   angular
