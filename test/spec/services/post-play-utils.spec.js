@@ -1,12 +1,21 @@
 'use strict';
 
+/*global localStorage: false */
 describe('Service: postPlayUtils', function () {
 
   // load the service's module
   beforeEach(function () {
     module('postplayTryAppInternal');
 
+    var store = [];
     //add your mocks here
+    spyOn(localStorage, 'getItem').andCallFake(function (key) {
+      return store[key];
+    });
+    spyOn(localStorage, 'setItem').andCallFake(function (key, value) {
+      store[key] = value + '';
+      return store[key];
+    });
   });
 
   function aFailedArtifact() {
@@ -115,21 +124,23 @@ describe('Service: postPlayUtils', function () {
     it('should recognize all failed and non failed artifacts', function () {
       var failedArtifact1 = aFailedArtifact();
       var failedArtifact1WithStatus = addStatusToArtifact(failedArtifact1);
-      var failedArtifact2 = aFailedArtifact();
-      var failedArtifact2WithStatus = addStatusToArtifact(failedArtifact2);
-      var failedArtifact3 = aFailedArtifact();
-      var failedArtifact3WithStatus = addStatusToArtifact(failedArtifact3);
 
       var passedArtifact1 = aPassedArtifact();
       var passedArtifact1WithStatus = addStatusToArtifact(passedArtifact1);
-      var passedArtifact2 = aPassedArtifact();
-      var passedArtifact2WithStatus = addStatusToArtifact(passedArtifact2);
-      var artifactsOfAllKinds = [failedArtifact1, passedArtifact1, failedArtifact2, failedArtifact3, passedArtifact2];
+      var artifactsOfAllKinds = [failedArtifact1, passedArtifact1];
 
-      expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject(artifactsOfAllKinds)).toEqual({
-        passing: [passedArtifact1WithStatus, passedArtifact2WithStatus],
-        failing: [failedArtifact1WithStatus, failedArtifact2WithStatus, failedArtifact3WithStatus]
-      });
+      expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject(artifactsOfAllKinds)).toEqual({passing: [passedArtifact1WithStatus], failing: [failedArtifact1WithStatus]});
+    });
+    it('should insert a passed artifact to the failed and chosen if it\'s save in the localStorage', function () {
+      var failedArtifact1 = aFailedArtifact();
+      var failedArtifact1WithStatus = addStatusToArtifact(failedArtifact1);
+
+      var passedArtifact1 = aPassedArtifact();
+      passedArtifact1.artifactId = 'passed_1';
+      var passedArtifact1WithStatus = addStatusToArtifact(passedArtifact1);
+      var artifactsOfAllKinds = [failedArtifact1, passedArtifact1];
+      localStorage.setItem('passed_1', true);
+      expect(postPlayUtils.getFailedAndFavouriteAndPassedArtifactsObject(artifactsOfAllKinds)).toEqual({passing: [], failing: [passedArtifact1WithStatus, failedArtifact1WithStatus]});
     });
   });
 });

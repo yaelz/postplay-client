@@ -38,7 +38,7 @@
         artifactDataObject.status = status;
         if (self.statusIsFailedOrWarning(status)) {
           failedArtifacts.push(artifactDataObject);
-        } else if (localStorage[artifactDataObject.artifactId]) {
+        } else if (localStorage.getItem(artifactDataObject.artifactId)) {
           failedArtifacts.unshift(artifactDataObject);
         } else {
           passedArtifacts.push(artifactDataObject);
